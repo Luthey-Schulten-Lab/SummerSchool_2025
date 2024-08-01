@@ -1,4 +1,4 @@
-# Code you will copy and run during the CME and RDME Tutorials.
+# Terminal Commands to Run Jobs on Delta
 
 ## Login into Delta login node
 
@@ -6,7 +6,7 @@
 ssh $USERNAME@login.delta.ncsa.illinois.edu
 ```
 
-***Replace*** the $USERNAME with your username. You need to type you password and do 2FA.
+***Replace*** the $USERNAME with your Delta username. You need to type you password and do 2FA.
 
 ##  Go into your projects directory and copy tutorials
 
