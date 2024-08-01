@@ -9,8 +9,8 @@ The purpose of this tutorial is to give you a crash course on modeling and simul
 ## Outline of tutorial:
 
 1. Introduction to DNA simulation with btree_chromo and LAMMPS
-2. Running btree_chromo: Setting up on Delta and running a simulation
-3. Modeling the minimal cell
+2. Setting up and running your first simulation on Delta
+3. Modeling the minimal cell chromsome replication and initial structure
 4. Modeling chromosome dynamics
 5. Understanding btree_chromo commands
 6. Visualization and analysis with VMD
@@ -25,14 +25,17 @@ The DNA that btree_chromo simulates is coarse-grained at a 10 bp resolution. Thi
 
 ZLS group member Ben Gilbert (recently graduated) wrote the program and used it to investigate chromosome disentanglement of replicated DNA strands and partitioning of the daughter strands into separate halves of a toy model cell (50 kbp genome), as well as create chromosome contact maps based on the simulated trajectories ([Gilbert 2023](https://www.frontiersin.org/journals/cell-and-developmental-biology/articles/10.3389/fcell.2023.1214962/full)). Ongoing research using btree_chromo involves integrating btree_chromo with Lattice Microbes, as well as investigating disentanglement and partitioning of a full minimal cell model (543 kbp genome). 
 
+<div align="center">
+
 | <img src="./figures/1.%20Introduction%20to%20simulation%20with%20btree_chromo%20and%20LAMMPS/division_2chromo_5000bp_separation.png" width="300"/>  | <img src="./figures/1.%20Introduction%20to%20simulation%20with%20btree_chromo%20and%20LAMMPS/partition.png" width="300"/> |
 |:--:|:--:|
 | Figure 1: Cell division of 50 kbp toy model | Figure 2: DNA partitioning of 543 kbp model |
 
-
+</div>
 Today you will be running simulations using a variant of LAMMPS which utilizes the GPUs on the Delta HPC cluster. We will simulate the entire minimal cell including the effects of SMC proteins, topoisomerase, and Brownian dynamics. 
 
-## 2. Running btree_chromo: Setting up on Delta and running a simulation
+## 2. Setting up and running your first simulation on Delta
+In this section, we will log on to Delta and launch a container which has btree_chromo and LAMMPS already installed. Using that container, we will start running a simulation of the minimal cell chromosome. The reason we are doing this first, is so that the simulation will be left running throughout our time slot. At the end of this tutorial, we will visualize and analyze the results of our simulations.
 
 **Step 1: Log in to Delta**
 
@@ -77,7 +80,7 @@ cd  /projects/bcuj/${USER}/btree_chromo_workspace/examples
 
 Viewing and editing of the example files will be done within this terminal window.
 
-## Typical Workflow:
+### Typical Workflow:
 
 The general workflow for running **btree_chromo** is as follows:
 
@@ -107,13 +110,14 @@ In the **Apptainer terminal**:
 
 ```
 
-## 3. Modeling the Minimal Cell
-### Growing the DNA
-<img align="right" width="300" src="./figures/3. Modeling the minimal cell/sc_growth_composite.pdf">
+## 3. Modeling the Minimal Cell replication and initial structure
+In this section 
 
 ### Modeling Replication States
 
 In this section, you will learn how to represent replication states, including nested theta structures, with a binary tree model. You will also get some practice with navigating directories in a linux terminal.
+
+<img align="center" width="800" src="./figures/3. Modeling the minimal cell/replication_topology_0.png">
 
 In **Editor terminal**,
 
@@ -175,6 +179,11 @@ total_size = 1300
   | start_link = 299, end_link = 600
 
 ```
+<img align="center" width="800" src="./figures/3. Modeling the minimal cell/replication_topology_partB_horizontal_rep_only_0.png">
+
+### Growing the DNA
+<img align="right" width="300" src="./figures/3. Modeling the minimal cell/sc_growth_composite_0.png">
+At the start of every simulation, we need initial coordinates for the 
 
 Next, in the **Editor terminal**, move to the next example in `examples/preparing_physical_structure`.
 There are several file types in this directory. Here are what they are used for:
@@ -207,6 +216,15 @@ Turning off bending removes the $U_i^b$ (cosine potential for bending), turning 
 |:--:|:--:|:--:|:--:|
 | <img src="./figures/4.%20Modeling%20chromosome%20dynamics/DNA_model_bending_0.png/" width="300"/>  | <img src="./figures/4.%20Modeling%20chromosome%20dynamics/DNA_model_twisting_0.png/" width="300"/> |  <img src="./figures/4.%20Modeling%20chromosome%20dynamics/DNA_model_stretching_0.png/" width="200"/> |  <img src="./figures/4.%20Modeling%20chromosome%20dynamics/DNA_model_LJ_0.png/" width="120"/> |
 |$U_i^b=\kappa_b\left[1-\cos \left(\pi-\theta_i\right)\right]$|$U_i^t=\kappa_t\left[1-\cos \left(\alpha_i+\gamma_i\right)\right]$|$U_i^s= -\frac{\kappa_s L_0^2}{2} \log \left[1-\left(l_i / L_0\right)^2\right]$ $+4 \epsilon_s\left[\left(\frac{\sigma_s^s}{l_i}\right)^{12}-\left(\frac{\sigma_s}{l_i}\right)^6\right]$ $\times \Theta\left(2^{\frac{1}{6}} \sigma_s-l_i\right)$  |$U_{i j}^{e . v .}=  4 \epsilon_{e . v}\left[\left(\frac{\sigma_{e . v}}{r_{i j}}\right)^{12}-\left(\frac{\sigma_{e . v}}{r_{i j}}\right)^6\right]$ $\times  \Theta\left(2^{\frac{1}{6}} \sigma_{{e.v. }}-r_{i j}\right)$|
+
+> [!NOTE]
+In the current version of btree_chromo, we neglect the twisting potential for neighboring beads (the corresponding forces are not calculated and are not used during our simulations). The reason for this has to do with how minimizations work in LAMMPS.
+> 
+
+In btree_chromo, we simulate dynamics of the DNA and ribosomes using a GPU-accelerated version of the Brownian dynamics integrator, which performs time-integration to update the coordinates of each of the beads. Let's quickly go through how the Brownian dynamics integrator works. First, recall how the acceleration of each bead is related to the net force on that bead and it's mass, which is given by Newton's second law. For bead $i$, which has mass $m_i$, Newton's second law reads
+
+insert images here
+
 
 For simulating the influence of loops and topoisomerase, the relevant directives are described in the [README](https://github.com/brg4/btree_chromo/) under Simulator:
 
