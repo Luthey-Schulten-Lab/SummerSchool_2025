@@ -74,6 +74,13 @@ bash /projects/bddt/DNA/files/launch_btree_chromo.sh
 
 This will run the container in interactive mode. You should now see the `Apptainer>` prompt which indicates your have entered the container. We will be running btree_chromo and viewing the terminal output in the container.
 
+Do the command
+
+```bash
+export LD_LIBRARY_PATH="/usr/local/lib64:/usr/local/lib:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs"
+```
+This ensures the program uses the nvidia drivers appropriate for the NVIDIA A100 GPUs on Delta.
+
 **Step 4: Run btree_chromo**
 
 In the container, please navigate into the folder where the btree_chromo executable is located:
