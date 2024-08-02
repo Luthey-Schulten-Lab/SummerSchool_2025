@@ -1,6 +1,7 @@
 # Simulating DNA using btree_chromo and LAMMPS
 
 ## Description:
+<img align="right" width="300" src="./figures/1. Introduction to simulation with btree_chromo and LAMMPS/initial_state.png">
 
 The purpose of this tutorial is to give you a crash course on modeling and simulating the bacterial chromosome. You will be introduced to the minimal cell chromosome: it’s structure, interactions it has with proteins, and how it replicates. We will walk you through how to set up and run a simulation using the program btree_chromo, on the Delta HPC cluster. The coarse-grained model of the DNA, ribosomes and cell membrane will be discussed, as well as the use of LAMMPS to perform energy minimizations and Brownian dynamics. We will also go into greater detail about how we model biological mechanisms such as SMC looping and topoisomerase. Finally, you will get a chance to visualize and analyze a simulation trajectory in VMD.
 
@@ -17,9 +18,9 @@ The purpose of this tutorial is to give you a crash course on modeling and simul
 
 ## 1. Introduction to DNA Simulation with btree_chromo and LAMMPS
 
-<img align="right" width="300" src="./figures/1. Introduction to simulation with btree_chromo and LAMMPS/initial_state.png">
-
 Here, we simulate DNA replication and dynamics using the C++ program btree_chromo, available online at  [github.com/brg4/btree_chromo](https://github.com/brg4/btree_chromo). This program was created mainly for the purposes of simulating the minimal cell chromosome, but it can be used to simulate any circular chromosome. The main purpose of the program is to model replication states of the chromosome, as well as perform simulation of chromosome dynamics by calling [LAMMPS](https://www.lammps.org/#gsc.tab=0) (Large-scale Atomic/Molecular Massively Parallel Simulator), a molecular dynamics program from Sandia National Laboratories.  
+
+<img align="right" width="300" src="./figures/1. Introduction to simulation with btree_chromo and LAMMPS/DNA_model_0.png">
 
 The DNA that btree_chromo simulates is coarse-grained at a 10 bp resolution. This means that a single, 3.4 nm diameter bead is used to represent 10 base pairs. We also use beads to represent ribosomes (10 nm), and the cell membrane. The program emulates the effects of SMC (structural maintenence of chromosomes) proteins that extrude loops of DNA to effect chromosome organization, as well as type II topoisomerases which allow for DNA strand crossings when they become tangled.
 
@@ -118,13 +119,17 @@ In this section you will learn about DNA replication in the minimal cell, and ho
 
 The JCVI-syn3A minimal cell has a 543379 bp (543 kbp) genome comprised of 493 genes. This means an unreplicated chromosome is represented as a circular polymer of 54338 beads. DNA replication, even in the minimal cell where the replication machinery retains only the essential components, is still rather complicated. For today, all we need to understand is that replication begins at a location on the genome called the origin (_Ori_), proceeds along the DNA in the clockwise and counterclockwise directions with Y-shaped structures (Fork), and ends at the terminal site, also called the terminus (_Ter_). 
 
+<img align="center" width="600" src="./figures/3. Modeling the minimal cell/topology_simple.png">
+
+**Figure 3: Representing replication states.**  _Ori_, _Ter_, and Forks given in red, orange, and magenta respectively.
+
 We can use a binary tree to represent the replication state of the chromosome. An unreplicated chromosome is represented by a single node, which we call the mother (m). When unreplicated, the chromosome is circular. As replication proceeds (starting from the _Ori_, along the Forks), the mother branches into two nodes, which we call the left and right daughters (ml and mr). The structure is now no longer circular; it is now called a "theta structure" due to its resemblance to the Greek letter $\theta$. Both the left and right daughters have their own _Ori_'s, so in principle, they could begin to replicate too. 
 
 In the figure below we illustrate replication of a 100 bead chromsome. The origin is depicted in red, the terminus, in orange, and forks in magenta. For each of the four stages of replication, we show the theta structure, the binary tree representation, the physical structure, and finally the bond topology. The bond topology displays all monomers using a colorbar, with the orange arc representing the bond at the terminus, and the pink arcs representing the bonds between the strand of newly created beads at the forks.
 
 <img align="center" width="1000" src="./figures/3. Modeling the minimal cell/replication_topology_0.png">
 
-**Figure 3: Representing replication states.**  For an unreplicated (left) and partially replicated (right) chromosome, the theta structure is shown in the top-left, the binary tree representation in the top-middle, the physical model in the top-right, and the bond topology of the physical model in the bottom. _Ori_, _Ter_, and Forks given in red, orange, and magenta respectively.
+**Figure 4: Different ways of representing replication states.**  For an unreplicated (left) and partially replicated (right) chromosome, the theta structure is shown in the top-left, the binary tree representation in the top-middle, the physical model in the top-right, and the bond topology of the physical model in the bottom. _Ori_, _Ter_, and Forks given in red, orange, and magenta respectively.
 
 Quickly, let's see how btree_chromo handles replication states. In **Editor terminal**,
 
@@ -206,6 +211,11 @@ See the figure on the right for  a schematic of algorithm used to generate initi
 
 ## 4. Modeling Chromosome Dynamics
 
+The total potential energy for the chromosome/ribosome system is
+
+$$U= \sum_{i=1}^{N_{\mathrm{DNA}}}\left[U_i^b+U_i^t+U_i^a+U_i^s\right] +\sum_{i=1}^{N_{\mathrm{DNA}}-1} \sum_{j=i+1}^{N_{\mathrm{DNA}}} U_{i j}^{\mathrm{DNA}-\mathrm{DNA}}+\sum_{i=1}^{N_{\mathrm{DNA}}} \sum_j^{N_{\text {ribo }}} U_{i j}^{\mathrm{DNA}-\text { ribo }} +\sum_{i=1}^{N_{\text {ribo }}-1} \sum_{j=i+1}^{N_{\text {ribo }}} U_{i j}^{\text {ribo-ribo }} +\sum_{i=1}^{N_{\text {bdry }}} \sum_j^{N_{\mathrm{DNA}}} U_{i j}^{\text {bdry-DNA }}+\sum_{i=1}^{N_{\text {bdry }}} \sum_j^{N_{\text {ribo }}} U_{i j}^{\text {bdry-ribo }}.$$
+
+The energies for the bending, twisting, stretching and excluded volume interactions are shown below.
 
 |**Bending:** |**Twisting** | **Stretching** | **Excluded Volume** |
 |:--:|:--:|:--:|:--:|
@@ -216,16 +226,53 @@ See the figure on the right for  a schematic of algorithm used to generate initi
 In the current version of btree_chromo, we neglect the twisting potential for neighboring beads (the corresponding forces are not calculated and are not used during our simulations). The reason for this has to do with how minimizations work in LAMMPS.
 > 
 
-In btree_chromo, we simulate dynamics of the DNA and ribosomes using a GPU-accelerated version of the Brownian dynamics integrator, which performs time-integration to update the coordinates of each of the beads. Let's quickly go through how the Brownian dynamics integrator works. First, recall how the acceleration of each bead is related to the net force on that bead and it's mass, which is given by Newton's second law. For bead $i$, which has mass $m_i$, Newton's second law reads
+In btree_chromo, we simulate dynamics of the DNA and ribosomes using a GPU-accelerated version of the Brownian dynamics integrator, which performs time-integration to update the coordinates of each of the beads. Let's quickly go through how the Brownian dynamics integrator works. First, recall how the acceleration of each bead is related to the net force on that bead and it's mass, which is given by Newton's second law, $F_{\text{net}}=ma$. 
 
-insert images here
+For bead $i$, which has mass $m_i$, there are three forces acting on the bead: the "system" force associated with the interactions between beads, $F_{\text{system}} = -\nabla U_i $, as well as the drag force $F_{\text{drag}}$ and random force $F_{\text{rand}}$. So, Newton's second law reads
 
-For simulating the influence of loops and topoisomerase, the relevant directives are described in the [README](https://github.com/brg4/btree_chromo/) under Simulator:
+<img align="center" height=50 src="./figures/4. Modeling chromosome dynamics/Newton_eq.png">
 
-| Directive | Description |
+The drag force is proportional to the bead's velocity, $\mathbf{v} = \text{d}\mathbf{x}/\text{d}t$, as well as its translational damping constant $\gamma_i$, given by the Einstein-Stokes equation: 
+
+<img align="center" height=25 src="./figures/4. Modeling chromosome dynamics/Stokes-Einstein_eq.png">
+
+Plugging this in and dividing by $\gamma_i$, we obtain the Langevin equation of motion:
+
+<img align="center" height=50 src="./figures/4. Modeling chromosome dynamics/Langevin_eq.png">
+
+In the large friction limit, i.e. where $\gamma_i$ is very large, we can neglect the left hand side of the Langevin equation, and we obtain the equation for Brownian motion:
+
+<img align="center" height=50 src="./figures/4. Modeling chromosome dynamics/Brownian_eq.png">
+
+LAMMPS uses this equation to update positions, according to a simple first order integration scheme known as the Euler-Maruyama method (basically, the Euler method).
+
+Both Langevin and Brownian dynamics can be used to correctly sample the NVT ensemble, but Brownian dynamics is preferred in our case since it allows us to take comparatively large time steps. Brownian dynamics is also sometimes called overdamped Langevin dynamics. This approiximation is valid for timesteps that satisfy $\Delta t \gg m_i/\gamma_i$.
+
+<img align="right" width=300 src="./figures/4. Modeling chromosome dynamics/DNA_model_looping_0.png">
+
+During the genome reduction process of Syn3A, guided by transposon mutagenesis studies on the original JCVI-syn1.0 genome and its intermediate reduced versions, it was found that structural maintenence of chromosomes (SMC) proteins were essential. However, the effect of SMC looping during the minimal cell replication cycle is not fully understood. While magnetic tweezer experiments have been done to determine loop extrusion step size of ~200 bp/s (Ryu et al, NAR 2022) and simulations indicate an extrusion frequency of ~2.5 steps/s (Nomidis et al, NAR 2022), we have limited experimental results for SMC looping in the crowded in-cell environment. btree_chromo allows us to investigate SMC looping through adjustment of simulation parameters.
+
+| Parameter | Description |
 | --- | --- |
-| simulator_load_loop_params:loop_params_file | read a file (loop_params_file) containing the parameters for the looping interactions |
-| simulator_run_loops:Nloops,Nsteps,Tfreq,Dfreq,append_option,skip_option | run Brownian dynamics with the hard/FENE potential for Nsteps with Nloops randomly placed, while printing thermodynamic information every Tfreq steps and dumping every Dfreq steps - append_option = noappend/append and skip_option = first/skip_first |
+| Total number of loops | Number of active anchor+hinge pairs that are extruding loops |
+| Loop extrusion frequency (s^-1) | How often does loop extrusion occur? Our best estimate (Nomidis et al) is around every 0.4 s |
+| Unbind/Rebind frequency (s^-1) | How often does the anchor move to a new location? After 90 extrusion steps? Less? |
+| Extrusion step size (bp) | ~200 bp (Ryu et al) |
+
+Also found to be essential were topoisomerases. 
+
+## 5. Understanding btree_chromo Commands
+
+
+```bash
+switch_twisting_angles: F
+```
+enable/disable twisting angles between DNA monomers (default T). Turning off twisting removes the $U_i^t$ and $U_i^a$ (cosine potentials for twisting and aligning).
+
+```bash
+simulator_run_loops:F,100,200000,50000,2000000,append,nofirst
+```
+Run Brownian dynamics with the hard/FENE potential for Nsteps with Nloops randomly placed, while printing thermodynamic information every Tfreq steps and dumping every Dfreq steps.
 
 If we take a look at loop_params.txt, we find that it specifies the minimum number of monomers separating anchor and hinge, the distribution of extrusion steps, hinge unbinding probability and grab radius, loop update frequency and topoisomerase relaxation frequency.
 
@@ -259,42 +306,14 @@ dNt_topo=50000
 
 ```
 
-The effect of SMC looping during the minimal cell replication cycle is not fully understood. While magnetic tweezer experiments have been done to determine loop extrusion step size of ~200 bp/s (Ryu et al, NAR 2022) and simulations indicate an extrusion frequency of ~2.5 steps/s (Nomidis et al, NAR 2022), we have limited experimental results for SMC looping in the crowded in-cell environment. btree_chromo allows us to investigate SMC looping through adjustment of simulation parameters.
-
-| Parameter | Description |
-| --- | --- |
-| Total number of loops | Number of active anchor+hinge pairs that are extruding loops |
-| Loop extrusion frequency (s^-1) | How often does loop extrusion occur? Our best estimate (Nomidis et al) is around every 0.4 s |
-| Unbind/Rebind frequency (s^-1) | How often does the anchor move to a new location? After 90 extrusion steps? Less? |
-| Extrusion step size (bp) | ~200 bp (Ryu et al) |
-
-Recall that 
-
-## 5. Understanding btree_chromo Commands
-
-Take a look in the provided README for btree_chromo: [github.com/brg4/btree_chromo](https://github.com/brg4/btree_chromo). Scroll past the description and installation steps to see the list of possible directives.
-Let's focus our attention on the commands that we can use to toggle various aspects of the Brownian dynamics simulation in LAMMPS, under Spatial System for Simulations: bonds, bending angles, and twisting angles.
-
-| Directive | Description |
-| --- | --- |
-| switch_bonds:(T/F) | enable/disable bonds between DNA monomers (default T) |
-| switch_bending_angles:(T/F) | enable/disable bending angles between DNA monomers (default T) |
-| switch_twisting_angles:(T/F) | enable/disable twisting angles between DNA monomers (default T) |
-
-*Note: these directives must be used prior to 'write_LAMMPS_data_file' to take effect*.
-By turning off these switches, we are effectively removing terms from the whole energy function that correspond to adjacent-monomer interactions in the DNA polymer:
-$$U= \sum_{i=1}^{N_{\mathrm{DNA}}}\left[U_i^b+U_i^t+U_i^a+U_i^s\right] +\sum_{i=1}^{N_{\mathrm{DNA}}-1} \sum_{j=i+1}^{N_{\mathrm{DNA}}} U_{i j}^{\mathrm{DNA}-\mathrm{DNA}}+\sum_{i=1}^{N_{\mathrm{DNA}}} \sum_j^{N_{\text {ribo }}} U_{i j}^{\mathrm{DNA}-\text { ribo }} +\sum_{i=1}^{N_{\text {ribo }}-1} \sum_{j=i+1}^{N_{\text {ribo }}} U_{i j}^{\text {ribo-ribo }} +\sum_{i=1}^{N_{\text {bdry }}} \sum_j^{N_{\mathrm{DNA}}} U_{i j}^{\text {bdry-DNA }}+\sum_{i=1}^{N_{\text {bdry }}} \sum_j^{N_{\text {ribo }}} U_{i j}^{\text {bdry-ribo }}.$$
-Turning off bending removes the $U_i^b$ (cosine potential for bending), turning off twisting removes the $U_i^t$ and $U_i^a$ (cosine potentials for twisting and aligning), and turning off bonds will remove all of these as well as the $U_i^s$ (FENE potentials for stretching) resulting in separate diffusing DNA monomers rather than a DNA polymer. The other five terms in the energy function are for excluded volume interactions (purely repulsive Weeks-Chandler-Andersen (WCA) pair potentials).
-
 ## 6. Visualization and analysis with VMD
 
-**Visualizing LAMMPS trajectories with VMD:**\
-You will now copy over the .lammpstrj files from Delta to your local machine in order to visualize them in vmd.
+You will now copy over the .lammpstrj files from Delta to your local machine in order to visualize them in vmd. Open up a new terminal, which we will call **Local terminal**.
 
 In the **Local terminal**:
 
 ```bash
-scp $USERNAME@login.delta.ncsa.illinois.edu:/projects/bcuj/$USERNAME/btree_chromo_workspace/examples/simulating_chromosome_with_replication/\\*.lammpstrj .
+scp $USERNAME@login.delta.ncsa.illinois.edu:/projects/bddt/$USERNAME/btree_chromo_workspace/\\*.lammpstrj .
 
 ```
 
@@ -304,7 +323,7 @@ We will also copy over the .tcl scripts which will create nice representations f
 In the **Local terminal**:
 
 ```bash
-scp $USERNAME@login.delta.ncsa.illinois.edu:/projects/bcuj/sharefile/Workshop_2024/DNA_model/\\*.tcl .
+scp $USERNAME@login.delta.ncsa.illinois.edu:/projects/bddt/DNA/files/\\*.tcl .
 
 ```
 
@@ -320,6 +339,13 @@ In VMD, delete the previous two molecules. Open the VMD TkConsole and do (Extens
 | Boundary | gray | 32.5 |
 | Anchor | black | 19.5 |
 | Hinge | white | 19.5 |
+
+## References
+[^gilbert2023]: Gilbert, Benjamin R., Zane R. Thornburg, Troy A. Brier, Jan A. Stevens, Fabian Grünewald, John E. Stone, Siewert J. Marrink, and Zaida Luthey-Schulten. “Dynamics of Chromosome Organization in a Minimal Bacterial Cell.” Frontiers in Cell and Developmental Biology 11 (August 9, 2023). https://doi.org/10.3389/fcell.2023.1214962.
+[]:
+[]:
+[]:
+[]:
 
 ## Links
 
