@@ -3,7 +3,7 @@
 ## Description:
 <img align="right" width="300" src="./figures/1. Introduction to simulation with btree_chromo and LAMMPS/initial_state.png">
 
-The purpose of this tutorial is to give you a crash course on modeling and simulating the bacterial chromosome. 
+The purpose of this tutorial is to give you a crash course on modeling and simulating the chromosome of the minimal cell. 
 
 We will walk you through how to set up and run a simulation using the program btree_chromo, on the Delta HPC cluster. The coarse-grained model of the DNA, ribosomes and cell membrane will be discussed, as well as the use of LAMMPS to perform energy minimizations and Brownian dynamics. We will also go into greater detail about how we model biological mechanisms such as SMC looping and topoisomerase. Finally, you will get a chance to visualize and analyze a simulation trajectory in VMD.
 
