@@ -251,15 +251,19 @@ Let's take a look in `full_model.inp` to get a feel for how to write input files
 
 ```bash
 switch_skip_runs:F
+
+btree_prng_seed:10
+replicator_prng_seed:10
 new_chromo:54338
-load_BD_lengths:/home/andrew/Desktop/Projects/for_Andrew_fullChromo_withGrowth_Test_Protocol/in_BD_lengths_LAMMPS_test.txt
-load_mono_coords:/home/andrew/Data/btree_chromo/BD_kk_testing/mono_coords_minimized.bin,row
-load_bdry_coords:2500A_bdry.bin,row
-prepare_simulator:/home/andrew/Data/btree_chromo/BD_kk_testing/logfile0.log
+
+load_BD_lengths:/mnt/in_BD_lengths_LAMMPS_test.txt
+load_mono_coords:/mnt/x_chain_Syn3A_chromosome_init_rep00001.bin,row
+load_bdry_coords:/mnt/2500A_bdry.bin,row
+prepare_simulator:/mnt/logfile0.log
 simulator_set_prng_seed:42
 simulator_set_nProc:8
-simulator_set_DNA_model:/home/andrew/Desktop/Projects/btree_chromo/LAMMPS_DNA_model_kk
-simulator_set_output_details:/home/andrew/Data/btree_chromo/BD_kk_testing/,division_withmin
+simulator_set_DNA_model:/Software/btree_chromo/LAMMPS_DNA_model_kk
+simulator_set_output_details:/mnt/,full_model
 simulator_set_delta_t:1.0E+5
 ```
 These commands create a new chromosome and load in coordinates for the DNA and boundary, creates output files, sets the LAMMPS random number generator seed, and sets the timestep to 0.1 ns
@@ -280,7 +284,7 @@ set_initial_state
 transform:m_cw1360_ccw1360
 set_final_state
 map_replication
-sys_write_sim_read_LAMMPS_data:/home/andrew/Data/btree_chromo/BD_kk_testing/data.lammps_0
+sys_write_sim_read_LAMMPS_data:/mnt/data.lammps_0
 ```
 These commands copy the LAMMPS simulation bead coordinates into the binary tree data structure in btree_chromo, replicates by moving both forks by 1360 beads, maps the binary tree structure back onto the bead coordinates, and then updates the bead coordinates in the LAMMPS simulation.
 
