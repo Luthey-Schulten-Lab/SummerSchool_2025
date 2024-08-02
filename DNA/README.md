@@ -59,7 +59,7 @@ You will need to replace $USERNAME with your own.
 **Step 2: Create workspace and copy examples folder**
 
 ```bash
-bash /projects/bddt/DNA/prelaunch_btree_chromo.sh
+bash /projects/bddt/DNA/files/prelaunch_btree_chromo.sh
 
 ```
 
@@ -68,7 +68,7 @@ This bash script creates a workspace `/projects/bcuj/${USER}/btree_chromo_worksp
 **Step 3: Launch the container**
 
 ```bash
-bash /projects/bddt/DNA/launch_btree_chromo.sh
+bash /projects/bddt/DNA/files/launch_btree_chromo.sh
 
 ```
 
@@ -86,7 +86,7 @@ cd /Software/btree_chromo/build/apps
 Next, run 'full_model.inp'. Do the command:
 
 ```bash
-./btree_chromo /mnt/examples/full_model.inp
+./btree_chromo /mnt/full_model.inp
 
 ```
 This command starts a simulation of the full 543 kbp chromosome in a 500 nm diameter spherical cell. By the end of this tutorial, our goal is to understand what is going on in the simulation, the contents of the input file `full_model.inp`, as well as some background biological knowledge.
@@ -110,10 +110,11 @@ In the figure below we illustrate replication of a 100 bead chromsome. The origi
 
 **Figure 4: Different ways of representing replication states.**  For an unreplicated (left) and partially replicated (right) chromosome, the theta structure is shown in the top-left, the binary tree representation in the top-middle, the physical model in the top-right, and the bond topology of the physical model in the bottom. _Ori_, _Ter_, and Forks given in red, orange, and magenta respectively.
 
-Quickly, let's see how btree_chromo handles replication states. In **Editor terminal**,
+Quickly, let's see how btree_chromo handles replication states. In a new terminal log on to Delta again, and navigate to `/projects/bddt/$USERNAME/btree_chromo_workspace/examples/preparing_chromosome`:
 
 ```bash
-ls /preparing_chromosome
+cd /projects/bddt/$USERNAME/btree_chromo_workspace/examples/preparing_chromosome
+ls
 
 ```
 
