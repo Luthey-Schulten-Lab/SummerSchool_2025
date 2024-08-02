@@ -358,11 +358,11 @@ In VMD, delete the previous two molecules. Open the VMD TkConsole and do (Extens
 ### Calculate and plot the Radius of Gyration
 We'll write a small script in the Tcl Console to calculate the radius of gyration for each frame of the trajectory and store the results.
 
-Define Variables to Store Data:
+Define Variables for the output file and number of frames:
 
 ```bash
+set outfile [open "rgyr_vs_frame.txt" w]
 set num_frames [molinfo top get numframes]
-set rg_values {}
 ```
 
 Loop Over All Frames:
@@ -372,39 +372,62 @@ for {set i 0} {$i < $num_frames} {incr i} {
     animate goto $i
     set DNA [atomselect top {vy>2}]
     set rg [measure rgyr $DNA]
-    lappend rg_values $rg
+    puts $outfile "$i $rg"
 }
 ```
 
 This script calculates the radius of gyration for all atoms in each frame and stores the values in the list rg_values.
 
-Next, we'll plot the radius of gyration values using VMD's graph command.
+Next, save the data to the designated output file:
 
 ```bash
-proc plot_rgyr {} {
-    global rg_values
-    set num_frames [llength $rg_values]
-    set plot_id [graph plot]
-
-    # Plot each point
-    for {set i 0} {$i < $num_frames} {incr i} {
-        graph plot $plot_id point $i [lindex $rg_values $i]
-    }
-
-    # Label the plot
-    graph title $plot_id "Radius of Gyration vs. Frame"
-    graph xlabel $plot_id "Frame"
-    graph ylabel $plot_id "Radius of Gyration (Å)"
-}
+close $outfile
 ```
+To visualize the change in RoG over time, we can use the following python script:
+```python
+import matplotlib.pyplot as plt
 
-Call the Function to Display the Plot:
+# Read the data from the file
+frames = []
+rgy_values = []
 
-```bash
-plot_rgyr
+with open("rgyr_vs_frame.txt", "r") as file:
+    for line in file:
+        frame, rg = line.split()
+        frames.append(int(frame))
+        rgy_values.append(float(rg))
+
+# Get the initial radius of gyration value for percentage calculation
+initial_rg = rgy_values[0]
+
+# Calculate the percentage values
+percentage_values = [(rg / initial_rg) * 100 for rg in rgy_values]
+
+# Create the plot
+fig, ax1 = plt.subplots(figsize=(10, 6))
+
+# Plot radius of gyration on the primary y-axis
+ax1.plot(frames, rgy_values, marker='o', linestyle='-', color='b', label='Radius of Gyration', linewidth=1)
+ax1.set_xlabel('Frame')
+ax1.set_ylabel('Radius of Gyration (Å)', color='b')
+ax1.tick_params(axis='y', labelcolor='b')
+ax1.grid(True)
+
+# Create a secondary y-axis for percentage values
+ax2 = ax1.twinx()
+ax2.plot(frames, percentage_values, marker='o', linestyle='--', color='r', label='Percentage of Initial Value', linewidth=1)
+ax2.set_ylabel('Percentage of Initial Radius of Gyration (%)', color='r')
+ax2.tick_params(axis='y', labelcolor='r')
+
+# Add titles and labels
+plt.title('Radius of Gyration vs. Frame')
+
+# Save the plot as a PNG file
+plt.savefig("radius_of_gyration_vs_frame.png")
+
+# Show the plot
+plt.show()
 ```
-
-This function initializes a plot, iterates through the rg_values list, and plots each point corresponding to a frame. It then labels the plot appropriately.
 
 ## References
 [^gilbert2023]: Gilbert, Benjamin R., Zane R. Thornburg, Troy A. Brier, Jan A. Stevens, Fabian Grünewald, John E. Stone, Siewert J. Marrink, and Zaida Luthey-Schulten. “Dynamics of Chromosome Organization in a Minimal Bacterial Cell.” Frontiers in Cell and Developmental Biology 11 (August 9, 2023). https://doi.org/10.3389/fcell.2023.1214962.
