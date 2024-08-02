@@ -370,8 +370,8 @@ Loop Over All Frames:
 ```bash
 for {set i 0} {$i < $num_frames} {incr i} {
     animate goto $i
-    set all [atomselect top all]
-    set rg [measure rgyr $all]
+    set DNA [atomselect top {vy>2}]
+    set rg [measure rgyr $DNA]
     lappend rg_values $rg
 }
 ```
