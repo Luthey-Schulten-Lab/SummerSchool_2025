@@ -29,13 +29,13 @@ ZLS group member Ben Gilbert (recently graduated) wrote the program and used it 
 
 | <img src="./figures/1.%20Introduction%20to%20simulation%20with%20btree_chromo%20and%20LAMMPS/division_2chromo_5000bp_separation.png" width="300"/>  | <img src="./figures/1.%20Introduction%20to%20simulation%20with%20btree_chromo%20and%20LAMMPS/partition.png" width="300"/> |
 |:--:|:--:|
-| Figure 1: Cell division of 50 kbp toy model | Figure 2: DNA partitioning of 543 kbp model |
+| Figure 1: Cell division of 50 kbp toy model. A repulsive force between the two circular DNA strands (blue, red) helps to partition DNA into the two sides of the cell, accompanying the cell membrane (green) shape change during cell division. | Figure 2: DNA partitioning of 543 kbp model. SMC looping and topoisomerase action has been performed corresponding to the biological time DNA replication (~60 mins), along with Brownian dynamics timesteps that amount to 20 ms of biological time |
 
 </div>
 Today you will be running simulations using a variant of LAMMPS which utilizes the GPUs on the Delta HPC cluster. We will simulate the entire minimal cell including the effects of SMC proteins, topoisomerase, and Brownian dynamics. 
 
 ## 2. Setting up and running your first simulation on Delta
-In this section, we will log on to Delta and launch a container which has btree_chromo and LAMMPS already installed. Using that container, we will start running a simulation of the minimal cell chromosome. The reason we are doing this first, is so that the simulation will be left running throughout our time slot. At the end of this tutorial, we will visualize and analyze the results of our simulations.
+In this section, we will log on to Delta and launch a container which has btree_chromo and LAMMPS already installed. Then, we will start running a simulation of the minimal cell chromosome. The reason we are doing this first, is so that the simulation will be left running throughout the tutorial. At the end of this tutorial, we will visualize and analyze the results of our simulations.
 
 **Step 1: Log in to Delta**
 
@@ -52,7 +52,7 @@ You will need to replace $USERNAME with your own.
 **Step 2: Create workspace and copy examples folder**
 
 ```bash
-bash /projects/bcuj/sharefile/Workshop_2024/DNA_model/prelaunch_btree_chromo.sh
+bash /projects/bddt/DNA/prelaunch_btree_chromo.sh
 
 ```
 
@@ -61,20 +61,20 @@ This bash script creates a workspace `/projects/bcuj/${USER}/btree_chromo_worksp
 **Step 3: Launch the container**
 
 ```bash
-bash /projects/bcuj/sharefile/Workshop_2024/DNA_model/launch_btree_chromo.sh
+bash /projects/bddt/DNA/launch_btree_chromo.sh
 
 ```
 
 This will run the container in interactive mode. You should now see the `Apptainer>` prompt which indicates your have entered the container. We will be running btree_chromo and viewing the terminal output in the container.
 
 **Important:** The btree_chromo  exectuable is within the container in `/Software/btree_chromo/build/apps/`. \
-**Important:** We have mounted `/projects/bcuj/${USER}/btree_chromo_workspace/examples` into the container in `/mnt/examples`. All changes made in the workspace will be reflected in the container.
+**Important:** We have mounted `/projects/bddt/${USER}/btree_chromo_workspace/examples` into the container in `/mnt/examples`. All changes made in the workspace will be reflected in the container.
 
 **Step 4: Open a new terminal window**\
 In a new terminal window, repeat step 1 and
 
 ```bash
-cd  /projects/bcuj/${USER}/btree_chromo_workspace/examples
+cd  /projects/bddt/${USER}/btree_chromo_workspace/examples
 
 ```
 
@@ -109,17 +109,24 @@ In the **Apptainer terminal**:
 ./btree_chromo /mnt/examples/full_model.inp
 
 ```
+This command starts a simulation of the full 543 kbp chromosome in a 500 nm diameter spherical cell. By the end of this tutorial, our goal is to understand what is going on in the simulation, the contents of the input file `full_model.inp`, as well as some background biological knowledge.
 
 ## 3. Modeling the Minimal Cell replication and initial structure
-In this section 
+In this section you will learn about DNA replication in the minimal cell, and how to represent replication states with a binary tree model. You will also learn how we generate initial conditions for the chromsome and ribosome bead positions.
 
 ### Modeling Replication States
 
-In this section, you will learn how to represent replication states, including nested theta structures, with a binary tree model. You will also get some practice with navigating directories in a linux terminal.
+The JCVI-syn3A minimal cell has a 543379 bp (543 kbp) genome comprised of 493 genes. This means an unreplicated chromosome is represented as a circular polymer of 54338 beads. DNA replication, even in the minimal cell where the replication machinery retains only the essential components, is still rather complicated. For today, all we need to understand is that replication begins at a location on the genome called the origin (_Ori_), proceeds along the DNA in the clockwise and counterclockwise directions with Y-shaped structures (Fork), and ends at the terminal site, also called the terminus (_Ter_). 
 
-<img align="center" width="800" src="./figures/3. Modeling the minimal cell/replication_topology_0.png">
+We can use a binary tree to represent the replication state of the chromosome. An unreplicated chromosome is represented by a single node, which we call the mother (m). When unreplicated, the chromosome is circular. As replication proceeds (starting from the _Ori_, along the Forks), the mother branches into two nodes, which we call the left and right daughters (ml and mr). The structure is now no longer circular; it is now called a "theta structure" due to its resemblance to the Greek letter $\theta$. Both the left and right daughters have their own _Ori_'s, so in principle, they could begin to replicate too. 
 
-In **Editor terminal**,
+In the figure below we illustrate replication of a 100 bead chromsome. The origin is depicted in red, the terminus, in orange, and forks in magenta. For each of the four stages of replication, we show the theta structure, the binary tree representation, the physical structure, and finally the bond topology. The bond topology displays all monomers using a colorbar, with the orange arc representing the bond at the terminus, and the pink arcs representing the bonds between the strand of newly created beads at the forks.
+
+<img align="center" width="1000" src="./figures/3. Modeling the minimal cell/replication_topology_0.png">
+
+**Figure 3: Representing replication states.**  For an unreplicated (left) and partially replicated (right) chromosome, the theta structure is shown in the top-left, the binary tree representation in the top-middle, the physical model in the top-right, and the bond topology of the physical model in the bottom. _Ori_, _Ter_, and Forks given in red, orange, and magenta respectively.
+
+Quickly, let's see how btree_chromo handles replication states. In **Editor terminal**,
 
 ```bash
 ls /preparing_chromosome
@@ -179,38 +186,26 @@ total_size = 1300
   | start_link = 299, end_link = 600
 
 ```
+This is a very thorough way of keeping track of what each bead corresponds to in your simulation. If one needs to simulate complicated theta structures, then keeping track of replication states this way is helpful. For our purposes, we don't need to worry about the binary tree formalism too much.
+
+For our simulations, we implement the "train-track" model of bacterial DNA replication (Gogou), where replisomes independently move along the opposite arms of the mother chromosome at each replication fork, replicating the DNA. There is another model called the "replication factory" model, but since Syn3A has so few regulatory mechanisms, this second one unlikely. (Plus, the train track model is also more consistent with our understanding of replication initiation (Thornburg).) In our implementation, new monomers are added to the left and right daughter chromosomes during replication by creating pairs of monomers centered around the corresponding position of the mother chromosome's monomers. 
+
 <img align="center" width="800" src="./figures/3. Modeling the minimal cell/replication_topology_partB_horizontal_rep_only_0.png">
 
+**Figure 4: Replication with train-track model.**  Starting with an unreplicated Syn3A chromosome (543,379 bp) inside a 200 nm radius cell with 500 ribosomes, 20,000 bp (2,000 monomers) were replicated using the train-track model (refer to the schematic). Circles are used to highlight the origins of replication (Oris), termination sites (Ter), and replication forks in the replicated system.
+
+
 ### Growing the DNA
-<img align="right" width="300" src="./figures/3. Modeling the minimal cell/sc_growth_composite_0.png">
-At the start of every simulation, we need initial coordinates for the 
+<img align="right" width="500" src="./figures/3. Modeling the minimal cell/sc_growth_composite_0.png">
 
-Next, in the **Editor terminal**, move to the next example in `examples/preparing_physical_structure`.
-There are several file types in this directory. Here are what they are used for:
+At the start of every simulation, we need initial configuration, i.e. coordinates for the DNA, ribosomes, and cell membrane. Initial configurations for the chromosome are generated using a midpoint-displacement algorithm that creates three-dimensional, closed curves formed from overlapping spherocylinder segments. We assume a spherical cell with a known ribosome distribution (nearly randomly distributed, according to Cryo-ET), and "grow in" a self-avoiding chain of these spherocylinders. This process involves adding segments iteratively while avoiding overlaps with ribosomes and preventing knots. Spherical monomers are then interpolated along the spherocylinders. This method accurately models the "fractal globule" chromosome configuration present in Syn3A cells.
 
-| File type | Description |
-| --- | --- |
-| .inp | directives (commands to be executed by btree_chromo) |
-| .dat | replication state |
-| .xyz | monomer coordinates for quick visualization |
-| .bin | monomer/ribosome coordinates (binary) |
-| data. | LAMMPS data file |
+We won't use it here, but the code for performing this algorithm is available at [github.com/brg4/sc_chain_generation](https://github.com/brg4/sc_chain_generation). For our simulation, we used coordinates generated from this program. 
+
+See the figure on the right for  a schematic of algorithm used to generate initial conditions of the chromosome. The beads coordinates generated by this algorithm are somewhat jagged, but an energy minimization will relax the structure. We will discuss energy minimizations in the next section.
 
 ## 4. Modeling Chromosome Dynamics
 
-Take a look in the provided README for btree_chromo: [github.com/brg4/btree_chromo](https://github.com/brg4/btree_chromo). Scroll past the description and installation steps to see the list of possible directives.
-Let's focus our attention on the commands that we can use to toggle various aspects of the Brownian dynamics simulation in LAMMPS, under Spatial System for Simulations: bonds, bending angles, and twisting angles.
-
-| Directive | Description |
-| --- | --- |
-| switch_bonds:(T/F) | enable/disable bonds between DNA monomers (default T) |
-| switch_bending_angles:(T/F) | enable/disable bending angles between DNA monomers (default T) |
-| switch_twisting_angles:(T/F) | enable/disable twisting angles between DNA monomers (default T) |
-
-*Note: these directives must be used prior to 'write_LAMMPS_data_file' to take effect*.
-By turning off these switches, we are effectively removing terms from the whole energy function that correspond to adjacent-monomer interactions in the DNA polymer:
-$$U= \sum_{i=1}^{N_{\mathrm{DNA}}}\left[U_i^b+U_i^t+U_i^a+U_i^s\right] +\sum_{i=1}^{N_{\mathrm{DNA}}-1} \sum_{j=i+1}^{N_{\mathrm{DNA}}} U_{i j}^{\mathrm{DNA}-\mathrm{DNA}}+\sum_{i=1}^{N_{\mathrm{DNA}}} \sum_j^{N_{\text {ribo }}} U_{i j}^{\mathrm{DNA}-\text { ribo }} +\sum_{i=1}^{N_{\text {ribo }}-1} \sum_{j=i+1}^{N_{\text {ribo }}} U_{i j}^{\text {ribo-ribo }} +\sum_{i=1}^{N_{\text {bdry }}} \sum_j^{N_{\mathrm{DNA}}} U_{i j}^{\text {bdry-DNA }}+\sum_{i=1}^{N_{\text {bdry }}} \sum_j^{N_{\text {ribo }}} U_{i j}^{\text {bdry-ribo }}.$$
-Turning off bending removes the $U_i^b$ (cosine potential for bending), turning off twisting removes the $U_i^t$ and $U_i^a$ (cosine potentials for twisting and aligning), and turning off bonds will remove all of these as well as the $U_i^s$ (FENE potentials for stretching) resulting in separate diffusing DNA monomers rather than a DNA polymer. The other five terms in the energy function are for excluded volume interactions (purely repulsive Weeks-Chandler-Andersen (WCA) pair potentials).
 
 |**Bending:** |**Twisting** | **Stretching** | **Excluded Volume** |
 |:--:|:--:|:--:|:--:|
@@ -224,7 +219,6 @@ In the current version of btree_chromo, we neglect the twisting potential for ne
 In btree_chromo, we simulate dynamics of the DNA and ribosomes using a GPU-accelerated version of the Brownian dynamics integrator, which performs time-integration to update the coordinates of each of the beads. Let's quickly go through how the Brownian dynamics integrator works. First, recall how the acceleration of each bead is related to the net force on that bead and it's mass, which is given by Newton's second law. For bead $i$, which has mass $m_i$, Newton's second law reads
 
 insert images here
-
 
 For simulating the influence of loops and topoisomerase, the relevant directives are described in the [README](https://github.com/brg4/btree_chromo/) under Simulator:
 
@@ -277,6 +271,20 @@ The effect of SMC looping during the minimal cell replication cycle is not fully
 Recall that 
 
 ## 5. Understanding btree_chromo Commands
+
+Take a look in the provided README for btree_chromo: [github.com/brg4/btree_chromo](https://github.com/brg4/btree_chromo). Scroll past the description and installation steps to see the list of possible directives.
+Let's focus our attention on the commands that we can use to toggle various aspects of the Brownian dynamics simulation in LAMMPS, under Spatial System for Simulations: bonds, bending angles, and twisting angles.
+
+| Directive | Description |
+| --- | --- |
+| switch_bonds:(T/F) | enable/disable bonds between DNA monomers (default T) |
+| switch_bending_angles:(T/F) | enable/disable bending angles between DNA monomers (default T) |
+| switch_twisting_angles:(T/F) | enable/disable twisting angles between DNA monomers (default T) |
+
+*Note: these directives must be used prior to 'write_LAMMPS_data_file' to take effect*.
+By turning off these switches, we are effectively removing terms from the whole energy function that correspond to adjacent-monomer interactions in the DNA polymer:
+$$U= \sum_{i=1}^{N_{\mathrm{DNA}}}\left[U_i^b+U_i^t+U_i^a+U_i^s\right] +\sum_{i=1}^{N_{\mathrm{DNA}}-1} \sum_{j=i+1}^{N_{\mathrm{DNA}}} U_{i j}^{\mathrm{DNA}-\mathrm{DNA}}+\sum_{i=1}^{N_{\mathrm{DNA}}} \sum_j^{N_{\text {ribo }}} U_{i j}^{\mathrm{DNA}-\text { ribo }} +\sum_{i=1}^{N_{\text {ribo }}-1} \sum_{j=i+1}^{N_{\text {ribo }}} U_{i j}^{\text {ribo-ribo }} +\sum_{i=1}^{N_{\text {bdry }}} \sum_j^{N_{\mathrm{DNA}}} U_{i j}^{\text {bdry-DNA }}+\sum_{i=1}^{N_{\text {bdry }}} \sum_j^{N_{\text {ribo }}} U_{i j}^{\text {bdry-ribo }}.$$
+Turning off bending removes the $U_i^b$ (cosine potential for bending), turning off twisting removes the $U_i^t$ and $U_i^a$ (cosine potentials for twisting and aligning), and turning off bonds will remove all of these as well as the $U_i^s$ (FENE potentials for stretching) resulting in separate diffusing DNA monomers rather than a DNA polymer. The other five terms in the energy function are for excluded volume interactions (purely repulsive Weeks-Chandler-Andersen (WCA) pair potentials).
 
 ## 6. Visualization and analysis with VMD
 
