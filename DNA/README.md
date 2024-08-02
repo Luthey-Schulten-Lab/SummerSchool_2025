@@ -215,7 +215,7 @@ The drag force is proportional to the bead's velocity, $\mathbf{v} = \text{d}\ma
 
 <img align="center" height=25 src="./figures/4. Modeling chromosome dynamics/Stokes-Einstein_eq.png">
 
-Plugging this in and dividing by $\gamma_i$, we obtain the Langevin equation of motion:
+Plugging in $F_{\text{drag}} = -\gamma_i v_i$ and dividing by $\gamma_i$, we obtain the Langevin equation of motion:
 
 <img align="center" height=50 src="./figures/4. Modeling chromosome dynamics/Langevin_eq.png">
 
