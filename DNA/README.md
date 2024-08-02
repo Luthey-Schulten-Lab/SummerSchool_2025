@@ -3,7 +3,9 @@
 ## Description:
 <img align="right" width="300" src="./figures/1. Introduction to simulation with btree_chromo and LAMMPS/initial_state.png">
 
-The purpose of this tutorial is to give you a crash course on modeling and simulating the bacterial chromosome. You will be introduced to the minimal cell chromosome: it’s structure, interactions it has with proteins, and how it replicates. We will walk you through how to set up and run a simulation using the program btree_chromo, on the Delta HPC cluster. The coarse-grained model of the DNA, ribosomes and cell membrane will be discussed, as well as the use of LAMMPS to perform energy minimizations and Brownian dynamics. We will also go into greater detail about how we model biological mechanisms such as SMC looping and topoisomerase. Finally, you will get a chance to visualize and analyze a simulation trajectory in VMD.
+The purpose of this tutorial is to give you a crash course on modeling and simulating the bacterial chromosome. 
+
+We will walk you through how to set up and run a simulation using the program btree_chromo, on the Delta HPC cluster. The coarse-grained model of the DNA, ribosomes and cell membrane will be discussed, as well as the use of LAMMPS to perform energy minimizations and Brownian dynamics. We will also go into greater detail about how we model biological mechanisms such as SMC looping and topoisomerase. Finally, you will get a chance to visualize and analyze a simulation trajectory in VMD.
 
 *This tutorial was prepared for the STC QCB Summer School, held during August of 2024.*
 
@@ -24,7 +26,7 @@ Here, we simulate DNA replication and dynamics using the C++ program btree_chrom
 
 The DNA that btree_chromo simulates is coarse-grained at a 10 bp resolution. This means that a single, 3.4 nm diameter bead is used to represent 10 base pairs. We also use beads to represent ribosomes (10 nm), and the cell membrane. The program emulates the effects of SMC (structural maintenence of chromosomes) proteins that extrude loops of DNA to effect chromosome organization, as well as type II topoisomerases which allow for DNA strand crossings when they become tangled.
 
-ZLS group member Ben Gilbert (recently graduated) wrote the program and used it to investigate chromosome disentanglement of replicated DNA strands and partitioning of the daughter strands into separate halves of a toy model cell (50 kbp genome), as well as create chromosome contact maps based on the simulated trajectories ([Gilbert 2023](https://www.frontiersin.org/journals/cell-and-developmental-biology/articles/10.3389/fcell.2023.1214962/full)). Ongoing research using btree_chromo involves integrating btree_chromo with Lattice Microbes, as well as investigating disentanglement and partitioning of a full minimal cell model (543 kbp genome). 
+ZLS group member Ben Gilbert (recently graduated) wrote the program and used it to investigate chromosome disentanglement of replicated DNA strands and partitioning of the daughter strands into separate halves of a toy model cell (50 kbp genome), as well as create chromosome contact maps based on the simulated trajectories[^gilbert2023]. Ongoing research using btree_chromo involves integrating btree_chromo with Lattice Microbes, as well as investigating disentanglement and partitioning of a full minimal cell model (543 kbp genome). 
 
 <div align="center">
 
@@ -33,10 +35,14 @@ ZLS group member Ben Gilbert (recently graduated) wrote the program and used it 
 | Figure 1: Cell division of 50 kbp toy model. A repulsive force between the two circular DNA strands (blue, red) helps to partition DNA into the two sides of the cell, accompanying the cell membrane (green) shape change during cell division. | Figure 2: DNA partitioning of 543 kbp model. SMC looping and topoisomerase action has been performed corresponding to the biological time DNA replication (~60 mins), along with Brownian dynamics timesteps that amount to 20 ms of biological time |
 
 </div>
-Today you will be running simulations using a variant of LAMMPS which utilizes the GPUs on the Delta HPC cluster. We will simulate the entire minimal cell including the effects of SMC proteins, topoisomerase, and Brownian dynamics. 
+Today you will run a simulation using a variant of LAMMPS which utilizes the GPUs on the Delta HPC cluster. We will simulate the entire minimal cell including the effects of SMC proteins, topoisomerase, and Brownian dynamics. 
 
 ## 2. Setting up and running your first simulation on Delta
-In this section, we will log on to Delta and launch a container which has btree_chromo and LAMMPS already installed. Then, we will start running a simulation of the minimal cell chromosome. The reason we are doing this first, is so that the simulation will be left running throughout the tutorial. At the end of this tutorial, we will visualize and analyze the results of our simulations.
+In this section, we will log on to Delta and launch a container which has btree_chromo and LAMMPS already installed. Then, we will start running a simulation of the minimal cell chromosome. 
+
+> [!NOTE]
+The reason we are doing this first, is so that the simulation will be left running throughout the tutorial. At the end of this tutorial, we will visualize and analyze the results of our simulations.
+> 
 
 **Step 1: Log in to Delta**
 
@@ -68,43 +74,16 @@ bash /projects/bddt/DNA/launch_btree_chromo.sh
 
 This will run the container in interactive mode. You should now see the `Apptainer>` prompt which indicates your have entered the container. We will be running btree_chromo and viewing the terminal output in the container.
 
-**Important:** The btree_chromo  exectuable is within the container in `/Software/btree_chromo/build/apps/`. \
-**Important:** We have mounted `/projects/bddt/${USER}/btree_chromo_workspace/examples` into the container in `/mnt/examples`. All changes made in the workspace will be reflected in the container.
+**Step 4: Run btree_chromo**
 
-**Step 4: Open a new terminal window**\
-In a new terminal window, repeat step 1 and
-
-```bash
-cd  /projects/bddt/${USER}/btree_chromo_workspace/examples
-
-```
-
-Viewing and editing of the example files will be done within this terminal window.
-
-### Typical Workflow:
-
-The general workflow for running **btree_chromo** is as follows:
-
-1. Prepare an input file (*directives.inp*) containing the directives to be executed by the binary tree program. Lines beginning with '#' are ignored.
-2. Prepare any auxiliary input files needed for the chosen directives.
-3. Run with: `./btree_chromo (some location)/(some name)_directives.inp`
-
-> [!IMPORTANT]
-We will henceforth refer to the terminal running the container as "**Apptainer terminal**", and the teminal for viewing and editing files, such as directives files, as the "**Editor terminal**".
-> 
-
-Next, we will run the program in the **Apptainer terminal**. First, change directories to where the executable is located:
-
-In the **Apptainer terminal**:
+In the container, please navigate into the folder where the btree_chromo executable is located:
 
 ```bash
 cd /Software/btree_chromo/build/apps
 
 ```
 
-Next, in the **Apptainer terminal** run 'full_model.inp'.
-
-In the **Apptainer terminal**:
+Next, run 'full_model.inp'. Do the command:
 
 ```bash
 ./btree_chromo /mnt/examples/full_model.inp
@@ -193,7 +172,7 @@ total_size = 1300
 ```
 This is a very thorough way of keeping track of what each bead corresponds to in your simulation. If one needs to simulate complicated theta structures, then keeping track of replication states this way is helpful. For our purposes, we don't need to worry about the binary tree formalism too much.
 
-For our simulations, we implement the "train-track" model of bacterial DNA replication (Gogou), where replisomes independently move along the opposite arms of the mother chromosome at each replication fork, replicating the DNA. There is another model called the "replication factory" model, but since Syn3A has so few regulatory mechanisms, this second one unlikely. (Plus, the train track model is also more consistent with our understanding of replication initiation (Thornburg).) In our implementation, new monomers are added to the left and right daughter chromosomes during replication by creating pairs of monomers centered around the corresponding position of the mother chromosome's monomers. 
+For our simulations, we implement the "train-track" model of bacterial DNA replication (Gogou), where replisomes independently move along the opposite arms of the mother chromosome at each replication fork, replicating the DNA. There is another model called the "replication factory" model, but since Syn3A has so few regulatory mechanisms, this second one unlikely. (Plus, the train track model is also more consistent with our understanding of replication initiation[^thornburg2022].) In our implementation, new monomers are added to the left and right daughter chromosomes during replication by creating pairs of monomers centered around the corresponding position of the mother chromosome's monomers. 
 
 <img align="center" width="800" src="./figures/3. Modeling the minimal cell/replication_topology_partB_horizontal_rep_only_0.png">
 
@@ -248,31 +227,67 @@ LAMMPS uses this equation to update positions, according to a simple first order
 
 Both Langevin and Brownian dynamics can be used to correctly sample the NVT ensemble, but Brownian dynamics is preferred in our case since it allows us to take comparatively large time steps. Brownian dynamics is also sometimes called overdamped Langevin dynamics. This approiximation is valid for timesteps that satisfy $\Delta t \gg m_i/\gamma_i$.
 
+### SMC looping and topoisomerases
+
 <img align="right" width=300 src="./figures/4. Modeling chromosome dynamics/DNA_model_looping_0.png">
 
-During the genome reduction process of Syn3A, guided by transposon mutagenesis studies on the original JCVI-syn1.0 genome and its intermediate reduced versions, it was found that structural maintenence of chromosomes (SMC) proteins were essential. However, the effect of SMC looping during the minimal cell replication cycle is not fully understood. While magnetic tweezer experiments have been done to determine loop extrusion step size of ~200 bp/s (Ryu et al, NAR 2022) and simulations indicate an extrusion frequency of ~2.5 steps/s (Nomidis et al, NAR 2022), we have limited experimental results for SMC looping in the crowded in-cell environment. btree_chromo allows us to investigate SMC looping through adjustment of simulation parameters.
+During the genome reduction process of Syn3A, guided by transposon mutagenesis studies on the original JCVI-syn1.0 genome and its intermediate reduced versions, it was found that structural maintenence of chromosomes (SMC) proteins were essential. However, the effect of SMC looping during the minimal cell replication cycle is not fully understood. While magnetic tweezer experiments have been done to determine loop extrusion step size of ~200 bp/s[^ryu2022], and simulations indicate an extrusion frequency of ~2.5 steps/s[^nomidis2022], we have limited experimental results for SMC looping in the crowded in-cell environment. 
+
+The simulation methodology we use for SMC looping is that of Bonato and Michieletto, in which DNA loops are created by adding harmonic bonds bewteen "anchor" and "hinge" monomers. Updating the hinge locations causes loop extrusion, as illustrated in the figure to the right. 
 
 | Parameter | Description |
 | --- | --- |
-| Total number of loops | Number of active anchor+hinge pairs that are extruding loops |
-| Loop extrusion frequency (s^-1) | How often does loop extrusion occur? Our best estimate (Nomidis et al) is around every 0.4 s |
-| Unbind/Rebind frequency (s^-1) | How often does the anchor move to a new location? After 90 extrusion steps? Less? |
-| Extrusion step size (bp) | ~200 bp (Ryu et al) |
+| Total number of loops | Number of active anchor+hinge pairs that are extruding loops. We know that there are ~100 SMC dimers[^gilbert2023]. |
+| Loop extrusion frequency (s^-1) | How often does loop extrusion occur? Our best estimate is around every 0.4 s[^nomidis2022]. |
+| Unbind/Rebind frequency (s^-1) | How often does the anchor move to a new location? |
+| Extrusion step size (bp) | ~200 bp[^ryu2022]|
 
-Also found to be essential were topoisomerases. 
+
+Also found to be essential were topoisomerases. There is evidence for coordination between topoisomerases and SMC complexes[^zawadzki2015]. For our simulations, topoisomerase is modeled by periodically running a set of minimizations and Brownian dynamics steps with DNA-DNA pair interactions replaced by soft potentials, which permits strand-crossings.
 
 ## 5. Understanding btree_chromo Commands
 
+Let's take a look in `full_model.inp` to get a feel for how to write input files for btree_chromo. You can either use a text editor to open the file in your terminal window, or simply view it on github at [files/full_model.inp](https://github.com/enguangfu/SummerSchool_2024/blob/main/DNA/files/full_model.inp).
+
+```bash
+switch_skip_runs:F
+new_chromo:54338
+load_BD_lengths:/home/andrew/Desktop/Projects/for_Andrew_fullChromo_withGrowth_Test_Protocol/in_BD_lengths_LAMMPS_test.txt
+load_mono_coords:/home/andrew/Data/btree_chromo/BD_kk_testing/mono_coords_minimized.bin,row
+load_bdry_coords:2500A_bdry.bin,row
+prepare_simulator:/home/andrew/Data/btree_chromo/BD_kk_testing/logfile0.log
+simulator_set_prng_seed:42
+simulator_set_nProc:8
+simulator_set_DNA_model:/home/andrew/Desktop/Projects/btree_chromo/LAMMPS_DNA_model_kk
+simulator_set_output_details:/home/andrew/Data/btree_chromo/BD_kk_testing/,division_withmin
+simulator_set_delta_t:1.0E+5
+```
+These commands create a new chromosome and load in coordinates for the DNA and boundary, creates output files, sets the LAMMPS random number generator seed, and sets the timestep to 0.1 ns
 
 ```bash
 switch_twisting_angles: F
 ```
-enable/disable twisting angles between DNA monomers (default T). Turning off twisting removes the $U_i^t$ and $U_i^a$ (cosine potentials for twisting and aligning).
+This command disables twisting angles between DNA monomers (default T). Turning off twisting removes the $U_i^t$ and $U_i^a$ (cosine potentials for twisting and aligning).
 
 ```bash
-simulator_run_loops:F,100,200000,50000,2000000,append,nofirst
+simulator_minimize_soft_harmonic:500
 ```
-Run Brownian dynamics with the hard/FENE potential for Nsteps with Nloops randomly placed, while printing thermodynamic information every Tfreq steps and dumping every Dfreq steps.
+This performs an energy minimization according to the [conjugate gradient algorithm](https://docs.lammps.org/minimize.html).
+
+``bash
+sync_simulator_and_system
+set_initial_state
+transform:m_cw1360_ccw1360
+set_final_state
+map_replication
+sys_write_sim_read_LAMMPS_data:/home/andrew/Data/btree_chromo/BD_kk_testing/data.lammps_0
+```
+
+
+```bash
+simulator_run_loops:F,100,200000,50000,20000,append,nofirst
+```
+This command runs Brownian dynamics with the hard/FENE potential for 200k timesteps with 100 loops randomly placed, while printing thermodynamic information every 50k steps and dumping the coordintaes every 20k steps.
 
 If we take a look at loop_params.txt, we find that it specifies the minimum number of monomers separating anchor and hinge, the distribution of extrusion steps, hinge unbinding probability and grab radius, loop update frequency and topoisomerase relaxation frequency.
 
@@ -340,18 +355,61 @@ In VMD, delete the previous two molecules. Open the VMD TkConsole and do (Extens
 | Anchor | black | 19.5 |
 | Hinge | white | 19.5 |
 
+### Calculate and plot the Radius of Gyration
+We'll write a small script in the Tcl Console to calculate the radius of gyration for each frame of the trajectory and store the results.
+
+Define Variables to Store Data:
+
+```bash
+set num_frames [molinfo top get numframes]
+set rg_values {}
+```
+
+Loop Over All Frames:
+
+```bash
+for {set i 0} {$i < $num_frames} {incr i} {
+    animate goto $i
+    set all [atomselect top all]
+    set rg [measure rgyr $all]
+    lappend rg_values $rg
+}
+```
+
+This script calculates the radius of gyration for all atoms in each frame and stores the values in the list rg_values.
+
+Next, we'll plot the radius of gyration values using VMD's graph command.
+
+```bash
+proc plot_rgyr {} {
+    global rg_values
+    set num_frames [llength $rg_values]
+    set plot_id [graph plot]
+
+    # Plot each point
+    for {set i 0} {$i < $num_frames} {incr i} {
+        graph plot $plot_id point $i [lindex $rg_values $i]
+    }
+
+    # Label the plot
+    graph title $plot_id "Radius of Gyration vs. Frame"
+    graph xlabel $plot_id "Frame"
+    graph ylabel $plot_id "Radius of Gyration (Å)"
+}
+```
+
+Call the Function to Display the Plot:
+
+```bash
+plot_rgyr
+```
+
+This function initializes a plot, iterates through the rg_values list, and plots each point corresponding to a frame. It then labels the plot appropriately.
+
 ## References
 [^gilbert2023]: Gilbert, Benjamin R., Zane R. Thornburg, Troy A. Brier, Jan A. Stevens, Fabian Grünewald, John E. Stone, Siewert J. Marrink, and Zaida Luthey-Schulten. “Dynamics of Chromosome Organization in a Minimal Bacterial Cell.” Frontiers in Cell and Developmental Biology 11 (August 9, 2023). https://doi.org/10.3389/fcell.2023.1214962.
-[]:
-[]:
-[]:
-[]:
-
-## Links
-
-1. [Public version of btree_chromo code](https://github.com/brg4/btree_chromo/tree/master), including in-depth README with explanation of code, input commands, and numerous examples of input files
-2. [Ben’s paper](https://www.frontiersin.org/journals/cell-and-developmental-biology/articles/10.3389/fcell.2023.1214962/full) (goes along with code; investigates effect of topoisomerases and SMC looping)
-3. [Ryu et al](https://watermark.silverchair.com/gkab1268.pdf?token=AQECAHi208BE49Ooan9kkhW_Ercy7Dm3ZL_9Cf3qfKAc485ysgAAA3QwggNwBgkqhkiG9w0BBwagggNhMIIDXQIBADCCA1YGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMA59DoPedmilVf1DbAgEQgIIDJ8aawyI4vnwQVACfC477JCaN79RsA-0xR99FeUs_UrNv19E7fbB8MzTIoryPiah0rwNRefWkEijhBjOlQnLrTFWjdk5NofDT1Wsr-HC8S93hljm99r9JttImcTpmSpaMJJUeVfbWk2AjbwcfaENTPUYZ0IDMo8Hm7JG2_b1f6FixKjMXruoIMWRwICge2xphz31oDIWveArL9HxWF2MHuJyJOA4JQRRcS6v5NiBPtUb5_lpo5UpJmARTx4-P4Zv2v0fydjXJZHMaybmJBUapbfTFg2kOQ1Amra9tixr1qiaMw3T0_IISEJmQH5R1wL24F03jRx80NziAxEzxBq-BDQPn_-qbWFHIZSi1oCmmirw3BTS6aBmlv5D2vbbj6U28YtQuQ0VWc8RDuWZfnIHs1jQRc1wB4iDfX_4JmXGUpGq6Rs8f6RsX7jFL-y0sEi095YYGXABzIAFPa5kPowsluykXfDThHpGBGKOzx-sgVGF5fDsicafsPA6pSLNt1wbKGAcZkY8O1Ks9ZpiYdd9DNbO1X_doMkcO83uDD4RLqPDT59chj4ndUvz2qJ99XDrAq5bvuOj3z_y8BTJs4fn2lXphlAlGwQVCLBfg3sUV1HUZtK5SqTYm3Z8c9HuZvsxl0fBdNm-ustJftwNJV9E26lhfB0wGazO4WmY2UTyEIJ9Q0rpyDh4UOn9uNCtXybabKo2u7BRtirEOoP1JCT3-hRO5PUkJUToJXn9mRxJ03eVXtPqwic_oTxqwgVf0vqgs-Q_M5gRtAqvhN8QeZYB8Udi9Pv9ID3sknbfxOoy7SjjRiR5i4AsHBvyvAK2BSwFlwQ37o-wsRHV-fr-oIyGRZ9mFQikR6zNgF2Ry0oZtSCB2eRJwi3ABbVKR6qBu9XPVm1q3dDfTrm_s6ycYu2Ues_zaiNwp_QfMPN8nEuYHnl5WlVsbSKzbHhCbSboICGNbnklDxODznTLEvb-oObNcY6LXT7VheXl3iT_gapR7FoYf8H2-dAmo6FW51zwX5EwtCG1cFTo2QbQpXCXAE3nceOzm3lE2oqIXAJN7b_H7HR4DDFTFfGrnfA) (magnetic tweezers)
-4. [Nomidis et al](https://watermark.silverchair.com/gkac268.pdf?token=AQECAHi208BE49Ooan9kkhW_Ercy7Dm3ZL_9Cf3qfKAc485ysgAAA3MwggNvBgkqhkiG9w0BBwagggNgMIIDXAIBADCCA1UGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMTq-Fwt4IdPb2QsVkAgEQgIIDJnrY-47zEepn0CV_7_8nYkuAVVtWC5E7SEkZEIcc0LCf3MU1VrXVqrtSfiFexlwwUQUsY4NelEgiNVhH7Ci6RI_dhshO4kUrnkkZus1SlA_ShFjtwOdJp00JGvCejyFlafdStptVBByxY4pTITUcyW388ezKzqCnkG6jrXod7Jz4slJ0YTGkx72HijxUi9_03gUHb_tNfWVGV-NNg4eNM-DYgNTclMBp2jZ3k8t4iHsWVQJrNifKblG6Y-Af-Abg610YMn693SOqyF1V2H-cJIZD9pxL8PGUDInbggyb2y0qhTp0tMzRYmuBy7lhneiJodHJC8bgymGb08bssROO90dSENKVJ4w71ASTonM0ZTmDKk27DoQ_jWe2Y58grA6K_y-Ec_KTBsPF2XtltSpO6QZapEOlpOzMIq1bvMn2Z49ws8tEC7MSd4Bxgb-zvk7rx14nXEro4JnE1GDqWyIi_L7ctUpduMx_nq6txZonhgp-M9w7RIofbRAlp1lVO4uDyXdUAzSRUeTKd978jFsqMMHlimwyB2mDp2BeLmIfUH35EioDQBnIwpZrSmSXc2TC6KYlyQ3QrGhUuNx58eT3SPP3LbXa-D8hnEcdIx47GF_TSwnkx3bRO_J5FhVjAuUbi3-_EOVGaCscrs7iAAj2ZPTiYRsQUSTVcX-N_jExdmC52qGRdE0ujirZVsEBszbfcrX-7ZXAxf4vBvEIRM3KRjEsZW6RMJXCoIgfCgeYtTAz9m7oeDQXmEC04kwHcVxI3w9oqCjoKoZfDHjJQKNmBIvRbwd2JlQes-FloHz_0gLnEVORwEbIfSeLHCrIMCvMRPIE5RWVD3vZ1qjzSfmMDMuPEg-hLo6IQvhvi_CDjepcfDNqxsTk52pZT1os1aeK6JQ9awzKer0Ks0LYWAtZDvf79mGtve1TUTZdEu-DYH2WPrF80CnhbZALFgjvT4pTa1XAp_kliKAEVYLRqmenQmYqpVOCghn_MPc9fqw_yQXB_m3Q-ZxebGMX2udsZy_MGapfjy21UMD6kVrF7RB5EABMqboR_K1yQ5jjGLkB0mYjcTQ3hm9J) (MD simulation on ratcheting motion)
-5. Broedersz [google scholar page](https://scholar.google.com/citations?hl=en&user=xSgWTTQAAAAJ&view_op=list_works&sortby=pubdate)
-6. [Zawadzki et al](https://www.sciencedirect.com/science/article/pii/S2211124715013492?via%3Dihub) (topo coordination with SMC)
+[^thornburg2022]: Thornburg, Zane R., David M. Bianchi, Troy A. Brier, Benjamin R. Gilbert, Tyler M. Earnest, Marcelo C. R. Melo, Nataliya Safronova, et al. “Fundamental Behaviors Emerge from Simulations of a Living Minimal Cell.” Cell 185, no. 2 (January 20, 2022): 345-360.e28. https://doi.org/10.1016/j.cell.2021.12.025.
+[^ryu2022]: Ryu, Je-Kyung, Sang-Hyun Rah, Richard Janissen, Jacob W J Kerssemakers, Andrea Bonato, Davide Michieletto, and Cees Dekker. “Condensin Extrudes DNA Loops in Steps up to Hundreds of Base Pairs That Are Generated by ATP Binding Events.” Nucleic Acids Research 50, no. 2 (January 25, 2022): 820–32. https://doi.org/10.1093/nar/gkab1268.
+[^nomidis2022]: Nomidis, Stefanos K, Enrico Carlon, Stephan Gruber, and John F Marko. “DNA Tension-Modulated Translocation and Loop Extrusion by SMC Complexes Revealed by Molecular Dynamics Simulations.” Nucleic Acids Research 50, no. 9 (May 20, 2022): 4974–87. https://doi.org/10.1093/nar/gkac268.
+[^bonato2021]: Bonato, Andrea, and Davide Michieletto. “Three-Dimensional Loop Extrusion.” Biophysical Journal 120, no. 24 (December 2021): 5544–52. https://doi.org/10.1016/j.bpj.2021.11.015.
+[^zawadzki2015]: Zawadzki, Pawel, Mathew Stracy, Katarzyna Ginda, Katarzyna Zawadzka, Christian Lesterlin, Achillefs N. Kapanidis, and David J. Sherratt. “The Localization and Action of Topoisomerase IV in Escherichia Coli Chromosome Segregation Is Coordinated by the SMC Complex, MukBEF.” Cell Reports 13, no. 11 (December 22, 2015): 2587–96. https://doi.org/10.1016/j.celrep.2015.11.034.
