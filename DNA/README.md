@@ -274,7 +274,7 @@ simulator_minimize_soft_harmonic:500
 ```
 This performs an energy minimization according to the [conjugate gradient algorithm](https://docs.lammps.org/minimize.html).
 
-``bash
+```bash
 sync_simulator_and_system
 set_initial_state
 transform:m_cw1360_ccw1360
@@ -282,7 +282,7 @@ set_final_state
 map_replication
 sys_write_sim_read_LAMMPS_data:/home/andrew/Data/btree_chromo/BD_kk_testing/data.lammps_0
 ```
-
+These commands copy the LAMMPS simulation bead coordinates into the binary tree data structure in btree_chromo, replicates by moving both forks by 1360 beads, maps the binary tree structure back onto the bead coordinates, and then updates the bead coordinates in the LAMMPS simulation.
 
 ```bash
 simulator_run_loops:F,100,200000,50000,20000,append,nofirst
