@@ -189,11 +189,11 @@ total_size = 1300
 ```
 This is a very thorough way of keeping track of what each bead corresponds to in your simulation. If one needs to simulate complicated theta structures, then keeping track of replication states this way is helpful. For our purposes, we don't need to worry about the binary tree formalism too much.
 
-For our simulations, we implement the "train-track" model of bacterial DNA replication (Gogou), where replisomes independently move along the opposite arms of the mother chromosome at each replication fork, replicating the DNA. There is another model called the "replication factory" model, but since Syn3A has so few regulatory mechanisms, this second one unlikely. (Plus, the train track model is also more consistent with our understanding of replication initiation[^thornburg2022].) In our implementation, new monomers are added to the left and right daughter chromosomes during replication by creating pairs of monomers centered around the corresponding position of the mother chromosome's monomers. 
+For our simulations, we implement the "train-track" model of bacterial DNA replication[^gogou2021], where replisomes independently move along the opposite arms of the mother chromosome at each replication fork, replicating the DNA. There is another model called the "replication factory" model, but since Syn3A has so few regulatory mechanisms, this second one unlikely. (Plus, the train track model is also more consistent with our understanding of replication initiation[^thornburg2022].) In our implementation, new monomers are added to the left and right daughter chromosomes during replication by creating pairs of monomers centered around the corresponding position of the mother chromosome's monomers. 
 
 <img align="center" width="800" src="./figures/3. Modeling the minimal cell/replication_topology_partB_horizontal_rep_only_0.png">
 
-**Figure 4: Replication with train-track model.**  Starting with an unreplicated Syn3A chromosome (543,379 bp) inside a 200 nm radius cell with 500 ribosomes, 20,000 bp (2,000 monomers) were replicated using the train-track model (refer to the schematic). Circles are used to highlight the origins of replication (Oris), termination sites (Ter), and replication forks in the replicated system.
+**Figure 5: Replication with train-track model.**  Starting with an unreplicated Syn3A chromosome (543,379 bp) inside a 200 nm radius cell with 500 ribosomes (not shown), 20,000 bp (2,000 monomers) were replicated using the train-track model (refer to the schematic). Circles are used to highlight the origins of replication (Oris), termination sites (Ter), and replication forks in the replicated system.
 
 ## 4. Modeling Chromosome Dynamics
 
@@ -296,9 +296,9 @@ sys_write_sim_read_LAMMPS_data:/mnt/data.lammps_0
 These commands copy the LAMMPS simulation bead coordinates into the binary tree data structure in btree_chromo, replicates by moving both forks by 1360 beads, maps the binary tree structure back onto the bead coordinates, and then updates the bead coordinates in the LAMMPS simulation.
 
 ```bash
-simulator_run_loops:F,100,200000,50000,20000,append,nofirst
+simulator_run_loops:100,150000,500,1000,append,nofirst
 ```
-This command runs Brownian dynamics with the hard/FENE potential for 200k timesteps with 100 loops randomly placed, while printing thermodynamic information every 50k steps and dumping the coordintaes every 20k steps.
+This command runs Brownian dynamics with the hard/FENE potential for 150k timesteps with 100 loops randomly placed, while printing thermodynamic information every 500 steps and dumping the coordinates every 1000 steps.
 
 If we take a look at loop_params.txt, we find that it specifies the minimum number of monomers separating anchor and hinge, the distribution of extrusion steps, hinge unbinding probability and grab radius, loop update frequency and topoisomerase relaxation frequency.
 
@@ -323,10 +323,10 @@ r_g=5.0E+2
 # simulator parameters
 
 # loop update frequency - [# timesteps]
-freq_loop=10000
+freq_loop=1500
 
 # topoisomerase relaxation (soft DNA-DNA pairs) frequency - [# timesteps]
-freq_topo=50000
+freq_topo=3000
 # topoisomerase relaxation (soft DNA-DNA pairs) interval - [# timesteps]
 dNt_topo=50000
 
@@ -344,16 +344,16 @@ scp $USERNAME@login.delta.ncsa.illinois.edu:/projects/bddt/$USERNAME/btree_chrom
 ```
 
 (Alternatively, instead of `.` you may choose to specify path to a local directory.)
-We will also copy over the .tcl scripts which will create nice representations for the DNA, ribosomes and boundary particles.
+We will also copy over the .tcl scripts which will create nice representations for the DNA and boundary particles.
 
 In the **Local terminal**:
 
 ```bash
-scp $USERNAME@login.delta.ncsa.illinois.edu:/projects/bddt/DNA/files/\\*.tcl .
+scp $USERNAME@login.delta.ncsa.illinois.edu:/projects/bddt/$USERNAME/btree_chromo_workspace/\\*.tcl .
 
 ```
 
-In VMD, delete the previous two molecules. Open the VMD TkConsole and do (Extensions->Tk Console). In the Tk Console, do `source load_example_full.tcl`. See the DNA polymer replicate!
+In VMD, open the VMD TkConsole and do (Extensions->Tk Console). In the Tk Console, do `source load_example_full.tcl`. See the DNA polymer replicate!
 
 | Monomer type | Color | Bead Size |
 | --- | --- | --- |
@@ -361,10 +361,12 @@ In VMD, delete the previous two molecules. Open the VMD TkConsole and do (Extens
 | Ori | red | 26.0 |
 | Ter | orange | 26.0 |
 | Fork | magenta | 26.0 |
-| Ribosome | mauve | 70.0 |
+| Ribosome* | mauve | 70.0 |
 | Boundary | gray | 32.5 |
 | Anchor | black | 19.5 |
 | Hinge | white | 19.5 |
+
+*Not present in our current simulations.
 
 ### Calculate and plot the Radius of Gyration
 We'll write a small script in the Tcl Console to calculate the radius of gyration for each frame of the trajectory and store the results.
@@ -442,6 +444,7 @@ plt.show()
 
 ## References
 [^gilbert2023]: Gilbert, Benjamin R., Zane R. Thornburg, Troy A. Brier, Jan A. Stevens, Fabian Grünewald, John E. Stone, Siewert J. Marrink, and Zaida Luthey-Schulten. “Dynamics of Chromosome Organization in a Minimal Bacterial Cell.” Frontiers in Cell and Developmental Biology 11 (August 9, 2023). https://doi.org/10.3389/fcell.2023.1214962.
+[^gogou2021]: Gogou, Christos, Aleksandre Japaridze, and Cees Dekker. “Mechanisms for Chromosome Segregation in Bacteria.” Frontiers in Microbiology 12 (June 2021). https://doi.org/10.3389/fmicb.2021.685687.
 [^thornburg2022]: Thornburg, Zane R., David M. Bianchi, Troy A. Brier, Benjamin R. Gilbert, Tyler M. Earnest, Marcelo C. R. Melo, Nataliya Safronova, et al. “Fundamental Behaviors Emerge from Simulations of a Living Minimal Cell.” Cell 185, no. 2 (January 20, 2022): 345-360.e28. https://doi.org/10.1016/j.cell.2021.12.025.
 [^ryu2022]: Ryu, Je-Kyung, Sang-Hyun Rah, Richard Janissen, Jacob W J Kerssemakers, Andrea Bonato, Davide Michieletto, and Cees Dekker. “Condensin Extrudes DNA Loops in Steps up to Hundreds of Base Pairs That Are Generated by ATP Binding Events.” Nucleic Acids Research 50, no. 2 (January 25, 2022): 820–32. https://doi.org/10.1093/nar/gkab1268.
 [^nomidis2022]: Nomidis, Stefanos K, Enrico Carlon, Stephan Gruber, and John F Marko. “DNA Tension-Modulated Translocation and Loop Extrusion by SMC Complexes Revealed by Molecular Dynamics Simulations.” Nucleic Acids Research 50, no. 9 (May 20, 2022): 4974–87. https://doi.org/10.1093/nar/gkac268.
