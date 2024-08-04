@@ -14,7 +14,7 @@ workspace_dir=${user_subdir}/btree_chromo_workspace
 # use srun to launch an interactive session
 srun \
     --pty \
-    --account=bcuj-delta-gpu \
+    --account=bddt-delta-gpu \
     --partition=gpuA100x4 \
     --time=02:00:00 \
     --mem=32g \

@@ -20,7 +20,7 @@ switch_ellipsoids:F
 simulator_load_loop_params:/mnt/loop_params.txt
 sys_write_sim_read_LAMMPS_data:/mnt/data.lammps_0
 simulator_minimize_soft_harmonic:500
-simulator_run_loops:F,100,1000,500,1000,noappend,first
+simulator_run_loops:100,1000,500,1000,noappend,first
 
 repeat:20
 sync_simulator_and_system
@@ -29,11 +29,9 @@ transform:m_cw1360_ccw1360
 set_final_state
 map_replication
 sys_write_sim_read_LAMMPS_data:/mnt/data.lammps_0
-repeat:50
-simulator_run_loops:F,100,200000,50000,2000000,append,nofirst
+repeat:3
+simulator_run_loops:100,20000,500,1000,append,nofirst
 
-# get a frame :-)
-simulator_run_loops:F,100,1001,100,1000,append,nofirst
 
 end_repeat
 end_repeat

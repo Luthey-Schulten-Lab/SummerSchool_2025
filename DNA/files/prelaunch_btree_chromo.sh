@@ -12,7 +12,7 @@ workspace_dir=${user_subdir}/btree_chromo_workspace
 mkdir ${workspace_dir}
 
 # copy the example files
-cp -r ${btree_chromo_files}/examples ${workspace_dir}/examples
+rsync -av --exclude='*.sif' "${btree_chromo_files}/" "${workspace_dir}/"
 
 
 
