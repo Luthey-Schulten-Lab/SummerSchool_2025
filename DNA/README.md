@@ -240,7 +240,7 @@ Both Langevin and Brownian dynamics can be used to correctly sample the NVT ense
 
 During the genome reduction process of Syn3A, guided by transposon mutagenesis studies on the original JCVI-syn1.0 genome and its intermediate reduced versions, it was found that structural maintenence of chromosomes (SMC) proteins were essential. However, the effect of SMC looping during the minimal cell replication cycle is not fully understood. While magnetic tweezer experiments have been done to determine loop extrusion step size of ~200 bp[^ryu2022], and simulations indicate an extrusion frequency of ~2.5 steps/s[^nomidis2022], we have limited experimental results for SMC looping in the crowded in-cell environment. 
 
-The simulation methodology we use for SMC looping is that of Bonato and Michieletto, in which DNA loops are created by adding harmonic bonds bewteen "anchor" and "hinge" monomers. Updating the hinge locations causes loop extrusion, as illustrated in the figure to the right. 
+The simulation methodology we use for SMC looping is that of Bonato and Michieletto, in which DNA loops are created by adding harmonic bonds bewteen "anchor" and "hinge" monomers[^bonato2021]. Updating the hinge locations causes loop extrusion, as illustrated in the figure to the right. 
 
 | Parameter | Description |
 | --- | --- |
