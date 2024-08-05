@@ -357,7 +357,15 @@ scp $USERNAME@login.delta.ncsa.illinois.edu:/projects/bddt/$USERNAME/btree_chrom
 
 ```
 
-In VMD, open the VMD TkConsole and do (Extensions->Tk Console). In the Tk Console, do `source load_example_full.tcl`. See the DNA polymer replicate!
+In VMD, open the VMD TkConsole and do (Extensions->Tk Console). In the Tk Console, do `source load_example_full.tcl`. 
+
+If you follow the steps above and all goes well, you should see something like the figure below. The sphere resolution for the DNA and boundary beads have been set to 7.0, but if VMD is running slow on your computer you might benefit from setting them even lower (`Graphics > Representations`). In the VMD Main window, you can hit the right arrow to loop through the trajectory. See the DNA polymer replicate! 
+
+<img align="center" width="1000" src="./figures/6. Visualization and analysis with VMD/screenshot_example.png">
+
+**Figure 6: Screenshot of VMD on Macbook air.**  This is an example of what your screen should look like if you follow the steps above.
+
+Notice how the changes between each frame are sometimes small; this corresponds to brownian dynamics of 1000 timesteps (100 ns) without looping. Sometimes the changes are large in certain areas; this corresponds to updating of each of the 100 SMC hinges. Finally, sometimes the changes are quite drastic; this corresponds to both SMC hinge updates as well as permitting strand crossings, i.e. topoisomerase action.
 
 | Monomer type | Color | Bead Size |
 | --- | --- | --- |
@@ -371,12 +379,6 @@ In VMD, open the VMD TkConsole and do (Extensions->Tk Console). In the Tk Consol
 | Hinge | white | 19.5 |
 
 *Not present in our current simulations.
-
-If you follow the steps above and all goes well, you should see something like the figure below. The sphere resolution for the DNA and boundary beads have been set to 7.0, but if VMD is running slow on your computer you might benefit from setting them even lower (`Graphics > Representations`). In the VMD Main window, you can hit the right arrow to loop through the trajectory. Notice how the changes between each frame are sometimes small; this corresponds to brownian dynamics of 1000 timesteps (100 ns) without looping. Sometimes the changes are large in certain areas; this corresponds to updating of each of the 100 SMC hinges. Finally, sometimes the changes are quite drastic; this corresponds to both SMC hinge updates as well as permitting strand crossings, i.e. topoisomerase action.
-
-<img align="center" width="1000" src="./figures/6. Visualization and analysis with VMD/screenshot_example.png">
-
-**Figure 6: Screenshot of VMD on Macbook air.**  This is an example of what your screen should look like if you follow the steps above.
 
 ### Calculate and plot the Radius of Gyration
 We'll write a small script in the Tcl Console to calculate the radius of gyration for each frame of the trajectory and store the results.
