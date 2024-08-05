@@ -32,7 +32,7 @@ ZLS group member Ben Gilbert (recently graduated) wrote the program and used it 
 
 | <img src="./figures/1.%20Introduction%20to%20simulation%20with%20btree_chromo%20and%20LAMMPS/division_2chromo_5000bp_separation.png" width="300"/>  | <img src="./figures/1.%20Introduction%20to%20simulation%20with%20btree_chromo%20and%20LAMMPS/partition.png" width="300"/> |
 |:--:|:--:|
-| Figure 1: Cell division of 50 kbp toy model. A repulsive force between the two circular DNA strands (blue, red) helps to partition DNA into the two sides of the cell, accompanying the cell membrane (green) shape change during cell division. | Figure 2: DNA partitioning of 543 kbp model. SMC looping and topoisomerase action has been performed corresponding to the biological time DNA replication (~60 mins), along with Brownian dynamics timesteps that amount to 20 ms of biological time |
+| Figure 1: Cell division of 50 kbp toy model. A repulsive force between the two circular DNA strands (blue, red) helps to partition DNA into the two sides of the cell, accompanying the cell membrane (green) shape change during cell division. | Figure 2: DNA partitioning of 543 kbp model. SMC looping and topoisomerase action has been performed corresponding to the biological time of DNA replication (~60 mins), along with Brownian dynamics timesteps that amount to 20 ms of biological time |
 
 </div>
 Today you will run a simulation using a variant of LAMMPS which utilizes the GPUs on the Delta HPC cluster. We will simulate the entire minimal cell including the effects of SMC proteins, topoisomerase, and Brownian dynamics. 
@@ -300,7 +300,11 @@ simulator_run_loops:100,150000,500,1000,append,nofirst
 ```
 This command runs Brownian dynamics with the hard/FENE potential for 150k timesteps with 100 loops randomly placed, while printing thermodynamic information every 500 steps and dumping the coordinates every 1000 steps.
 
-If we take a look at loop_params.txt, we find that it specifies the minimum number of monomers separating anchor and hinge, the distribution of extrusion steps, hinge unbinding probability and grab radius, loop update frequency and topoisomerase relaxation frequency.
+```bash
+simulator_load_loop_params:/mnt/loop_params.txt
+```
+
+This command loads in a file that specifies various parameters related to SMC looping and topoisomerases. If we take a look at loop_params.txt, we find that it specifies the minimum number of monomers separating anchor and hinge, the distribution of extrusion steps, hinge unbinding probability and grab radius, loop update frequency and topoisomerase relaxation frequency.
 
 ```bash
 # system parameters
@@ -358,15 +362,21 @@ In VMD, open the VMD TkConsole and do (Extensions->Tk Console). In the Tk Consol
 | Monomer type | Color | Bead Size |
 | --- | --- | --- |
 | DNA | viridis color scale | 13.0 |
-| Ori | red | 26.0 |
-| Ter | orange | 26.0 |
-| Fork | magenta | 26.0 |
+| Ori | red | 39.0 |
+| Ter | orange | 39.0 |
+| Fork | magenta | 39.0 |
 | Ribosome* | mauve | 70.0 |
 | Boundary | gray | 32.5 |
 | Anchor | black | 19.5 |
 | Hinge | white | 19.5 |
 
 *Not present in our current simulations.
+
+If you follow the steps above and all goes well, you should see something like the figure below. The sphere resolution for the DNA and boundary beads have been set to 7.0, but if VMD is running slow on your computer you might benefit from setting them even lower (`Graphics > Representations`). In the VMD Main window, you can hit the right arrow to loop through the trajectory. Notice how the changes between each frame are sometimes small; this corresponds to brownian dynamics of 1000 timesteps (100 ns) without looping. Sometimes the changes are large in certain areas; this corresponds to updating of each of the 100 SMC hinges. Finally, sometimes the changes are quite drastic; this corresponds to both SMC hinge updates as well as permitting strand crossings, i.e. topoisomerase action.
+
+<img align="center" width="1000" src="./figures/6. Visualization and analysis with VMD/screenshot_example.png">
+
+**Figure 6: Screenshot of VMD on Macbook air.**  This is an example of what your screen should look like if you follow the steps above.
 
 ### Calculate and plot the Radius of Gyration
 We'll write a small script in the Tcl Console to calculate the radius of gyration for each frame of the trajectory and store the results.
