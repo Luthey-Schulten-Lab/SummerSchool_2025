@@ -243,17 +243,17 @@ Both Langevin and Brownian dynamics can be used to correctly sample the NVT ense
 
 ### SMC looping and topoisomerases
 
-<img align="right" width=250 src="./figures/4. Modeling chromosome dynamics/DNA_model_looping_0.png">
-
 During the genome reduction process of Syn3A, guided by transposon mutagenesis studies on the original JCVI-syn1.0 genome and its intermediate reduced versions, it was found that structural maintenence of chromosomes (SMC) proteins were essential. However, the effect of SMC looping during the minimal cell replication cycle is not fully understood. While magnetic tweezer experiments have been done to determine loop extrusion step size of ~200 bp[^ryu2022], and simulations indicate an extrusion frequency of ~2.5 steps/s[^nomidis2022], we have limited experimental results for SMC looping in the crowded in-cell environment. 
 
-Ganji et al. directly visualized the process by which condensin (aka, an SMC dimer) complexes extrude DNA into loops[^ganji2018]. They demonstrated that a single condensin can pull in DNA from one side at a force-dependent rate, supporting the loop extrusion model as a mechanism for chromosome organization. This finding provides strong evidence that SMC protein complexes like condensin actively shape the spatial arrangement of the genome.
-
-<img align="center" height=200 src="./figures/4. Modeling chromosome dynamics/ganji.png">
+<img align="center" height=300 src="./figures/4. Modeling chromosome dynamics/ganji.png">
 
 **Figure 6: Real-time imaging of DNA loop extrusion by SMC complex.**  A series of snapshots shows DNA loop extrusion intermediates cuased by an SMC dimer on a SxO-stained double-tethered DNA strand. A constant flow at a large angle to DNA axis stretches extruded loop and maintains DNA in imaging plane. Adapted from Ganji et al[^ganji2018].
 
-The simulation methodology we use for SMC looping is that of Bonato and Michieletto, in which DNA loops are created by adding harmonic bonds bewteen "anchor" and "hinge" monomers[^bonato2021]. Updating the hinge locations causes loop extrusion, as illustrated in the figure to the right. 
+<img align="right" width=250 src="./figures/4. Modeling chromosome dynamics/DNA_model_looping_0.png">
+
+Ganji et al. directly visualized the process by which condensin (aka, an SMC dimer) complexes extrude DNA into loops[^ganji2018]. They demonstrated that a single condensin can pull in DNA from one side at a force-dependent rate, supporting the loop extrusion model as a mechanism for chromosome organization. This finding provides strong evidence that SMC protein complexes like condensin actively shape the spatial arrangement of the genome.
+
+The simulation methodology we use for SMC looping is that of Bonato and Michieletto, in which DNA loops are created by adding harmonic bonds bewteen "anchor" and "hinge" monomers[^bonato2021]. Updating the hinge locations causes loop extrusion, as illustrated in the figure to the right. In the simulation, a bead is considered a candidate for the hinge only if it is within a 50 nm radius of the anchor bead; this is because the SMC dimer has a long axis of ~50 nm, and thus can only physically couple DNA beads a maximum 50 nm apart[^nomidis2022].
 
 | Parameter | Description |
 | --- | --- |
