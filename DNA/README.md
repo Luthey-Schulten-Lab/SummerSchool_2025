@@ -63,12 +63,16 @@ bash /projects/bddt/DNA/files/prelaunch_btree_chromo.sh
 
 ```
 
-This bash script creates a workspace `/projects/bcuj/${USER}/btree_chromo_workspace`. It also copies the `examples` directory into the workspace, which contains example input and output files for **btree_chromo**.
+This bash script creates a workspace `/projects/bddt/${USER}/btree_chromo_workspace`. It also copies the `examples` directory into the workspace, which contains example input and output files for **btree_chromo**.
 
-**Step 3: Launch the container**
+Next, we will run a job in interactive mode. If you would rather run the job non-interactively, please skip ahead to "Running btree_chromo via non-interactive job."
+
+**Running btree_chromo in interactive session**
+
+***Launch the container***
 
 ```bash
-bash /projects/bddt/DNA/files/launch_btree_chromo.sh
+bash /projects/bddt/${USER}/btree_chromo_workspace/launch_btree_chromo.sh
 
 ```
 
@@ -81,7 +85,7 @@ export LD_LIBRARY_PATH="/usr/local/lib64:/usr/local/lib:/usr/local/nvidia/lib:/u
 ```
 This ensures the program uses the nvidia drivers appropriate for the NVIDIA A100 GPUs on Delta.
 
-**Step 4: Run btree_chromo**
+***Run btree_chromo***
 
 In the container, please navigate into the folder where the btree_chromo executable is located:
 
@@ -96,7 +100,52 @@ Next, run 'full_model.inp'. Do the command:
 ./btree_chromo /mnt/full_model.inp
 
 ```
-This command starts a simulation of the full 543 kbp chromosome in a 500 nm diameter spherical cell. By the end of this tutorial, our goal is to understand what is going on in the simulation, the contents of the input file `full_model.inp`, as well as some background biological knowledge.
+This command starts a simulation of the full 543 kbp chromosome in a 500 nm diameter spherical cell. By the end of this tutorial, our goal is to understand what is going on in the simulation, the contents of the input file `full_model.inp`, as well as some background biological knowledge. The output of the simulation will be located in
+
+```bash
+/projects/bddt/${USER}/btree_chromo_workspace
+```
+and it will be called `full_model.lammpstrj`.
+
+**Running btree_chromo via non-interactive job**
+
+Alternatively, we can run our btree_chromo simulation via a bash script that submits a job to Delta such that it runs non-interactively. This has the advantage over the interactive session in that it will perform all the same commands above, while not putting you into the Apptainer shell (the command-line interface within the container). 
+
+You will still obtain output in the folder `/projects/bddt/${USER}/btree_chromo_workspace` in the file `full_model.lammpstrj` but you will no longer get the continous output stream from btree_chromo clogging up your terminal.
+
+Run the command
+```bash
+sbatch /projects/bddt/${USER}/btree_chromo_workspace/run_btree_chromo.sh
+```
+If you get `sbatch: error: Unable to open file /projects/bddt/${USER}/btree_chromo_workspace/run_btree_chromo.sh`, please do
+
+```bash
+cp /projects/bddt/DNA/files/run_btree_chromo.sh /projects/bddt/${USER}/btree_chromo_workspace/run_btree_chromo.sh
+```
+and then you should be able to run the `sbatch` command.
+
+If you would like to monitor the progress of your job, you can do the command
+
+```bash
+squeue -u ${USER}
+```
+which will shoud you your jobid, how long the job has been running, as well as what partition and GPU node it is running on.
+
+You can also do 
+```bash
+ls -lh /projects/bddt/${USER}/btree_chromo_workspace/
+```
+to see when the last time your `full_model.lammpstrj` was updated, as well as its size. 
+
+
+> [!TIP]
+Zealous students who are interested in changing their PRNG (pseudorandom number generator) seed before they launch their simulation (so that they a get different result from your peers) may do so by editing the number on line 12 in `/projects/bddt/${USER}/btree_chromo_workspace/full_model.inp`, and changing it to any integer greater than zero. This is easy if you are familiar with using command-line text editors like vim. If you would like to learn more about how to use vim, see the Appendix at the end of this tutorial.
+>
+
+> [!TIP]
+Currently, the jobs are set to run for a maximum of 2 hours. If you would like to extend this time, you can do so by editing line 4 in `run_btree_chromo.sh`. We have enough resources allocated for the Summer School that you can certainly request 8 hours (how long it would take to fully replicated the chromosome based on the parameters in `full_model.inp`. 
+> 
+
 
 ## 3. Modeling DNA initial structure and replication 
 In this section you will learn how we generate initial conditions for the chromsome and ribosome bead positions. You will also learn about DNA replication in the minimal cell, and how to represent replication states with a binary tree model. 
@@ -309,9 +358,9 @@ sys_write_sim_read_LAMMPS_data:/mnt/data.lammps_0
 These commands copy the LAMMPS simulation bead coordinates into the binary tree data structure in btree_chromo, replicates by moving both forks by 1360 beads, maps the binary tree structure back onto the bead coordinates, and then updates the bead coordinates in the LAMMPS simulation.
 
 ```bash
-simulator_run_loops:100,150000,500,1000,append,nofirst
+simulator_run_loops:100,15000,500,1000,append,nofirst
 ```
-This command runs Brownian dynamics with the hard/FENE potential for 150k timesteps with 100 loops randomly placed, while printing thermodynamic information every 500 steps and dumping the coordinates every 1000 steps.
+This command runs Brownian dynamics with the hard/FENE potential for 15k timesteps with 100 loops randomly placed, while printing thermodynamic information every 500 steps and dumping the coordinates every 1000 steps.
 
 ```bash
 simulator_load_loop_params:/mnt/loop_params.txt
@@ -466,6 +515,45 @@ plt.savefig("radius_of_gyration_vs_frame.png")
 # Show the plot
 plt.show()
 ```
+
+## Appendix: Using Vim
+
+### Opening a File in Vim
+
+To open a file with Vim, use the following command:
+
+```bash
+vim filename
+```
+For example, to open full_model.inp in the workspace directory, you would use:
+
+```bash
+vim /projects/bddt/${USER}/btree_chromo_workspace/full_model.inp
+```
+
+Vim operates primarily in three modes:
+
+Normal Mode: The default mode for navigation and command execution. You start in this mode.
+
+Insert Mode: For inserting and editing text. You enter this mode by pressing i.
+
+Command Mode: For executing commands. You enter this mode by pressing : from Normal Mode.
+
+Here are some basic commands to get you started:
+
+In Normal Mode:
+
+`i`: Enter Insert Mode before the cursor.
+
+`:w`: Save the file.
+
+`:q`: Quit Vim.
+
+`:wq`: Save and quit Vim.
+
+`:q!`: Quit without saving changes.
+
+In Insert Mode, you can ype as you normally would. Use the Backspace key to delete. Press `Esc` to return to Normal Mode. When you are done editing, type `:wq` and press enter to save and quit Vim.
 
 ## References
 [^gilbert2023]: Gilbert, Benjamin R., Zane R. Thornburg, Troy A. Brier, Jan A. Stevens, Fabian Grünewald, John E. Stone, Siewert J. Marrink, and Zaida Luthey-Schulten. “Dynamics of Chromosome Organization in a Minimal Bacterial Cell.” Frontiers in Cell and Developmental Biology 11 (August 9, 2023). https://doi.org/10.3389/fcell.2023.1214962.
