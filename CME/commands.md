@@ -59,8 +59,7 @@ You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tuto
 
     The last two line contains the delta GPU node `$DeltaNode`.
 
-+ ***Second***: ssh into the delta GPU node.
-    Open a second terminal.
++ ***Second***: Open a second terminal. ssh into the delta GPU node.
   Your `$DeltaNode` can be found from the information above in last two lines after `http://`. ***Replace*** `$DeltaNode` with your node you see above and ***Replace*** `$USERNAME` with your username. ***Replace*** `$Port` with the 4 digit number you used.
     
     ```bash
@@ -71,9 +70,6 @@ You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tuto
 
 + ***Third***: Copy the last line in the first terminal and paste to one browser to open Jupyter Notebook.
 
-    ``` bash
-    http://127.0.0.1:8811/?token=b2e7ca15cd9dc3a6893a1273e359c88869225bc29d66c80c
-    ```
 
 ## Run Whole-Cell Model's Python Scripts in Parallel
 
