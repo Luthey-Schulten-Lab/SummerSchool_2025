@@ -1,5 +1,6 @@
 # Terminal Commands to Run Jobs on Delta
 
+
 ## Login into Delta login node
 
 ```bash
@@ -8,7 +9,7 @@ ssh $USERNAME@login.delta.ncsa.illinois.edu
 
 ***Replace*** the $USERNAME with your Delta username. You need to type you password and do 2FA.
 
-##  Go into your projects directory and copy tutorials
+##  Enter your projects directory and copy CME tutorials
 
 go to your directory
 
@@ -22,15 +23,17 @@ copy the source code for the workshop
 cp -r /projects/bddt/LM ./
 ```
 
-## Jupyter Notebook
+## Launch Jupyter Notebook on Delta
 
-launch a juputer notebook on a delta GPU node using *srun* and ssh into the GPU node remotely to do the tutorials.
+Launch a juputer notebook on a delta GPU node using *srun* and ssh into the GPU node remotely to do the tutorials.
+
+You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tutorial 3.
 
 + ***First***: submit a job to delta GPU node
 
     ***Replace*** $Port with a non-trivial number (Don't use 8888) to avoid using the same port as others.
     ```bash
-    srun --account=bddt-delta-gpu --partition=gpuA40x4 --time=02:00:00 --mem=64g --gpus-per-node=1 --tasks-per-node=1 --cpus-per-task=16 --nodes=1 apptainer exec --nv --containall --bind /projects/bddt/$USER/:/workspace /projects/bddt/$USER/LM/LM.sif jupyter-notebook /workspace/ --no-browser --port=$Port --ip=0.0.0.0 --allow-root
+    srun --account=bddt-delta-gpu --partition=gpuA100x4 --time=04:00:00 --mem=64g --gpus-per-node=1 --tasks-per-node=1 --cpus-per-task=16 --nodes=1 apptainer exec --nv --containall --bind /projects/bddt/$USER/:/workspace /projects/bddt/$USER/LM/LM.sif jupyter-notebook /workspace/ --no-browser --port=$Port --ip=0.0.0.0 --allow-root
     ```
     
     Then you should wait for Delta to allocate the resources for you, when you see something like this, it means you are good to proceed:
@@ -72,13 +75,13 @@ launch a juputer notebook on a delta GPU node using *srun* and ssh into the GPU 
     http://127.0.0.1:8811/?token=b2e7ca15cd9dc3a6893a1273e359c88869225bc29d66c80c
     ```
 
-## CME/ODE Whole Cell simulation in Parallel
+## Run Whole-Cell Model's Python Scripts in Parallel
 
 You will submit a job to run Whole Cell Model in parallel on delta GPU node.
 
 In the given bash file, you will launch 2 minutes simulation of 4 replicates.
 
-Open a new terminal and login to Delta.
+### Open a new terminal and login to Delta ###
 
 + First: go to *programs* folder
 
@@ -104,5 +107,6 @@ Open a new terminal and login to Delta.
     cd /projects/bddt/$USER/LM/CME/WholeCellModel/output_4replicates
     ```
 
-+ Fourth: Run pkl.ipynb and plotting.ipynb
-    Run to plot the same figures showin in the tutorial
+### Run pkl.ipynb and plotting.ipynb on Jupyter Notebook Webpage
+
+Run to plot the same figures shown in the tutorial
