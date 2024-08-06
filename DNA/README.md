@@ -516,6 +516,10 @@ plt.savefig("radius_of_gyration_vs_frame.png")
 plt.show()
 ```
 
+The output should be a png image that shows how the radius of gyration changes over time:
+
+<img align="center" width="1000" src="./figures/6. Visualization and analysis with VMD/rgyr_example.png">
+
 ## Appendix: Using Vim
 
 ### Opening a File in Vim
