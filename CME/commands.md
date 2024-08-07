@@ -29,7 +29,8 @@ Launch a juputer notebook on a delta GPU node using *srun* and ssh into the GPU 
 
 You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tutorial 3.
 
-+ ***First***: submit a job to delta GPU node
++ ***First***: submit a job to delta GPU node.
+     Here *srun* launch interactive job onto Delta, *partition* claims A100 GPU, and for 4 hours *time*. We need to specify the *port* for *jupyter-notebook*.
 
     ***Replace*** $Port with a four digit non-trivial number to avoid using the same port as others. Group A should use 1111, 2222, 3333 or 4444. Group B can use 5555, 6666, 7777 or 9999.
     ```bash
