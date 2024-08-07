@@ -27,6 +27,7 @@ set final_topo_color false
 
 # Define Radii
 set DNA_rad 13.0
+set DNA_new_rad 15.0
 set a_special 3.0
 set ori_rad [expr $a_special*$DNA_rad]
 set ter_rad [expr $a_special*$DNA_rad]
@@ -98,7 +99,7 @@ mol colupdate $DNA_rep $mol_id on
 mol addrep $mol_id
 set DNA_new_rep $rep_count
 set rep_count [expr $rep_count + 1]
-mol modstyle $DNA_new_rep $mol_id VDW $DNA_rad 7.0
+mol modstyle $DNA_new_rep $mol_id VDW $DNA_new_rad 7.0
 mol modmaterial $DNA_new_rep $mol_id AOChalky
 mol modselect $DNA_new_rep $mol_id [$DNA_new text]
 mol scaleminmax $mol_id $DNA_new_rep 1 [$DNA_new num]
@@ -187,3 +188,13 @@ mol colupdate $bdry_rep $mol_id on
 
 # Center the view
 display resetview
+
+# Turn off axes for movie-making
+axes location off
+
+# Rotate the molecule
+molinfo top set center_matrix [list {{1 0 0 314.371} {0 1 0 166.648} {0 0 1 117.512} {0 0 0 1}}]
+molinfo top set scale_matrix [list {{0.000294161 0 0 0} {0 0.000294161 0 0} {0 0 0.000294161 0} {0 0 0 1}}]
+molinfo top set rotate_matrix [list {{-0.681275 -0.21132 -0.700862 0} {0.0891463 0.92635 -0.365962 0} {0.726579 -0.3118 -0.61226 0} {0 0 0 1}}]
+molinfo top set global_matrix [list {{1 0 0 0} {0 1 0 0} {0 0 1 0} {0 0 0 1}}]
+
