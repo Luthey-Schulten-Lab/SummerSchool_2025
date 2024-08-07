@@ -31,7 +31,7 @@ You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tuto
 
 + ***First***: submit a job to delta GPU node
 
-    ***Replace*** $Port with a non-trivial number (Don't use 8888) to avoid using the same port as others.
+    ***Replace*** $Port with a four digit non-trivial number to avoid using the same port as others. Group A should use 1111, 2222, 3333 or 4444. Group B can use 5555, 6666, 7777 or 9999.
     ```bash
     srun --account=bddt-delta-gpu --partition=gpuA100x4 --time=04:00:00 --mem=64g --gpus-per-node=1 --tasks-per-node=1 --cpus-per-task=16 --nodes=1 apptainer exec --nv --containall --bind /projects/bddt/$USER/:/workspace /projects/bddt/$USER/LM/LM.sif jupyter-notebook /workspace/ --no-browser --port=$Port --ip=0.0.0.0 --allow-root
     ```
@@ -59,8 +59,7 @@ You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tuto
 
     The last two line contains the delta GPU node `$DeltaNode`.
 
-+ ***Second***: ssh into the delta GPU node.
-    Open a second terminal.
++ ***Second***: Open a second terminal. ssh into the delta GPU node.
   Your `$DeltaNode` can be found from the information above in last two lines after `http://`. ***Replace*** `$DeltaNode` with your node you see above and ***Replace*** `$USERNAME` with your username. ***Replace*** `$Port` with the 4 digit number you used.
     
     ```bash
@@ -71,9 +70,6 @@ You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tuto
 
 + ***Third***: Copy the last line in the first terminal and paste to one browser to open Jupyter Notebook.
 
-    ``` bash
-    http://127.0.0.1:8811/?token=b2e7ca15cd9dc3a6893a1273e359c88869225bc29d66c80c
-    ```
 
 ## Run Whole-Cell Model's Python Scripts in Parallel
 

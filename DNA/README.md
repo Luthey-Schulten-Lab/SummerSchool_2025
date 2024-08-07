@@ -419,7 +419,7 @@ scp $USERNAME@login.delta.ncsa.illinois.edu:/projects/bddt/$USERNAME/btree_chrom
 
 ```
 
-In VMD, open the VMD TkConsole and do (Extensions->Tk Console). In the Tk Console, do `source load_example_full.tcl`. 
+In VMD, open the VMD TkConsole and do (Extensions->Tk Console). In the Tk Console, do `source full_model.tcl`. 
 
 If you follow the steps above and all goes well, you should see something like the figure below. The sphere resolution for the DNA and boundary beads have been set to 7.0, but if VMD is running slow on your computer you might benefit from setting them even lower (`Graphics > Representations`). In the VMD Main window, you can hit the right arrow to loop through the trajectory. See the DNA polymer replicate! 
 
@@ -515,6 +515,10 @@ plt.savefig("radius_of_gyration_vs_frame.png")
 # Show the plot
 plt.show()
 ```
+
+The output should be a png image that shows how the radius of gyration changes over time:
+
+<img align="center" width="1000" src="./figures/6. Visualization and analysis with VMD/rgyr_example.png">
 
 ## Appendix: Using Vim
 
