@@ -104,6 +104,8 @@ In the given bash file, you will launch 2 minutes simulation of 4 replicates.
     cd /projects/bddt/$USER/LM/CME/WholeCellModel/output_4replicates
     ```
 
-### Run pkl.ipynb and plotting.ipynb on Jupyter Notebook Webpage
+### Run pkl.ipynb then plotting.ipynb on Jupyter Notebook Webpage
+
+*pkl.ipynb* will serialize the CSV files into one single python pickle file that will be used in *plotting.ipynb*
 
 Run to plot the same figures shown in the tutorial
