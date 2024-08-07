@@ -560,9 +560,9 @@ Then, in the folder with all of your frames and the `create_movie.sh`, do
 ```bash
 bash create_movie.sh
 ```
-After a few seconds, you should have a file `replicate_DNA.mp4`. Here's what mine looks like:
+After a few seconds, you should have a file `replicate_DNA.mp4`. It should look something like this:
 
-[Watch the Video](https://github.com/Luthey-Schulten-Lab/SummerSchool_2024/tree/main/DNA/files/replicate_DNA.mp4)
+[Watch the Video](https://github.com/Luthey-Schulten-Lab/SummerSchool_2024/tree/main/DNA/files/replicate_DNA_short.mp4)
 
 ## Appendix: Using Vim
 
