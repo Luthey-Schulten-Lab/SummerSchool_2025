@@ -17,6 +17,7 @@ We will walk you through how to set up and run a simulation using the program bt
 4. Modeling chromosome dynamics
 5. Understanding btree_chromo commands
 6. Visualization and analysis with VMD
+7. Movie-making with VMD and FFmpeg (_Added 8/7_)
 
 ## 1. Introduction to DNA Simulation with btree_chromo and LAMMPS
 
@@ -519,6 +520,47 @@ plt.show()
 The output should be a png image that shows how the radius of gyration changes over time:
 
 <img align="center" width="1000" src="./figures/6. Visualization and analysis with VMD/rgyr_example.png">
+
+(Sorry, Windows users, you will need to make sure your environmental variables for LAMMPS are set correctly by setting them via command line outside of VMD, and if you are using VMD 1.9.3 don't use the viridis colorscale or the lmap command. Apparently they are working on fixing the LAMMPS variable bug in the next version of VMD.)
+
+## 7. Movie-making with VMD and FFmpeg (_Added 8/7_)
+
+Now that you are able to load a LAMMPS trajectory in to VMD, let's create a movie that loops through that trajectory when we play it. To do this, we will render each of the frames and output them as individual .tga files, and then combine them into a .mp4 movie. You could then use that .mp4 movie for your presentation on Friday. Windows users, not sure if the following steps will work for you, you might have to make a few adjustments, but you are welcome to try.
+
+First, double check you have a good view of the DNA. If you would like to use the same visualization settings that I did, you can source (or copy some of the lines) from my .tcl file located in [files/load_btree_chromo_v2.tcl](https://github.com/enguangfu/SummerSchool_2024/blob/main/DNA/files/load_btree_chromo_v2.tcl) in this repository. This .tcl file is just like the .tcl file you have been using, I just changed some of the representations and moved the camera around.
+
+Next, we will create a folder called `frames`, then render the frames using the Tachyon renderer (the version that uses in-memory rendering) and output each of the frames as .tga files into `frames` (they will be called `frame0001.tga`, `frame0001.tga`, etc.). To do this, please download from the github repo [files/render_full_model.tcl](https://github.com/enguangfu/SummerSchool_2024/blob/main/DNA/files/render_full_model.tcl) and source it:
+
+```bash
+source render_full_model.tcl
+```
+
+Rendering takes a while. I had around 600 frames, and rendering all of them took me around half an hour on my MacBook Air.
+
+Next, we will create a video from the frames using FFmpeg. If you are on a mac, we can install it using homebrew.
+
+Installing Homebrew:
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+Updating Homebrew:
+```bash
+brew update
+```
+
+Installing FFmpeg:
+```bash
+brew install ffmpeg
+```
+
+The commands to create the movie are in [files/create_movie.sh](https://github.com/enguangfu/SummerSchool_2024/blob/main/DNA/files/create_movie.sh) which you can download. Make sure you put it in the frames folder, where you have all of your frames.
+
+Then, in the folder with all of your frames and the `create_movie.sh`, do 
+```bash
+bash create_movie.sh
+```
+After a few seconds, you should have a file `replicate_DNA.mp4`.
 
 ## Appendix: Using Vim
 
