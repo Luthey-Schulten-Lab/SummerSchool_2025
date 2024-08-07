@@ -562,7 +562,8 @@ bash create_movie.sh
 ```
 After a few seconds, you should have a file `replicate_DNA.mp4`. It should look something like this:
 
-[Watch the Video](https://github.com/Luthey-Schulten-Lab/SummerSchool_2024/tree/main/DNA/files/replicate_DNA_short_compressed.mp4)
+https://github.com/user-attachments/assets/de2f6c68-4c4e-4105-8e5c-bc8bcf9a022a
+
 
 ## Appendix: Using Vim
 
