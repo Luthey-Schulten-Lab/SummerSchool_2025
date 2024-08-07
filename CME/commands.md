@@ -32,7 +32,7 @@ You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tuto
 + ***First***: submit a job to delta GPU node.
      Here *srun* launch interactive job onto Delta, *partition* claims A100 GPU, and for 4 hours *time*. We need to specify the *port* for *jupyter-notebook*.
 
-    ***Replace*** $Port with a four digit non-trivial number to avoid using the same port as others. Group A should use 1111, 2222, 3333 or 4444. Group B can use 5555, 6666, 7777 or 9999.
+    ***Copy**** the following command and **Replace*** $Port with a four digit non-trivial number to avoid using the same port as others. Group A should use 1111, 2222, 3333 or 4444. Group B can use 5555, 6666, 7777 or 9999.
     ```bash
     srun --account=bddt-delta-gpu --partition=gpuA100x4 --time=04:00:00 --mem=64g --gpus-per-node=1 --tasks-per-node=1 --cpus-per-task=16 --nodes=1 apptainer exec --nv --containall --bind /projects/bddt/$USER/:/workspace /projects/bddt/$USER/LM/LM.sif jupyter-notebook /workspace/ --no-browser --port=$Port --ip=0.0.0.0 --allow-root
     ```
