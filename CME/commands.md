@@ -60,8 +60,8 @@ You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tuto
 
     The last two line contains the delta GPU node `$DeltaNode`.
 
-+ ***Second***: Open a second terminal. ssh into the delta GPU node.
-  Your `$DeltaNode` can be found from the information above in last two lines after `http://`. ***Replace*** `$DeltaNode` with your node you see above and ***Replace*** `$USERNAME` with your username. ***Replace*** `$Port` with the 4 digit number you used.
++ ***Second***: Open a second terminal and Copy the following command.
+  Your `$DeltaNode` can be found from the information above in last two lines after `http://`. ***Replace*** `$DeltaNode` with your node you see above and ***Replace*** `$USERNAME` with your username. ***Replace*** `$Port` with the 4 digit number you used. By doing so, you are SSH into the Delta GPU node.
     
     ```bash
     ssh -l $USERNAME  -L 127.0.0.1:$Port:$DeltaNode.delta.internal.ncsa.edu:$Port dt-login.delta.ncsa.illinois.edu
@@ -69,12 +69,12 @@ You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tuto
 
     You need to type you password and do 2FA AGAIN.
 
-+ ***Third***: Copy the last line in the first terminal and paste to one browser to open Jupyter Notebook.
++ ***Third***: Copy the last line in the first terminal and paste to one browser (Firefox, Chrome, ...) to open Jupyter Notebook.
 
 
 ## Run Whole-Cell Model's Python Scripts in Parallel
 
-You will submit a job to run Whole Cell Model in parallel on delta GPU node.
+You will submit a job to run Whole Cell Model in parallel on Delta GPU node.
 
 In the given bash file, you will launch 2 minutes simulation of 4 replicates.
 
