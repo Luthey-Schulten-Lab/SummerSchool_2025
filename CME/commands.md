@@ -74,9 +74,9 @@ You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tuto
 
 ## Run Whole-Cell Model's Python Scripts in Parallel
 
-You will submit a job to run Whole Cell Model in parallel on Delta GPU node.
+Run this part only when you start Tutorial 3.
 
-In the given bash file, you will launch 2 minutes simulation of 4 replicates.
+You will submit a job to run Whole Cell Model in parallel on Delta GPU node.
 
 ### Open a new terminal and login to Delta ###
 
@@ -91,7 +91,7 @@ In the given bash file, you will launch 2 minutes simulation of 4 replicates.
     ```bash
     sbatch mpirun.sh
     ```
-
+In the given bash file, you will launch 2 minutes simulation of 4 replicates.
 + Third: Check your job
     Check the status of your job. *PD* means waiting to run, *R* running.
 
