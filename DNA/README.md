@@ -422,6 +422,17 @@ scp $USERNAME@login.delta.ncsa.illinois.edu:/projects/bddt/$USERNAME/btree_chrom
 
 In VMD, open the VMD TkConsole and do (Extensions->Tk Console). In the Tk Console, do `source full_model.tcl`. 
 
+**Important considerations for Windows Users:**
+For those using a Windows machine, you will need to make sure your environmental variables for LAMMPS are set correctly by setting them via command line outside of VMD. Before starting VMD, in Windows Command Shell, please do the following:
+```bash
+setx LAMMPSDUMMYPOS "$xd,$yd,$zd"
+setx LAMMPSMAXATOMS "200000"
+setx LAMMPSREMAPFIELDS "vx=c_id_track,vy=c_type_track"
+```
+Each entry should produce “SUCCESS: Specified value was saved.”
+
+This workaround is only needed on Windows VMD (i.e. not on Linux and Mac VMD). This issue will be addressed in upcoming VMD releases. As of writing this, the latest VMD is Versopm 1.9.4.
+
 If you follow the steps above and all goes well, you should see something like the figure below. The sphere resolution for the DNA and boundary beads have been set to 7.0, but if VMD is running slow on your computer you might benefit from setting them even lower (`Graphics > Representations`). In the VMD Main window, you can hit the right arrow to loop through the trajectory. See the DNA polymer replicate! 
 
 <img align="center" width="1000" src="./figures/6. Visualization and analysis with VMD/screenshot_example.png">
@@ -520,8 +531,6 @@ plt.show()
 The output should be a png image that shows how the radius of gyration changes over time:
 
 <img align="center" width="1000" src="./figures/6. Visualization and analysis with VMD/rgyr_example.png">
-
-(Sorry, Windows users, you will need to make sure your environmental variables for LAMMPS are set correctly by setting them via command line outside of VMD, and if you are using VMD 1.9.3 don't use the viridis colorscale or the lmap command. Apparently they are working on fixing the LAMMPS variable bug in the next version of VMD.)
 
 ## 7. Movie-making with VMD and FFmpeg (_Added 8/7_)
 
