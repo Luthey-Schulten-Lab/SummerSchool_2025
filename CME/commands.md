@@ -61,7 +61,7 @@ You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tuto
     The last two line contains the delta GPU node `DeltaNode`.
 
 + ***Second***: Open a second terminal and Copy the following command.
-  Your `DeltaNode` can be found from the information above in last two lines after `http://`. ***Replace*** `DeltaNode` with your node you see above and ***Replace*** `USERNAME` with your username. ***Replace*** `Port` with the 4 digit number you used. By doing so, you are SSH into the Delta GPU node.
+  Your `DeltaNode` can be found from the information above in last two lines after `http://`. ***Replace*** `DeltaNode` with your node you see above and ***Replace*** `USERNAME` with your username. ***Replace*** two `Port` with the 4 digit number you used. By doing so, you are SSH into the Delta GPU node.
     
     ```bash
     ssh -l USERNAME  -L 127.0.0.1:Port:DeltaNode.delta.internal.ncsa.edu:Port dt-login.delta.ncsa.illinois.edu
