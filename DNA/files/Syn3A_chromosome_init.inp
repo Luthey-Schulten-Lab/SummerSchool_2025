@@ -1,0 +1,23 @@
+run = 2
+min_rep = 1
+max_rep = 1
+
+seed = 42
+r = 1.7E+1
+r_sc = 2.4E+1
+R_o = 1.0E+2
+R_b = 1.95e+03
+
+cyclic_shift = 0
+knot_prevent = 1
+
+N_o = 500
+obstacle_file = null
+
+N_chains = 1
+
+N_stages = 4
+12,2000
+6,8000
+3,18000
+1,54338
