@@ -7,7 +7,7 @@
 ssh USERNAME@login.delta.ncsa.illinois.edu
 ```
 
-***Replace*** `USERNAME` with your Delta username. You need to type you password and do 2FA.
+***Replace*** `USERNAME` with your Delta username. You need to type your password and do 2FA.
 
 ##  Enter your projects directory and copy CME tutorials
 
@@ -25,19 +25,20 @@ cp -r /projects/bddt/LM ./
 
 ## Launch Jupyter Notebook on Delta
 
-Launch a juputer notebook on a delta GPU node using *srun* and ssh into the GPU node remotely to do the tutorials.
+Launch a juputer notebook on a Delta GPU node using *srun* and *ssh* into the GPU node remotely to do the tutorials using GUI.
 
 You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tutorial 3.
 
-+ ***First***: submit a job to delta GPU node.
-     Here *srun* launch interactive job onto Delta, *partition* claims A100 GPU, and for 4 hours *time*. We need to specify the *port* for *jupyter-notebook*.
++ ***First***: Submit a job to a Delta GPU node.
+     Here *srun* launch interactive job onto Delta, *partition* claims A100 GPU, and for 4 hours *time*.
+     We need to specify the `Port` for *jupyter-notebook*.
 
-    ***Copy*** the following command and **Replace** Port with a four digit non-trivial number to avoid using the same port as others. Group A should use 1111, 2222, 3333 or 4444. Group B can use 5555, 6666, 7777 or 9999.
+    ***Copy*** the following command and **Replace** `Port` with a four digit non-trivial number to avoid using the same port as others. Group A should use 1111, 2222, 3333 or 4444. Group B can use 5555, 6666, 7777 or 9999.
     ```bash
     srun --account=bddt-delta-gpu --partition=gpuA100x4 --time=04:00:00 --mem=64g --gpus-per-node=1 --tasks-per-node=1 --cpus-per-task=16 --nodes=1 apptainer exec --nv --containall --bind /projects/bddt/$USER/:/workspace /projects/bddt/$USER/LM/LM.sif jupyter-notebook /workspace/ --no-browser --port=Port --ip=0.0.0.0 --allow-root
     ```
     
-    Then you should wait for Delta to allocate the resources for you, when you see something like this, it means you are good to proceed:
+    Then you should wait for Delta to allocate the resources for you that usually takes less than 1 minute. When you see similar things as the following, you are good to proceed:
     ```bash
     srun: job 3546627 queued and waiting for resources
     srun: job 3546627 has been allocated resources
@@ -58,10 +59,11 @@ You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tuto
         or http://127.0.0.1:$Port/?token=b2e7ca15cd9dc3a6893a1273e359c88869225bc29d66c80c
     ```
 
-    The last two line contains the delta GPU node `DeltaNode`.
+    The last two line contains the Delta GPU node `DeltaNode`, which is the node where your job is running on.
 
-+ ***Second***: SSH into the Delta GPU node. Open a second terminal and Copy the following command.
-  Your `DeltaNode` can be found from the information above in last two lines after `http://`. ***Replace*** `DeltaNode` with your node you see above and ***Replace*** `USERNAME` with your username. ***Replace*** two `Port` with the 4 digit number you used.
++ ***Second***: SSH into the Delta GPU node.
+  Open a second terminal and Copy the following command.
+  Your `DeltaNode` can be found from the information above in last two lines after `http://`. ***Replace*** `DeltaNode` with your node you see above and ***Replace*** `USERNAME` with your Delta username. ***Replace*** two `Port` with the 4 digit number you used.
     
     ```bash
     ssh -l USERNAME  -L 127.0.0.1:Port:DeltaNode.delta.internal.ncsa.edu:Port dt-login.delta.ncsa.illinois.edu
@@ -69,12 +71,13 @@ You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tuto
 
     You need to type you password and do 2FA AGAIN.
 
-+ ***Third***: Copy the last URL in the first terminal and paste to one browser (Firefox, Chrome, ...) to open Jupyter Notebook.
++ ***Third***: Open Jupyter Notebook Webpage
+  Copy the last URL in the first terminal and paste to one browser (Firefox, Chrome, ...) to open Jupyter Notebook.
 
 
 ## Run Whole-Cell Model's Python Scripts in Parallel
 
-Run this part only when you start Tutorial 3.
+Run this part when you start Tutorial 3, CME/ODE Whole Cell Model of Minimal Cell.
 
 You will submit a job to run Whole Cell Model in parallel on Delta GPU node.
 
