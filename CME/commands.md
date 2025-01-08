@@ -17,7 +17,7 @@ Navigate to your directory
 cd /projects/bddt/$USER
 ```
 
-Copy the prepared materials to your directory
+Copy the prepared materials to your directory. This step may take several minutes since the large Apptainer file and prepared CME/ODE Whole-Cell Model trajactories.
 
 ```bash
 cp -r /projects/bddt/LM ./
@@ -101,7 +101,11 @@ You will submit a job to run Whole Cell Model in parallel on Delta GPU node.
     ```
 
 ### Run pkl.ipynb then plotting.ipynb on Jupyter Notebook Webpage
++ **First**: Navigate to `./LM/CME/WholeCellModel/analysis` in Jupyter Notebook Webpage.
+  
++ **Second**: Open *pkl.ipynb* and **Run All** to serialize the CSV files into one single python pickle file.  
+  10 CSV files are generated beforehand for the analysis.
+  
++ **Thrid**: Open *plotting.ipynb* and **Run All** to generate the plots.  
+  Compare the plots with figures in *Summer_School_CME_2024.pdf*.
 
-*pkl.ipynb* will serialize the CSV files into one single python pickle file that will be used in *plotting.ipynb*
-
-Run to plot the same figures shown in the tutorial
