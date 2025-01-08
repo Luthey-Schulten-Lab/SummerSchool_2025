@@ -11,33 +11,26 @@ ssh USERNAME@login.delta.ncsa.illinois.edu
 
 ##  Enter your projects directory and copy CME tutorials
 
-go to your directory
+Navigate to your directory
 
 ```bash
 cd /projects/bddt/$USER
 ```
 
-copy the source code for the workshop
+Copy the prepared materials to your directory
 
 ```bash
 cp -r /projects/bddt/LM ./
 ```
 
 ## Launch Jupyter Notebook on Delta
-
-Launch a juputer notebook on a Delta GPU node using *srun* and *ssh* into the GPU node remotely to do the tutorials using GUI.
-
-You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tutorial 3.
-
-+ ***First***: Submit a job to a Delta GPU node.
-     Here *srun* launch interactive job onto Delta, *partition* claims A100 GPU, and for 4 hours *time*.
-     We need to specify the `Port` for *jupyter-notebook*.
-
-    ***Copy*** the following command and **Replace** `Port` with a four digit non-trivial number to avoid using the same port as others. Group A should use 1111, 2222, 3333 or 4444. Group B can use 5555, 6666, 7777 or 9999.
+You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tutorial 3. The advantage of Jupyter Notebook is that you could navigate the folders and run the *.ipynb* file using GUI.  
++ **First**: Submit a job to a Delta GPU node.  
+     Here *srun* launch interactive job onto Delta, *partition* claims A100 GPU, and for 4 hours *time*. We need to specify the `Port` for *jupyter-notebook*.  
+    ***Copy*** the following command and ***Replace*** `Port` with a four digit non-trivial number to avoid using the same port as others. Group A should use 1111, 2222, 3333 or 4444. Group B can use 5555, 6666, 7777 or 9999.
     ```bash
     srun --account=bddt-delta-gpu --partition=gpuA100x4 --time=04:00:00 --mem=64g --gpus-per-node=1 --tasks-per-node=1 --cpus-per-task=16 --nodes=1 apptainer exec --nv --containall --bind /projects/bddt/$USER/:/workspace /projects/bddt/$USER/LM/LM.sif jupyter-notebook /workspace/ --no-browser --port=Port --ip=0.0.0.0 --allow-root
-    ```
-    
+    ```  
     Then you should wait for Delta to allocate the resources for you that usually takes less than 1 minute. When you see similar things as the following, you are good to proceed:
     ```bash
     srun: job 3546627 queued and waiting for resources
@@ -61,8 +54,8 @@ You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tuto
 
     The last two line contains the Delta GPU node `DeltaNode`, which is the node where your job is running on.
 
-+ ***Second***: SSH into the Delta GPU node.
-  Open a second terminal and Copy the following command.
++ **Second**: SSH into the Delta GPU node.  
+  Open a second terminal and Copy the following command.  
   Your `DeltaNode` can be found from the information above in last two lines after `http://`. ***Replace*** `DeltaNode` with your node you see above and ***Replace*** `USERNAME` with your Delta username. ***Replace*** two `Port` with the 4 digit number you used.
     
     ```bash
@@ -71,7 +64,7 @@ You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tuto
 
     You need to type you password and do 2FA AGAIN.
 
-+ ***Third***: Open Jupyter Notebook Webpage
++ **Third**: Open Jupyter Notebook Webpage.   
   Copy the last URL in the first terminal and paste to one browser (Firefox, Chrome, ...) to open Jupyter Notebook.
 
 
@@ -83,19 +76,19 @@ You will submit a job to run Whole Cell Model in parallel on Delta GPU node.
 
 ### Open a new terminal and login to Delta ###
 
-+ First: go to *programs* folder
++ **First**: Go to *programs* folder
 
     ``` bash
     cd /projects/bddt/$USER/LM/CME/WholeCellModel/programs
     ```
 
-+ Second: Just submit the bash file
++ **Second**: Submit the bash file
 
     ```bash
     sbatch mpirun.sh
     ```
-In the given bash file, you will launch 2 minutes simulation of 4 replicates.
-+ Third: Check your job
+     In the given bash file, you will launch 2 minutes simulation of 4 replicates.
++ **Third**: Check your job
     Check the status of your job. *PD* means waiting to run, *R* running.
 
     ```bash
