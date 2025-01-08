@@ -74,7 +74,7 @@ Run this part when you start Tutorial 3, CME/ODE Whole Cell Model of Minimal Cel
 
 You will submit a job to run Whole Cell Model in parallel on Delta GPU node.
 
-### Open a new terminal and login to Delta ###
+### Open a new terminal and then login to Delta ###
 
 + **First**: Go to *programs* folder
 
