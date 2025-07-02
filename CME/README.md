@@ -1,7 +1,18 @@
-# Terminal Commands to Run Jobs on Delta
+# Coupled Genetic Information Processes and Metabolism in Minimal Cell, JCVI-syn3A
 
+## Description:
 
-## Login into Delta login node
+## Outline:
+
+0. Terminal Commands to Conduct the Simulation
+1. Introduction to Lattice-Microbe, a GPU accelerated stochastic simulation platform
+2. Tutorial 1: Bimolecular Reaction Solved in ODE and CME
+3. Tutorial 2: Genetic Information Processs in CME
+4. Tutorial 3: CMEODE Whole-Cell Model of a Genetically Minimal Cell, JCVI-Syn3A
+   
+## 0. Terminal Commands
+
+### 0.1 Login into Delta login node
 
 ```bash
 ssh USERNAME@login.delta.ncsa.illinois.edu
@@ -23,7 +34,7 @@ Copy the prepared materials to your directory. This step may take several minute
 cp -r /projects/bddt/LM ./
 ```
 
-## Launch Jupyter Notebook on Delta
+### 0.2 Launch Jupyter Notebook on Delta
 You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tutorial 3. The advantage of Jupyter Notebook is that you could navigate the folders and run the *.ipynb* file using GUI.  
 + **First**: Submit a job to a Delta GPU node.  
      Here *srun* launch interactive job onto Delta, *partition* claims A100 GPU, and for 4 hours *time*. We need to specify the `Port` for *jupyter-notebook*.  
@@ -68,7 +79,7 @@ You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tuto
   Copy the last URL in the first terminal and paste to one browser (Firefox, Chrome, ...) to open Jupyter Notebook.
 
 
-## Run CME/ODE Whole-Cell Model's Python Scripts
+### 0.3 Run CME/ODE Whole-Cell Model's Python Scripts
 
 Run this part when you start Tutorial 3, CME/ODE Whole-Cell Model of Minimal Cell.
 
