@@ -124,9 +124,11 @@ You will submit a job to run Whole-Cell Model in parallel on Delta GPU node.
 
 ## 2. Introduction to Lattice Microbe
 
-Go to folder *introduction*
+Go to [Introduction](introduction/README.md)
 
 ## 3. Tutorial: Bimolecular Reaction Solved in ODE and CME
+
+Go to folder *introduction*
 
 ## 4. Tutorial: Genetic Information Processs in CME
 
