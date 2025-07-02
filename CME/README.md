@@ -1,7 +1,12 @@
 # Coupled Genetic Information Processes and Metabolism in Minimal Cell, JCVI-syn3A
 
 ## Description:
+
 <img align="right" width="300" src="./figs/figs_WCM/syn3A.png">
+
+In ***Coupled genetic information processes and metabolism in Minimal Cell*** tutorial, you will first learn the basic of stochastic kinetic simulation of a [bimolecule reaction](bimolecule/), then a model [genetic information process](GIP/) solved by chemical master equations (**CMEs**). The essential metabolism[^breier_metabolism] in Syn3A
+
+*This tutorial was prepared for NSF Science and Technology Center for Quantitative Cell Biology Summer School organized in July.*
 
 ## Outline:
 
@@ -124,12 +129,19 @@ You will submit a job to run Whole-Cell Model in parallel on Delta GPU node.
 
 ## 2. Introduction to Lattice Microbe
 
-Go to [Introduction](introduction/README.md)
+**Go to [Introduction](introduction/)**
 
 ## 3. Tutorial: Bimolecular Reaction Solved in ODE and CME
 
-Go to folder *introduction*
+**Go to [bimolecule](bimolecule/)**
 
 ## 4. Tutorial: Genetic Information Processs in CME
 
+**Go to [Genetic Information Processes](GIP/)**
+
 ## 5. Tutorial: CMEODE Whole-Cell Model of a Genetically Minimal Cell, JCVI-Syn3A
+
+**Go to [CME-ODE WCM of Syn3A](WCM/)**
+
+## References:
+[^breier_metabolism]: Essential metabolism https://doi.org/10.3389/fmicb.2021.685687
