@@ -1,18 +1,19 @@
 # Coupled Genetic Information Processes and Metabolism in Minimal Cell, JCVI-syn3A
 
 ## Description:
+<img align="right" width="300" src="./figs/figs_WCM/syn3A.png">
 
 ## Outline:
 
-0. Terminal Commands to Conduct the Simulation
-1. Introduction to Lattice-Microbe, a GPU accelerated stochastic simulation platform
-2. Tutorial 1: Bimolecular Reaction Solved in ODE and CME
-3. Tutorial 2: Genetic Information Processs in CME
-4. Tutorial 3: CMEODE Whole-Cell Model of a Genetically Minimal Cell, JCVI-Syn3A
+1. Terminal Commands to Conduct the Simulation
+2. Introduction to Lattice-Microbe, a GPU Accelerated Stochastic Simulation Platform
+3. Tutorial: Bimolecular Reaction Solved in ODE and CME
+4. Tutorial: Genetic Information Processs in CME
+5. Tutorial: CMEODE Whole-Cell Model of a Genetically Minimal Cell, JCVI-Syn3A
    
-## 0. Terminal Commands
+## 1. Terminal Commands
 
-### 0.1 Login into Delta login node
+### Login into Delta 
 
 ```bash
 ssh USERNAME@login.delta.ncsa.illinois.edu
@@ -20,7 +21,7 @@ ssh USERNAME@login.delta.ncsa.illinois.edu
 
 ***Replace*** `USERNAME` with your Delta username. You need to type your password and do 2FA.
 
-##  Enter your projects directory and copy CME tutorials
+###  Enter your projects directory and copy CME tutorials
 
 Navigate to your directory
 
@@ -34,7 +35,7 @@ Copy the prepared materials to your directory. This step may take several minute
 cp -r /projects/bddt/LM ./
 ```
 
-### 0.2 Launch Jupyter Notebook on Delta
+### Launch Jupyter Notebook on Delta
 You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tutorial 3. The advantage of Jupyter Notebook is that you could navigate the folders and run the *.ipynb* file using GUI.  
 + **First**: Submit a job to a Delta GPU node.  
      Here *srun* launch interactive job onto Delta, *partition* claims A100 GPU, and for 4 hours *time*. We need to specify the `Port` for *jupyter-notebook*.  
@@ -79,7 +80,7 @@ You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tuto
   Copy the last URL in the first terminal and paste to one browser (Firefox, Chrome, ...) to open Jupyter Notebook.
 
 
-### 0.3 Run CME/ODE Whole-Cell Model's Python Scripts
+### Run CME/ODE Whole-Cell Model's Python Scripts
 
 Run this part when you start Tutorial 3, CME/ODE Whole-Cell Model of Minimal Cell.
 
@@ -121,3 +122,12 @@ You will submit a job to run Whole-Cell Model in parallel on Delta GPU node.
 + **Thrid**: Open *plotting.ipynb* and **Run All** to generate the plots.  
   Compare the plots with figures in *Summer_School_CME_2024.pdf*.
 
+## 2. Introduction to Lattice Microbe
+
+Go to folder *introduction*
+
+## 3. Tutorial: Bimolecular Reaction Solved in ODE and CME
+
+## 4. Tutorial: Genetic Information Processs in CME
+
+## 5. Tutorial: CMEODE Whole-Cell Model of a Genetically Minimal Cell, JCVI-Syn3A
