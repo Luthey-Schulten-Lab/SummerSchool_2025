@@ -33,7 +33,7 @@ CME and RDME are the homogenous and heterogenous stochastic chemical reaction ki
 
 ### Chemical Master Equation (CME)
 
-In CME, the state of the system $\mathbf{x}$ as a vector is the counts of all species. The transition between different states is the fire of single chemical reaction $r$ out of all reactions $R$ with stoichiometry $\mathbf{S_r}$. The probability for the fire of each single chemical reaction in next time step $dt$ is $a_r({{\mathbf{x}}})dt$, where we name $a_r({{\mathbf{x}}})$ propensity of reaction $r$ under system state $\mathbf{x}$. Propensities are calculated shown in in **Table 1** where macroscopic ODE rate constants are first converted into stochastic ones and then calculate the propensity using mass action law. $V$ is the volume of the system, $N_A$ the Avogadro’s number.
+In CME, the state of the system $\mathbf{x}$ as a vector is the counts of all species. The transition between different states is the fire of single chemical reaction $r$ out of all reactions $R$ with stoichiometry $\mathbf{S_r}$. The probability for the fire of each single chemical reaction in next time step $dt$ is $a_r({{\mathbf{x}}})dt$, where we name $a_r({{\mathbf{x}}})$ propensity of reaction $r$ under system state $\mathbf{x}$. Propensities are calculated shown in in **Table 1** where macroscopic ODE rate constants are first converted into stochastic ones and then calculate the propensity using mass action law. $V$ is the volume of the system, $N_A$ the Avogadro’s number, $n_A$ and $n_B$ is the absolute count of particle A and B.
 
 ```math
 \frac{dP(\mathbf{x},t)}{dt}=\sum_{r}^{R} [-a_r({{\mathbf{x}}}) P({{\mathbf{x}}},t) + a_r({{\mathbf{x}}}_\nu-\mathbf{S_r}) P({{\mathbf{x}}}-\mathbf{S_r},t)]
