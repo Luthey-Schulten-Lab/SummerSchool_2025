@@ -11,17 +11,20 @@ and post-process simulations all within a single script, and the calculation is 
 
 <!-- <img align="right" width="300" src="../figs/figs_introduction/LM_architecture.png"> -->
 
-<figure style="text-align: center;">
+<p align="center">
   <img src="../figs/figs_introduction/LM_architecture.png" width="300" alt="Schematic diagram of the LM architecture">
-  <figcaption><b>Figure 1.</b> Schematic diagram of the LM architecture.</figcaption>
-</figure>
+</p>
+
+<p align="center"><b>Figure 1. Schematic diagram of the LM architecture</b></p>
 
 A general workflow of jLM in LM is shown as follows. jLM is compatible for both CME and RDME simulations. Designed with Jupyter Notebook interfaces, jLM offers a suite of functions to visualize the RDME simulation states like spatial regions, species and reactions when setting up the system. In the `hookSimulation()`, various algorithms can be incorporated with CME and RDME to fullfile the hybrid algorithms.
 
 <p align="center">
   <img src="../figs/figs_introduction/Flow_Chart_jLM_pyLM.png" width="300" alt="Workflow of jLM">
 </p>
-**Figure 2: Workflow of jLM**
+
+<!-- <p align="center>Figure 2. Workflow of jLM<\p> -->
+<p align="center">Figure 2. Workflow of jLM</p>
 
 ## Stochastic Modeling of Cellular Processes
 
