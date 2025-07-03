@@ -9,7 +9,7 @@ We will simulate the association/dissociation reaction of hypothetical molecules
 \ce{A + B <=>[\ce{k_f}][\ce{k_r}]C}
 ```
 
-Let us start out with a low number of each particles: 100 of A and B and 0 of C.  Let us imagine simulating that problem in a microbe sized volume of 1 $fL$. Also, let us start off with rates of $k_f=1.07\times 10^6M^{-1}s^{-1}$ and $k_r=0.351/s$.
+Let us start out with a low number of each particles: 100 of A and B and 0 of C.  Let us imagine simulating that problem in a microbe sized volume of 1 $fL$. Also, let us start off with forward rate $k_f=1.07\times 10^6M^{-1}s^{-1}$ and backward rate $k_r=0.351/s$.
 
 Under ODE representation using concentrations of species, the change of concentrations for A, B, and C are:
 ```math
@@ -59,16 +59,18 @@ In ODE result, what you should note is that the count of each species varies smo
 
 You might note that the behavior in stochastic result is qualitatively the same to the deterministic ODE result, however there appears to be considerable fluctuation, even after the system has come to equilibrium.  This is due to the stochastic nature of the process, where the reaction can transiently fluctuate away from the equilibrium value.  In addition, you may be able to tell that the changes in particle number from one time to another are in integer increments, though this will become considerably more obvious at lower number of particles.
 
-<p align="center">
-  <img src="../figs/plots_bimolecule/bimolecule_CME_minmaxavg_A_10repilicates_1foldrates.png" width="300" alt="ODE result"> <img src="../figs/plots_bimolecule/bimolecule_CME_trace_replicate1.png" width="300" alt="CME replicate 1"> <br>
-  <b>Figure 2. Population average of particle A in 10 (Left) and 100 (Right) replicates solved stochastically.</b>
-</p>
+
 
 ## Discussion
 
 ### 1. Increase the sample size 
 
 Change the replicates number from 10 to 100 or even more in Tutorial 1.2. You need to change the variable `reps` and restart the Jupyter Notebook kernel to start a new CME simulation. See **Figure 2** for the situation with 10 and 100 replicates. Does the higher replicates number lead to a smoother average and variance?
+
+<p align="center">
+  <img src="../figs/plots_bimolecule/bimolecule_CME_minmaxavg_A_10repilicates_1foldrates.png" width="300" alt="ODE result"> <img src="../figs/plots_bimolecule/bimolecule_CME_trace_replicate1.png" width="300" alt="CME replicate 1"> <br>
+  <b>Figure 2. Population average of particle A in 10 (Left) and 100 (Right) replicates solved stochastically.</b>
+</p>
 
 ### 2. Increase the reaction rate
 
