@@ -6,34 +6,30 @@ Lattice microbe (LM) is a graphics processing units (GPUs) accelerated stochasti
 
 LM is designed to simulate stochastic processes in biological cells using the spatially homogenoues Chemical Master Equation (CME) and heterogenours Reaction Diffusion Master Equation (RDME). With hooking, one can also incorporate metabolic reactions simulated with Ordinary Differential Equation (ODE) and chromosome dynamics with Brownian Dynamics (BD).
 
-jLM is the python-based Problem Solving Environments (PSE) designed to integrate with Jupyter Notebook, and was developed in 2018, after pyLM in 2013(*Outdated Now*). jLM sits on top of a SWIG interface that allows the C++ code to be accessible from the Python terminal. Using jLM allows the user to set up, run
-and post-process simulations all within a single script, and the calculation is still performed in C++. The API of jLM can be found at [Lattice Microbes API Reference](https://forxhunter.github.io/LM2.5_doc/API.html).
+jLM is the python-based Problem Solving Environments (PSE) designed to integrate with Jupyter Notebook, and was developed in 2018, after pyLM in 2013(*Outdated Now*). jLM sits on top of a SWIG interface that allows the C++ code to be accessible from the Python terminal. Using jLM allows the user to set up, run and post-process simulations all within a single script, and the calculation is still performed in C++. The API of jLM can be found at [Lattice Microbes API Reference](https://forxhunter.github.io/LM2.5_doc/API.html).
 
 <!-- <img align="right" width="300" src="../figs/figs_introduction/LM_architecture.png"> -->
 
 <p align="center">
-  <img src="../figs/figs_introduction/LM_architecture.png" width="300" alt="Schematic diagram of the LM architecture">
+  <img src="../figs/figs_introduction/LM_architecture.png" width="300" alt="Schematic diagram of the LM architecture"> <br>
+  <b>Figure 1. Schematic diagram of the LM architecture</b>
 </p>
-
-<p align="center"><b>Figure 1. Schematic diagram of the LM architecture</b></p>
 
 A general workflow of jLM in LM is shown as follows. jLM is compatible for both CME and RDME simulations. Designed with Jupyter Notebook interfaces, jLM offers a suite of functions to visualize the RDME simulation states like spatial regions, species and reactions when setting up the system. In the `hookSimulation()`, various algorithms can be incorporated with CME and RDME to fullfile the hybrid algorithms.
 
 <p align="center">
-  <img src="../figs/figs_introduction/Flow_Chart_jLM_pyLM.png" width="300" alt="Workflow of jLM">
+  <img src="../figs/figs_introduction/Flow_Chart_jLM_pyLM.png" width="300" alt="Workflow of jLM"> <br>
+  <b>Figure 2. Workflow of jLM</b>
 </p>
-
-<!-- <p align="center>Figure 2. Workflow of jLM<\p> -->
-<p align="center">Figure 2. Workflow of jLM</p>
 
 ## Stochastic Modeling of Cellular Processes
 
 CME and RDME are the homogenous and heterogenous stochastic chemical reaction kinetics algorithms. Ordinary Differential Equations (ODE) is suitable for macroscopic and homogenous chemical kinetics that includes metabolic networks in the minimal cell. Brownian Dynamics (BD) is used in continuum polymer chromosome model.
 
-<figure style="text-align: center;">
-  <img src="../figs/figs_introduction/algorithms.png" width="300" alt="Stochastic/Deterministic and Homogeneous/Heterogenours Algorithms">
-  <figcaption><b>Figure 3.</b> Stochastic/Deterministic and Homogeneous/Heterogenours Algorithms.</figcaption>
-</figure>
+<p align="center">
+  <img src="../figs/figs_introduction/algorithms.png" width="300" alt="Workflow of jLM"> <br>
+  <b>Figure 3. Stochastic/Deterministic and Homogenous/Heteregenours Simulation Algorithms</b>
+</p>
 
 ### Chemical Master Equation (CME)
 
