@@ -4,29 +4,33 @@
 
 <img align="right" width="300" src="./figs/figs_WCM/syn3A.png">
 
-In ***Coupled genetic information processes and metabolism in Minimal Cell*** tutorial, you will first learn the basic of stochastic kinetic simulation of a [bimolecule reaction](bimolecule/), then a model [genetic information process](GIP/) solved by chemical master equations (**CMEs**). The essential metabolism[^breier_metabolism] in Syn3A
+In ***Coupled genetic information processes and metabolism in Minimal Cell*** tutorial, you will first learn the basic of stochastic kinetic simulation of a [bimolecule reaction](bimolecule/), then a model [genetic information process](GIP/) solved by chemical master equations (**CMEs**). The essential metabolism[^breuer_metabolism] in Syn3A imports nutrients in the growth media, and further converts them to generate ATP molecules that energize cellular processes, and monomers for the synthesis of proteins, RNAs, and chromosome. To simulate the [co-evolution of GIP and metabolism in Syn3A](WCM/), we employ a hybrid stochastic-deterministic algorithm[^bianchi_CMEODE] where stepwise communication is performed to describe the interactions between these two subsystems.
 
 *This tutorial was prepared for NSF Science and Technology Center for Quantitative Cell Biology Summer School organized in July.*
 
 ## Outline:
 
-1. Terminal Commands to Conduct the Simulation
+1. Set up the tutorial on Delta
 2. Introduction to Lattice-Microbe, a GPU Accelerated Stochastic Simulation Platform
 3. Tutorial: Bimolecular Reaction Solved in ODE and CME
 4. Tutorial: Genetic Information Processs in CME
 5. Tutorial: CMEODE Whole-Cell Model of a Genetically Minimal Cell, JCVI-Syn3A
    
-## 1. Terminal Commands
+## 1. Set up the tutorial on Delta
+
+You will SSH into [NCSA Delta](https://docs.ncsa.illinois.edu/systems/delta/en/latest/quick_start.html) to conduct the computational tasks.
 
 ### Login into Delta 
 
 ```bash
 ssh USERNAME@login.delta.ncsa.illinois.edu
 ```
+> [!WARNING]
+> ***Replace*** `USERNAME` with your Delta username. 
 
-***Replace*** `USERNAME` with your Delta username. You need to type your password and do 2FA.
+To successfully login, you need to type your password for NCSA and do 2FA.
 
-###  Enter your projects directory and copy CME tutorials
+###  Copy tutorials into your own directory
 
 Navigate to your directory
 
@@ -34,21 +38,24 @@ Navigate to your directory
 cd /projects/bddt/$USER
 ```
 
-Copy the prepared materials to your directory. This step may take several minutes since the large Apptainer file and prepared CME/ODE Whole-Cell Model trajactories.
+Copy the prepared materials to your directory. This step may take several minutes since the large Apptainer file and prepared CME-ODE WCM trajactories.
 
 ```bash
 cp -r /projects/bddt/LM ./
 ```
 
 ### Launch Jupyter Notebook on Delta
-You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tutorial 3. The advantage of Jupyter Notebook is that you could navigate the folders and run the *.ipynb* file using GUI.  
-+ **First**: Submit a job to a Delta GPU node.  
-     Here *srun* launch interactive job onto Delta, *partition* claims A100 GPU, and for 4 hours *time*. We need to specify the `Port` for *jupyter-notebook*.  
-    ***Copy*** the following command and ***Replace*** `Port` with a four digit non-trivial number to avoid using the same port as others. Group A should use 1111, 2222, 3333 or 4444. Group B can use 5555, 6666, 7777 or 9999.
+>[!NOTE]
+>You will use Jupyter Notebook to run Tutorials bimolecule, GIP and the analysis part of Tutorial WCM. 
+
+The advantage of Jupyter Notebook is that you could navigate the folders and run the *.ipynb* file using GUI.
+
+- **First**: Submit a job to a Delta GPU node.  
+     Here *srun* launch interactive job onto Delta, *partition* claims A100 GPU node, and for 6 hours *time*. A four digit number is randomly generated to specify the *port* for Jupyter Notebook. 
     ```bash
-    srun --account=bddt-delta-gpu --partition=gpuA100x4 --time=04:00:00 --mem=64g --gpus-per-node=1 --tasks-per-node=1 --cpus-per-task=16 --nodes=1 apptainer exec --nv --containall --bind /projects/bddt/$USER/:/workspace /projects/bddt/$USER/LM/LM.sif jupyter-notebook /workspace/ --no-browser --port=Port --ip=0.0.0.0 --allow-root
+    srun --account=bddt-delta-gpu --partition=gpuA100x4 --time=06:00:00 --mem=64g --gpus-per-node=1 --tasks-per-node=1 --cpus-per-task=16 --nodes=1 apptainer exec --nv --containall --bind /projects/bddt/$USER/:/workspace /projects/bddt/$USER/LM/LM.sif jupyter-notebook /workspace/ --no-browser --port=$((RANDOM%9000+1000)) --ip=0.0.0.0 --allow-root
     ```  
-    Then you should wait for Delta to allocate the resources for you that usually takes less than 1 minute. When you see similar things as the following, you are good to proceed:
+    Then you should wait for Delta to allocate the resources for you that usually takes less than 1 minute. When you see similar things as the following, you are good to proceed to the second step:
     ```bash
     srun: job 3546627 queued and waiting for resources
     srun: job 3546627 has been allocated resources
@@ -65,67 +72,27 @@ You will use Jupyter Notebook to run Tutorial 1, 2 and the analysis part of Tuto
         To access the notebook, open this file in a browser:
             file:///u/$USERNAME/.local/share/jupyter/runtime/nbserver-13-open.html
         Or copy and paste one of these URLs:
-            http://`DeltaNode`.delta.ncsa.illinois.edu:$Port/?token=b2e7ca15cd9dc3a6893a1273e359c88869225bc29d66c80c
+            http://$DeltaNode.delta.ncsa.illinois.edu:$Port/?token=b2e7ca15cd9dc3a6893a1273e359c88869225bc29d66c80c
         or http://127.0.0.1:$Port/?token=b2e7ca15cd9dc3a6893a1273e359c88869225bc29d66c80c
     ```
 
-    The last two line contains the Delta GPU node `DeltaNode`, which is the node where your job is running on.
+    The last two line contains the Delta GPU node `DeltaNode`, which is the node assgined by Delta to run your job. The `Port` is four digits randomly generated.
 
-+ **Second**: SSH into the Delta GPU node.  
-  Open a second terminal and Copy the following command.  
-  Your `DeltaNode` can be found from the information above in last two lines after `http://`. ***Replace*** `DeltaNode` with your node you see above and ***Replace*** `USERNAME` with your Delta username. ***Replace*** two `Port` with the 4 digit number you used.
+- **Second**: SSH into the Delta GPU node.  
+  Open a **second** terminal and run the following command.
+  >[!WARNING]
+  >***Replace*** `DeltaNode` with the node assgined by Delta.    
+  >***Replace*** `USERNAME` with your Delta username.   
+  >***Replace*** two `Port` with the 4 digit number generated.  
     
     ```bash
-    ssh -l USERNAME  -L 127.0.0.1:Port:DeltaNode.delta.internal.ncsa.edu:Port dt-login.delta.ncsa.illinois.edu
+    ssh -l $USERNAME  -L 127.0.0.1:$Port:$DeltaNode.delta.internal.ncsa.edu:$Port dt-login.delta.ncsa.illinois.edu
     ```
 
     You need to type you password and do 2FA AGAIN.
 
-+ **Third**: Open Jupyter Notebook Webpage.   
+- **Third**: Open Jupyter Notebook Webpage.   
   Copy the last URL in the first terminal and paste to one browser (Firefox, Chrome, ...) to open Jupyter Notebook.
-
-
-### Run CME/ODE Whole-Cell Model's Python Scripts
-
-Run this part when you start Tutorial 3, CME/ODE Whole-Cell Model of Minimal Cell.
-
-You will submit a job to run Whole-Cell Model in parallel on Delta GPU node.
-
-### Open a new terminal and then login to Delta ###
-
-+ **First**: Go to *programs* folder
-
-    ``` bash
-    cd /projects/bddt/$USER/LM/CME/WholeCellModel/programs
-    ```
-
-+ **Second**: Submit the bash file
-
-    ```bash
-    sbatch mpirun.sh
-    ```
-     In the given bash file, you will launch 2 minutes simulation of 4 replicates. You are encouraged to change the parameters to run longer of more replicates. Normally, it takes 6 physical hours to finish 2 biological hours' simulation on a Delta A100 GPU node.
-  
-+ **Third**: Check the status of your job.  
-    *PD* means waiting to run, *R* running.
-
-    ```bash
-    squeue -u $USER
-    ```
-    go to *output_4replicates* folder 
-    
-    ``` bash
-    cd /projects/bddt/$USER/LM/CME/WholeCellModel/output_4replicates
-    ```
-
-### Run pkl.ipynb then plotting.ipynb on Jupyter Notebook Webpage
-+ **First**: Navigate to `./LM/CME/WholeCellModel/analysis` in Jupyter Notebook Webpage.
-  
-+ **Second**: Open *pkl.ipynb* and **Run All** to serialize the CSV files into one single python pickle file.  
-  10 CSV files are generated beforehand for the analysis.
-  
-+ **Thrid**: Open *plotting.ipynb* and **Run All** to generate the plots.  
-  Compare the plots with figures in *Summer_School_CME_2024.pdf*.
 
 ## 2. Introduction to Lattice Microbe
 
