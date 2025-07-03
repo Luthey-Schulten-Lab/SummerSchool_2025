@@ -112,3 +112,4 @@ The advantage of Jupyter Notebook is that you could navigate the folders and run
 
 ## References:
 [^breier_metabolism]: Essential metabolism https://doi.org/10.3389/fmicb.2021.685687
+[^bianchi_CMEODE]: Communication 10.1049/iet-syb.2017.0070
