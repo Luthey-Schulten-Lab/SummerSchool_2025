@@ -6,7 +6,7 @@ Lattice microbe (LM) is a graphics processing units (GPUs) accelerated stochasti
 
 LM is designed to simulate stochastic processes in biological cells using the spatially homogenoues Chemical Master Equation (CME) and heterogenours Reaction Diffusion Master Equation (RDME). With hooking, one can also incorporate metabolic reactions simulated with Ordinary Differential Equation (ODE) and chromosome dynamics with Brownian Dynamics (BD).
 
-jLM is the python-based Problem Solving Environments (PSE) designed to integrate with Jupyter Notebook, and was developed in 2018, after pyLM in 2013(*Outdated Now*). jLM sits on top of a SWIG interface that allows the C++ code to be accessible from the Python terminal. Using jLM allows the user to set up, run and post-process simulations all within a single script, and the calculation is still performed in C++. The API of jLM can be found at [Lattice Microbes API Reference](https://forxhunter.github.io/LM2.5_doc/API.html).
+jLM is the python-based Problem Solving Environments (PSE) designed to integrate with Jupyter Notebook, and was developed in 2018, after pyLM in 2013 (*Outdated Now*). jLM sits on top of a SWIG interface that allows the C++ code to be accessible from the Python terminal. Using jLM allows the user to set up, run and post-process simulations all within a single script, and the calculation is still performed in C++. The API of jLM can be found at [Lattice Microbes API Reference](https://forxhunter.github.io/LM2.5_doc/API.html).
 
 <!-- <img align="right" width="300" src="../figs/figs_introduction/LM_architecture.png"> -->
 
@@ -33,11 +33,29 @@ CME and RDME are the homogenous and heterogenous stochastic chemical reaction ki
 
 ### Chemical Master Equation (CME)
 
-In CME, the state of the system $\mathbf{x}$ as a vector is the counts of all species. The transition between different states is the fire of single chemical reaction $r$ out of all reactions $R$ with stoichiometry $\mathbf{S_r}$. The probability for the fire of each single chemical reaction in next time step $dt$ is $a_r({{\mathbf{x}}})dt$, where we name $a_r({{\mathbf{x}}})$ propensity of reaction $r$ under system state $\mathbf{x}$. Propensities are calculated shown in in Table \ref{tab:odetocme} where macroscopic ODE rate constants are first converted into stochastic ones and then calculate the propensity using mass action law. 
+In CME, the state of the system $\mathbf{x}$ as a vector is the counts of all species. The transition between different states is the fire of single chemical reaction $r$ out of all reactions $R$ with stoichiometry $\mathbf{S_r}$. The probability for the fire of each single chemical reaction in next time step $dt$ is $a_r({{\mathbf{x}}})dt$, where we name $a_r({{\mathbf{x}}})$ propensity of reaction $r$ under system state $\mathbf{x}$. Propensities are calculated shown in in **Table 1** where macroscopic ODE rate constants are first converted into stochastic ones and then calculate the propensity using mass action law. 
 
 ```math
 \frac{dP(\mathbf{x},t)}{dt}=\sum_{r}^{R} [-a_r({{\mathbf{x}}}) P({{\mathbf{x}}},t) + a_r({{\mathbf{x}}}_\nu-\mathbf{S_r}) P({{\mathbf{x}}}-\mathbf{S_r},t)]
 ```
+
+<p align="center">
+  <div style="max-width: 600px; margin: auto; text-align: center;">
+    <b>
+      Table 1. Zeroth, First and Second Order reactions in ODE and CME.
+      Here, the stochastic rate constant should be computed from the macroscopic rate constant
+      using the volume of the experiment, <i>V</i>, and Avogadro’s number, <i>N<sub>A</sub></i>.
+    </b>
+  </div>
+  <br>
+  <img src="../figs/figs_introduction/unit_conversion.png" width="600" alt="Convert macroscopic unit to stochastic unit">
+</p>
+
+
+<!-- <p align="center">
+  <b>Table 1. Zeroth, First and Second Order reactions in ODE and CME. Here, the stochastic rate constant should be computed from the macroscopic rate constant using the volume of the experiment, V , and Avogadro’s number, NA .</b> <br>
+  <img src="../figs/figs_introduction/unit_conversion.png" width="600" alt="Convert macroscopic unit to stochastic unit"> <br>
+</p> -->
 
 Thus, Chemical Master Equation states that the derivative of probability, $P(\mathbf{x},t)$ to stay in state $\mathbf{x}$ with respect to time $t$ equals the summation of in-flow, $`\sum_{r}^{R}[a_r({{\mathbf{x}}}_\nu-\mathbf{S_r}) P({{\mathbf{x}}}-\mathbf{S_r},t)]`$ minus the out-flow, $`\sum_{r}^{R} [-a_r({{\mathbf{x}}}) P({{\mathbf{x}}},t)]`$.
 
