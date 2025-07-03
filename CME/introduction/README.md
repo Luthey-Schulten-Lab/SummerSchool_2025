@@ -50,9 +50,6 @@ Similarly to ODE, CME for complex system is unsolvable. In most cases, we use Gi
 RDME is used to simulate spatially heterogenous systems by discretizing the entire volume into cubic lattice. Within each lattice site, the reactions are assumed to be well-stirred and described by separated CMEs as shown in the first summation. The second summation describes the flow of probability due to the diffusion between neighboring lattice sites.
 
 $$
-\begin{align*}
-\frac{dP(\mathbf{x},t)}{dt}=& \sum_{\nu}^{V}\sum_{r}^{R} [-a_r({{\mathbf{x}}}_\nu) P({{\mathbf{x}}}_\nu,t) + a_r({{\mathbf{x}}}_\nu-\mathbf{S_r}) P({{\mathbf{x}}}_\nu-\mathbf{S_r},t)]\\
-& +\sum_{\nu}^{V}\sum_{\xi}^{\pm\hat{i},\hat{j},\hat{k}}\sum_{\alpha}^{N} [-d_{xi}^{\alpha} x_{\nu}^{\alpha} P({{\mathbf{x}}},t) + d_{\xi}^{\alpha} (x_{\nu+\xi}^{\alpha}+1_{\nu}^{\alpha}) P({{\mathbf{x}}}+1_{\nu+\xi}^{\alpha}-1_{\nu}^{\alpha},t)]
-\end{align*}
+\frac{dP(\mathbf{x},t)}{dt}= \sum_{\nu}^{V}\sum_{r}^{R} [-a_r({{\mathbf{x}}}_\nu) P({{\mathbf{x}}}_\nu,t) + a_r({{\mathbf{x}}}_\nu-\mathbf{S_r}) P({{\mathbf{x}}}_\nu-\mathbf{S_r},t)] +\sum_{\nu}^{V}\sum_{\xi}^{\pm\hat{i},\hat{j},\hat{k}}\sum_{\alpha}^{N} [-d_{xi}^{\alpha} x_{\nu}^{\alpha} P({{\mathbf{x}}},t) + d_{\xi}^{\alpha} (x_{\nu+\xi}^{\alpha}+1_{\nu}^{\alpha}) P({{\mathbf{x}}}+1_{\nu+\xi}^{\alpha}-1_{\nu}^{\alpha},t)]
 \tag{RDME}
 $$
