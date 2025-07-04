@@ -43,3 +43,5 @@ vmd
 2. Load the visualization state `render.vmd`
 
 Explore the trajectory visualization as needed. 
+
+![cell_traj_snapshot](./figures/VMD_render.png)
