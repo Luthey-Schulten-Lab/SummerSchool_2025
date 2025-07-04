@@ -14,7 +14,7 @@ In ***Coupled genetic information processes and metabolism in Minimal Cell*** tu
 2. Introduction to Lattice-Microbe, a GPU Accelerated Stochastic Simulation Platform
 3. Tutorial: Bimolecular Reaction Solved Stochastically in CME
 4. Tutorial: Stochastic Genetic Information Processs in CME
-5. Tutorial: CMEODE Whole-Cell Model of a Genetically Minimal Cell, JCVI-Syn3A
+5. Tutorial: CME-ODE Whole-Cell Model of a Genetically Minimal Cell, JCVI-Syn3A
    
 ## 1. Set up the tutorial on Delta
 
@@ -106,7 +106,7 @@ The advantage of Jupyter Notebook is that you could navigate the folders and run
 
 **Go to [Genetic Information Processes](GIP/)**
 
-## 5. Tutorial: CMEODE Whole-Cell Model of a Genetically Minimal Cell, JCVI-Syn3A
+## 5. Tutorial: CME-ODE Whole-Cell Model of a Genetically Minimal Cell, JCVI-Syn3A
 
 **Go to [CME-ODE WCM of Syn3A](WCM/)**
 
