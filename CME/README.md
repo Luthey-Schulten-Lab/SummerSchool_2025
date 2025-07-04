@@ -82,10 +82,10 @@ The advantage of Jupyter Notebook is that you could navigate the folders and run
 
 - **Second**: SSH into the Delta GPU node.  
   Open a **second** terminal and run the following command.
-  >[!WARNING]
-  >***Replace*** `DeltaNode` with the node assgined by Delta.    
-  >***Replace*** `USERNAME` with your Delta username.   
-  >***Replace*** two `Port` with the 4 digit number generated.  
+>[!WARNING]
+>***Replace*** `DeltaNode` with the node assgined by Delta.    
+>***Replace*** `USERNAME` with your Delta username.   
+>***Replace*** two `Port` with the 4 digit number generated.  
 
   ```bash
   ssh -l $USERNAME  -L 127.0.0.1:$Port:$DeltaNode.delta.internal.ncsa.edu:$Port dt-login.delta.ncsa.illinois.edu
