@@ -15,7 +15,7 @@ Since VMD requires a graphical interface, we'll use Open OnDemand's Desktop inte
 
 4. Configure the job settings and click Launch:
    - Container image: keep default
-   - Account: `bxxx-delta-gpu`
+   - Account: `beyi-delta-gpu`
    - Partition: `GPUA40x4-interactive`
    - Duration: `00-01:00:00`
    - Reservation: leave empty if none
