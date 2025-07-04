@@ -3,15 +3,23 @@
 ## 0. Data downloads
 
 Since time cost of running the whole cell model is very high, we won't actually run the RDME hybrid 4DWCM live. Instead, I will briefly introduce the logic of the 4DWCM and try to analyze 50 trjectories as average stored in zenodo. 
+
+So fist, we will download 50 trajectories files and 4 `lm` trajectories for later visuliaztion.
+```bash
+
+bash download.sh
+```
+If it works properly, you should find out there are two directories created `data` and `trajectory`.
  
 ## 1  Model Overview and the Hybrid Simulation Flowchart
 
-The 4DWCM [1] integrates four numerical engines so that every molecular event of a living minimal cell can be followed for its entire 105-min division cycle. A reaction-diffusion master-equation (RDME) solver on the GPU advances Brownian motion and local reactions in 10 nm lattice voxels with 50 µs steps. Every 12.5 ms of biological time the RDME is paused and three auxiliary solvers are called: 
-1. a global chemical-master-equation module for low-copy, well-stirred reactions such as transcription initiation and tRNA charging 
+The 4DWCM [1] integrates four numerical algorithms so that every molecular event of a living minimal cell can be followed for its entire 105-min division cycle
+1. A reaction-diffusion master-equation (RDME) solver on the GPU advances Brownian motion and local reactions in 10 nm lattice voxels with 50 µs steps. Every 12.5 ms of biological time the RDME is paused and three auxiliary solvers are called: 
+2. a global chemical-master-equation module for low-copy, well-stirred reactions such as transcription initiation and tRNA charging 
 
-2. an ordinary-differential-equation solver for the 493-reaction metabolic network
+3. an ordinary-differential-equation solver for the 493-reaction metabolic network
 
-3. a Brownian-dynamics simulation running on a second GPU that evolves the coarse-grained chromosome, replication forks and SMC-loop extrusion. 
+4. a Brownian-dynamics simulation running on a second GPU that evolves the coarse-grained chromosome, replication forks and SMC-loop extrusion. 
 
 
 ![d](./figures/4DWCM_flowchart_v1.3.png)
@@ -80,17 +88,20 @@ The 4DWCM [1] integrates four numerical engines so that every molecular event of
 | **Free-DTS**            | Cell morphology |
 
 
+---
 
-#### 2  Geometry: Surface Area, Volume and DNA Doubling
+## 2  Geometry: Surface Area, Volume and DNA Doubling
 
 The simulated cell begins as a sphere of radius 200 nm and grows isotropically until its volume doubles (\~68 min), after which an invagination appears and constriction proceeds until cytokinesis at \~106 min. Membrane synthesis continues throughout, so surface area does not plateau until division is complete. DNA replication initiates after a short B-period of \~5 min, finishes at \~51 min, and the combined timing of DNA and membrane growth predicts an ori\:ter ratio of 1.28, remarkably close to the experimental value of 1.21 . The staggered vertical lines in the figure below mark, respectively, the mean times at which DNA, volume and surface area have doubled in the 50-cell ensemble.
 
 ![SAVDNA](./figures/DNA_V_SA.png)
 
+
 ## 3  Complex assembly and active counts
 
 By the time the average cell reaches the division point (\~105 min) it contains 881 ribosomes, 176 RNA polymerases and 192 degradosomes. Because the subunits of RNAP and the degradosome are placed unassembled at t = 0, these complexes self-assemble within the first biological second and then track gene expression demand throughout the cycle. Roughly 55 % of ribosomes are translating, 70 % of RNAP are elongating, and 10 % of degradosomes are actively degrading at any instant, values that fall within the broad ranges measured for bacteria with richer proteomes .
 ![traj](./figures/GIP_statistics_first5.png)
+
 ## 4  Protein and mRNA Accumulation relative to Replication Initiation
 
 Replication typically starts five minutes after birth but can be delayed to as late as 46 min in outlier cells . Because DNA, volume and metabolism are still ramping up during this brief interval, protein totals at initiation exceed the inoculum by barely ten per cent, whereas mRNA pools have already expanded two-fold owing to their shorter lifetimes and the burst of RNAP assembly. When the same cells are inspected at 105 min, the distribution of the “scaled protein count” (protein copies at 105 min divided by the initial copy number) peaks just below two, revealing that the model falls slightly short of perfect protein doubling for the average gene, especially for long, slow-translated proteins . The corresponding mRNA distribution is broader—owing to stochastic transcription–degradation—but its median also lies beneath 2, confirming that underproduction of transcripts is a principal cause of the modest protein shortfall.
