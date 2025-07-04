@@ -54,6 +54,9 @@ Due to the time limitation, you will launch 2 minutes simulation of 4 cell repli
 
 ### Launch Four Cell Replicates
 
+<details>
+<summary><strong>Click to EXPAND: Launch Simulation in Parallel </strong></summary>
+
 + **First**: Open **another** new terminal and login to Delta again
 
 + **Second**: Navigate and Submit the bash file
@@ -77,6 +80,7 @@ Due to the time limitation, you will launch 2 minutes simulation of 4 cell repli
     ``` bash
     cd /projects/bddt/$USER/LM/CME/WholeCellModel/output_4replicates
     ```
+</details>
 
 Each simulation replicate with index *i* generates:
 
@@ -290,7 +294,9 @@ We can look at one reaction entry in the SBML file for more insights. Go to the 
 
 The discreteness and stochasticity of chemical kinetics play a role when the number of reactants is significantly low. This makes it necessary to use stochastic chemical master equation (CME) for genetic information processes (GIP) where the copy numbers of species are low, shown as follows to sample the variation. In contrast, ordinary differential equations (ODE) is sufficient to depict the kinetics of large numbers of small metabolites in metabolism.
 
-$\frac{dP(\mathbf{x},t)}{dt}=\sum_{r}^{R} [-a_r({{\mathbf{x}}}) P({{\mathbf{x}}},t) + a_r({{\mathbf{x}}}_\nu-\mathbf{S_r}) P({{\mathbf{x}}}-\mathbf{S_r},t)]$
+```math
+\frac{dP(\mathbf{x},t)}{dt}=\sum_{r}^{R} [-a_r({{\mathbf{x}}}) P({{\mathbf{x}}},t) + a_r({{\mathbf{x}}}_\nu-\mathbf{S_r}) P({{\mathbf{x}}}-\mathbf{S_r},t)]
+```
 
 To simulate the **co-evolution** of GIP and metabolism, the communication needs to be performed to describe the interactions between these two subsystems. We then proposed to use **[Hybrid CMEODE simulation](https://ietresearch.onlinelibrary.wiley.com/doi/10.1049/iet-syb.2017.0070)**.  We first discretize the entire simulation length into piecewise communication time steps (hook intervals, $t_H$). During each communication time step, 
 
