@@ -18,20 +18,15 @@ Now go to file on your Jupyter Notebook webpage `Tut2.1-GeneticInformationProces
 
 ## Stochastic Protein Synthesis
 
-First, we can plot the traces of mRNA and protein in different single replicates to see the stair-stepping trace of mRNA and the burst of protein in **Figure 1**. You will an increase/burst in protein count when there are mRNAs and the protein count holds or gradually decrease when no mRNA. You are encouraged to compare the pattern shown here to your own plots. 
+We first look at the average and span of mRNA and protein abundances among the cell population of 10 replicates. The population averaged mRNA abundace fluctuates below 1 along the cell cycle, and the protein counts increase accumulatively from the translation processes (protein degradation was minor compared to translation under this set of kinetic parameters).
+
+Protein synthesis takes place in each single cells. We can plot the traces of mRNA and protein in different single replicates to see the stair-stepping trace of mRNA and the burst of protein. You will an increase/burst in protein when there are mRNAs, and the halting or even decrease of protein with no mRNA. You are encouraged to compare the pattern shown here to your own plots.
 
 <p align="center">
-  <img src="../figs/plots_GIP/mRNA_replicate1.png" width="300" alt="ODE result"> <img src="../figs/plots_GIP/protein_replicate1.png" width="300" alt="CME replicate 1"> <br>
-  <b>Figure 1. Left: star-stepping trace of mRNA in single cell replicate 1; Right: Burst-like protein synthesis in the same replicate</b>
+  <img src="../figs/plots_GIP/GIP_mRNA_Protein_10Replicates.png" width="300" alt="mRNA Protein 10 reps"> <img src="../figs/plots_GIP/GIP_mRNA_Protein_Cell1.png" width="300" alt="CME replicate 1"> <br>
+  <b>Figure 1. Left: Population average (solid line) and full span (shaded area) of mRNA (red) and protein(blue) abundances in 10 cell replicates <br> 
+  Right: star-stepping trace of mRNA and the burst-like protein synthesis in one single cell replicate</b>
 </p>
-
-We can also see the average, minimum and maximum of mRNA and protein counts over the whole simulation time span.
-
-<p align="center">
-  <img src="../figs/plots_GIP/minmaxavg_mRNA_10replicates.png" width="300" alt="ODE result"> <img src="../figs/plots_GIP/minmaxavg_protein_10replicates.png" width="300" alt="CME replicate 1"> <br>
-  <b>Figure 2. Population average, minumum, and maximum of mRNA (Left) and protein (Right) among 10 replicates</b>
-</p>
-
 
 ## Discussion
 
@@ -40,9 +35,9 @@ We can also see the average, minimum and maximum of mRNA and protein counts over
 Do mRNA and protein reach steady-state during the 6300 seconds' simulation? How can you tell this from the plots? If the fluctuation is large, try to increase the replicates numbers `reps` from 10 to 100.
 
 ### 2. Doubling the initial abundace of protein for cell division
-The initial count of protein P\_0001/DnaA from experimental proteomics data is 148. Compare the mean count of protein at the end of the cell cycle to this experimental count. Does the simulation roughly generate 148 proteins during the entire cell cycle? And why this is important? Please consider cell division.
+The initial count of protein P\_0001/DnaA from experimental proteomics data is 148. In the following histogram, the population average of DnaA at the end of the cell cycle is 270. Compare the mean count of protein at the end of the cell cycle to this experimental count. Does the simulation roughly generate 148 proteins during the entire cell cycle? And why this is important? Please consider cell division.
 
 <p align="center">
-  <img src="../figs/plots_GIP/Distribution_Ptns_at_6300_seconds_100replicates.png" width="450" alt="ODE result"> <br>
+  <img src="../figs/plots_GIP/GIP_Proteins_CycleEnd_100replicates.png" width="450" alt="ODE result"> <br>
   <b>Figure 3. Distribution of protein abundances among 100 cell replicates at the of the cell cycle</b>
 </p>

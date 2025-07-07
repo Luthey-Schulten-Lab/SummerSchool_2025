@@ -30,7 +30,7 @@ def plot_hists(fig_dir, fig_name, fig_size,
                mean_median=[False, False],
                title_set=True, fonts_sizes=[7, 7, 8, 6],
                extension='.png', range=None, 
-               tick_setting=[4.0, 1.5, 5, 'out'], legend_pos='best'):
+               tick_setting=[4.0, 1.5, 5, 'out'], line_widths = [1,1.5], legend_pos='best'):
     """
     Description:
     fonts_sizes: xlable, ylabel, title, legend
@@ -41,6 +41,7 @@ def plot_hists(fig_dir, fig_name, fig_size,
     fig = plt.figure(figsize=(fig_size[0], fig_size[1]))
     
     xlabel_fontsize, ylabel_fontsize, title_fontsize, legend_fontsize = fonts_sizes
+    line_width, spine_width = line_widths
 
     # colors = ['limegreen', 'royalblue', 'darkorange', 'purple', 'red', 'cyan']  # Predefined color list
     
@@ -54,16 +55,16 @@ def plot_hists(fig_dir, fig_name, fig_size,
         print(f"Hist {fig_path} {legends[i]}: Min {np.min(data):.2f}, Mean {np.mean(data):.2f}, Median {np.median(data):.2f}, Max {np.max(data):.2f}")
 
         if range is None:
-            plt.hist(data, bins=bins, alpha=0.7, color=color, edgecolor='black', linewidth=1, label=f'{legends[i]}', histtype='stepfilled')
+            plt.hist(data, bins=bins, alpha=0.7, color=color, edgecolor='black', linewidth=line_width, label=f'{legends[i]}', histtype='stepfilled')
         else:
-            plt.hist(data, bins=bins, range=range, alpha=0.7, color=color, edgecolor='black', linewidth=1, label=f'{legends[i]}', histtype='stepfilled')
+            plt.hist(data, bins=bins, range=range, alpha=0.7, color=color, edgecolor='black', linewidth=line_width, label=f'{legends[i]}', histtype='stepfilled')
         
         
         # Add mean, median lines per dataset
         
         if mean_median[0]:
             mean = np.nanmean(data)
-            plt.axvline(mean, color=color, linestyle='solid', linewidth=1.5)
+            plt.axvline(mean, color=color, linestyle='solid', linewidth=1.5*line_width)
 
             ax.text(mean, 0, f'{mean:.2f}', color=color, rotation=-45,
             ha='left', va='top', fontsize=tick_setting[2],
@@ -71,7 +72,7 @@ def plot_hists(fig_dir, fig_name, fig_size,
 
         if mean_median[1]:
             median = np.nanmedian(data)
-            plt.axvline(median, color=color, linestyle='dotted', linewidth=1.5)
+            plt.axvline(median, color=color, linestyle='dotted', linewidth=1.5*line_width)
 
             ax.text(median, 0, f'{median:.2f}', color=color, rotation=45,
             ha='right', va='top', fontsize=tick_setting[2],
@@ -92,10 +93,10 @@ def plot_hists(fig_dir, fig_name, fig_size,
     ax.tick_params(labelsize=tick_setting[2], length=tick_length, width=tick_width, direction=tick_setting[3],
                 left=True, right=False, bottom=True, top=False, which='major')
     
-    ax.spines['left'].set_linewidth(1.5)
-    ax.spines['bottom'].set_linewidth(1.5)
-    ax.spines['right'].set_linewidth(1.5)
-    ax.spines['top'].set_linewidth(1.5)
+    ax.spines['left'].set_linewidth(spine_width)
+    ax.spines['bottom'].set_linewidth(spine_width)
+    ax.spines['right'].set_linewidth(spine_width)
+    ax.spines['top'].set_linewidth(spine_width)
     
     handles, labels = ax.get_legend_handles_labels()
     if handles:
@@ -104,7 +105,7 @@ def plot_hists(fig_dir, fig_name, fig_size,
     plt.tight_layout()
     fig.savefig(fig_path, dpi=600, transparent=False)
     plt.show()
-    # plt.close()
+    plt.close()
 
     return None
 
@@ -113,7 +114,7 @@ def plot_time_ranges(fig_dir, fig_name, fig_size,
                time, data_list, legends, colors, xlabel, ylabel, title,
                percentile=[10,90], plot_avg=True, plot_range=True, xlimit=[0,100],
                title_set=True, fonts_sizes=[7, 7, 8, 6],
-               extension='.png', tick_setting=[4.0, 1.5, 5, 'out'], legend_pos='best',
+               extension='.png', tick_setting=[4.0, 1.5, 5, 'out'], line_widths = [1,1.5], legend_pos='best',
                linestyles=None, ylimit=None):
     """
     Description:
@@ -127,7 +128,8 @@ def plot_time_ranges(fig_dir, fig_name, fig_size,
     fig = plt.figure(figsize=(fig_size[0], fig_size[1]))
     
     xlabel_fontsize, ylabel_fontsize, title_fontsize, legend_fontsize = fonts_sizes
-        
+    line_width, spine_width = line_widths
+
     ax = plt.gca()
     # ax.set_facecolor('white')
 
@@ -144,7 +146,7 @@ def plot_time_ranges(fig_dir, fig_name, fig_size,
         # print(f"{legend}: any all-NaN in y? {np.isnan(y).all(axis=1).any()}")
         if plot_avg:
             mean_y = np.nanmean(y, axis=1)
-            ax.plot(time, mean_y, alpha=0.75, linewidth=1, color=color, linestyle=ls, label=f"{legend}")
+            ax.plot(time, mean_y, alpha=0.75, linewidth=line_width, color=color, linestyle=ls, label=f"{legend}")
             # print(mean_y, legend)
 
         if plot_range:
@@ -170,10 +172,10 @@ def plot_time_ranges(fig_dir, fig_name, fig_size,
     ax.tick_params(labelsize=tick_setting[2], length=tick_length, width=tick_width, direction=tick_setting[3],
                 left=True, right=False, bottom=True, top=False, which='major')
     
-    ax.spines['left'].set_linewidth(1.5)
-    ax.spines['bottom'].set_linewidth(1.5)
-    ax.spines['right'].set_linewidth(1.5)
-    ax.spines['top'].set_linewidth(1.5)
+    ax.spines['left'].set_linewidth(spine_width)
+    ax.spines['bottom'].set_linewidth(spine_width)
+    ax.spines['right'].set_linewidth(spine_width)
+    ax.spines['top'].set_linewidth(spine_width)
     
     handles, labels = ax.get_legend_handles_labels()
     if handles:
@@ -183,7 +185,7 @@ def plot_time_ranges(fig_dir, fig_name, fig_size,
     plt.tight_layout()
     fig.savefig(fig_path, dpi=600, transparent=False)
     plt.show()
-    # plt.close()
+    plt.close()
 
     return None
 
@@ -191,7 +193,7 @@ def plot_doubling(fig_dir, fig_name, fig_size,
                pkl, DNA_content,
                ylabel, title, reps, colors, legends, xlimit=[0,100],
                title_set=True, fonts_sizes=[7, 7, 8, 6],
-               extension='.png', tick_setting=[4.0, 1.5, 5, 'out'], 
+               extension='.png', tick_setting=[4.0, 1.5, 5, 'out'], line_widths = [1,1.5],
                legend_pos='best'):
     """
     Plot the scaled SA, Volume, and Chromosome
@@ -201,6 +203,8 @@ def plot_doubling(fig_dir, fig_name, fig_size,
     ax = plt.gca()
 
     xlabel_fontsize, ylabel_fontsize, title_fontsize, legend_fontsize = fonts_sizes
+    line_width, spine_width = line_widths
+
     reps = [rep -1 for rep in reps]
 
     vol = pkl.volumes[:,reps] # times by reps
@@ -238,7 +242,7 @@ def plot_doubling(fig_dir, fig_name, fig_size,
 
         p, = ax.plot(pkl.t/60, mean_y,
                         alpha=0.75,
-                        linewidth=1,
+                        linewidth=line_width,
                         color=colors[ith],
                         label=legends[ith])
         
@@ -287,16 +291,123 @@ def plot_doubling(fig_dir, fig_name, fig_size,
     ax.tick_params(labelsize=tick_setting[2], length=tick_length, width=tick_width, direction=tick_setting[3],
                 left=True, right=False, bottom=True, top=False, which='major')
     
-    ax.spines['left'].set_linewidth(1.5)
-    ax.spines['bottom'].set_linewidth(1.5)
-    ax.spines['right'].set_linewidth(1.5)
-    ax.spines['top'].set_linewidth(1.5)
+    ax.spines['left'].set_linewidth(spine_width)
+    ax.spines['bottom'].set_linewidth(spine_width)
+    ax.spines['right'].set_linewidth(spine_width)
+    ax.spines['top'].set_linewidth(spine_width)
 
     print('plot_doubling',ax.get_xlim())
     
     plt.tight_layout()
     fig.savefig(fig_path, dpi=600, transparent=False)
+    plt.show()
+    plt.close()
+
+    return None
+
+def plot_time_dualAxes(fig_dir, fig_name, fig_size,
+               time, xlabel, title, percentile,
+               left_data, left_legends, left_colors, left_ylabel, left_plots, left_ylabel_color,
+               right_data, right_legends, right_colors, right_ylabel, right_plots, right_ylabel_color,
+               xlimit=[0,100], title_set=True, fonts_sizes=[7, 7, 8, 6],
+               extension='.png', tick_setting=[4.0, 1.5, 5, 'out'], line_widths = [1,1.5],legend_pos='best'):
+
+    fig_path = fig_dir + fig_name + extension
+    fig, ax1 = plt.subplots(figsize=(fig_size[0], fig_size[1]))
     
+    xlabel_fontsize, ylabel_fontsize, title_fontsize, legend_fontsize = fonts_sizes
+    line_width, spine_width = line_widths
+    
+    ax1.set_xlim(xlimit[0], xlimit[1])
+    
+    xlabel = xlabel.replace('_', '\_')
+    ax1.set_xlabel(r'{0}'.format(xlabel), fontsize=xlabel_fontsize, labelpad=1.5)
+    
+    left_ylabel = left_ylabel.replace('_', '\_')
+    ax1.set_ylabel(r'{0}'.format(left_ylabel), 
+                   fontsize=ylabel_fontsize, color=left_ylabel_color,
+                   labelpad=1.5)
+    
+    if title_set:
+        title = title.replace('_', '\_')
+        ax1.set_title(r'{0}'.format(title), fontsize=title_fontsize, pad=4)
+
+    for y, legend, color, left_plot in zip(left_data, left_legends, left_colors, left_plots):
+        # print(y.shape)
+        # print(f"{legend}: any all-NaN in y? {np.isnan(y).all(axis=1).any()}")
+        if left_plot == 'single':
+            ax1.plot(time, y, alpha=1, linewidth=line_width, color=color, label=f"{legend}")
+
+        elif left_plot == 'range':
+            lower_bound = np.percentile(y, percentile[0], axis=1)
+            upper_bound = np.percentile(y, percentile[1], axis=1)
+            ax1.fill_between(time, lower_bound, upper_bound, color=color, alpha=0.3)
+
+        elif left_plot == 'range_avg':
+            mean_y = np.nanmean(y, axis=1)
+            ax1.plot(time, mean_y, alpha=1, linewidth=line_width, color=color, label=f"{legend}")
+            lower_bound = np.percentile(y, percentile[0], axis=1)
+            upper_bound = np.percentile(y, percentile[1], axis=1)
+            ax1.fill_between(time, lower_bound, upper_bound, color=color, alpha=0.3)
+
+        else:
+            print('Plot Method Not Matched')
+
+    tick_length = tick_setting[0]
+    tick_width = tick_setting[1]
+    ax1.tick_params(labelsize=tick_setting[2], length=tick_length, width=tick_width, direction=tick_setting[3],
+                left=True, right=False, bottom=True, top=False, which='major')
+    
+    ax1.spines['left'].set_linewidth(spine_width)
+    ax1.spines['bottom'].set_linewidth(spine_width)
+    ax1.spines['right'].set_linewidth(spine_width)
+    ax1.spines['top'].set_linewidth(spine_width)
+    
+    ax2 = ax1.twinx()
+    
+    ax2.set_ylabel(r''+right_ylabel.replace('_','\_'),
+                      fontsize=ylabel_fontsize, color=right_ylabel_color,
+                      labelpad=1.5)
+    
+    for y, legend, color, right_plot in zip(right_data, right_legends, right_colors, right_plots):
+        # print(y.shape)
+        # print(f"{legend}: any all-NaN in y? {np.isnan(y).all(axis=1).any()}")
+        if right_plot == 'single':
+            ax2.plot(time, y, alpha=1, linewidth=line_width, color=color, label=f"{legend}")
+
+        elif right_plot == 'range':
+            lower_bound = np.percentile(y, percentile[0], axis=1)
+            upper_bound = np.percentile(y, percentile[1], axis=1)
+            ax2.fill_between(time, lower_bound, upper_bound, color=color, alpha=0.3)
+
+        elif right_plot == 'range_avg':
+            mean_y = np.nanmean(y, axis=1)
+            ax2.plot(time, mean_y, alpha=1, linewidth=line_width, color=color, label=f"{legend}")
+            lower_bound = np.percentile(y, percentile[0], axis=1)
+            upper_bound = np.percentile(y, percentile[1], axis=1)
+            ax2.fill_between(time, lower_bound, upper_bound, color=color, alpha=0.3)
+
+        else:
+            print('Plot Method Not Matched')
+
+    ax2.tick_params(labelsize=tick_setting[2], length=tick_length, width=tick_width, direction=tick_setting[3],
+                left=False, right=True, bottom=False, top=False, which='major')
+    
+    # Merge legends
+    handles1, labels1 = ax1.get_legend_handles_labels()
+    handles2, labels2 = ax2.get_legend_handles_labels()
+
+    if handles1+handles2:
+        # Set the legend with a higher zorder
+        legend = ax2.legend(handles1 + handles2, labels1 + labels2, 
+                            loc=legend_pos, 
+                            fontsize=legend_fontsize)
+        legend.set_zorder(20)  # Ensure legend is on top
+
+
+    plt.tight_layout()
+    fig.savefig(fig_path, dpi=600, transparent=False)
+    plt.show()
     plt.close()
 
     return None

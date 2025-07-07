@@ -53,8 +53,8 @@ In the jupyter notebook, we also introduce a more general way to do the analysis
 In ODE result, what you should note is that the count of each species varies smoothly across the time course. However, the count of each reactant must be in integer numbers due to the discreteness of molecules. Further, the reactions occur via the collision between two molecules, so the change of count also in integer units. Under such reasoning, the ODE result is not accurate anymore for microscopic reactions where the counts of reactants are low. Stochastic modeling was designed to address this point.  
 
 <p align="center">
-  <img src="../figs/plots_bimolecule/bimolecule_ODE_Count.png" width="300" alt="ODE result"> <img src="../figs/plots_bimolecule/bimolecule_CME_trace_replicate1.png" width="300" alt="CME replicate 1"> <br>
-  <b>Figure 1. Comparison between ODE trajectory and CME trajectory of replicate 1</b>
+  <img src="../figs/plots_bimolecule/bimolecule_ODE_1foldrate.png" width="300" alt="ODE result"> <img src="../figs/plots_bimolecule/bimolecule_CME_traces_rep5_1foldrates.png" width="300" alt="CME replicate 1"> <br>
+  <b>Figure 1. Comparison between ODE trajectory and CME trajectory of one replicate</b>
 </p>
 
 You might note that the behavior in stochastic result is qualitatively the same to the deterministic ODE result, however there appears to be considerable fluctuation, even after the system has come to equilibrium.  This is due to the stochastic nature of the process, where the reaction can transiently fluctuate away from the equilibrium value.  In addition, you may be able to tell that the changes in particle number from one time to another are in integer increments, though this will become considerably more obvious at lower number of particles.
@@ -68,7 +68,7 @@ You might note that the behavior in stochastic result is qualitatively the same 
 Change the replicates number from 10 to 100 or even more in Tutorial 1.2. You need to change the variable `reps` and restart the Jupyter Notebook kernel to start a new CME simulation. See **Figure 2** for the situation with 10 and 100 replicates. Does the higher replicates number lead to a smoother average and variance?
 
 <p align="center">
-  <img src="../figs/plots_bimolecule/bimolecule_CME_minmaxavg_A_10repilicates_1foldrates.png" width="300" alt="ODE result"> <img src="../figs/plots_bimolecule/bimolecule_CME_trace_replicate1.png" width="300" alt="CME replicate 1"> <br>
+  <img src="../figs/plots_bimolecule/bimolecule_CME_A_10replicates_1foldrates.png" width="300" alt="ODE result"> <img src="../figs/plots_bimolecule/bimolecule_CME_A_100replicates_1foldrates.png" width="300" alt="CME replicate 1"> <br>
   <b>Figure 2. Population average of particle A in 10 (Left) and 100 (Right) replicates solved stochastically.</b>
 </p>
 
@@ -77,7 +77,7 @@ Change the replicates number from 10 to 100 or even more in Tutorial 1.2. You ne
 Multiple both the forward and backward rate constants by 10 or even 100 by changing variable `fold`, and restart and run ODE and CME Jupyter Notebooks again. In ODE, does the system converge to equilibrium faster? Does the equilibrium count change? In CME, does the fluctuation in single replicate become faster? How about the ensemble average? See **Figure 3**.
 
 <p align="center">
-  <img src="../figs/plots_bimolecule/bimolecule_ODE_Count_10foldrates.png" width="300" alt="ODE result"> <img src="../figs/plots_bimolecule/bimolecule_CME_trace_replicate1_10foldrates.png" width="300" alt="CME replicate 1"> <br>
+  <img src="../figs/plots_bimolecule/bimolecule_ODE_10foldrate.png" width="300" alt="ODE result"> <img src="../figs/plots_bimolecule/bimolecule_CME_traces_rep5_10foldrates.png" width="300" alt="CME replicate 1"> <br>
   <b>Figure 3. ODE trajectory and CME trajectory of replicate 1 with 10 times faster forward and backward rates.</b>
 </p>
 
