@@ -2,14 +2,14 @@
 
 ## Biomolecular Reaction
 
-In the first tutorial, we will motivate stochastic modeling with a simple example of a bimolecular reaction. The counts of reactants are small enough that you will see the fluctuations and variance of the stochastic result compared to the deterministic one. You will use `Tut1.1-ODEBimol.ipynb` to run the ODE of Bimolecular reaction solved with Scipy and `Tut1.2-CMEBimol.ipynb` to run the CME of the Bimolecular reaction with jLM in Lattice Microbe.
+In this tutorial, we will motivate stochastic modeling with a simple bimolecular reaction. The counts of reactants are small enough that you will see the fluctuations and variance of the stochastic result compared to the deterministic one. You will use `Tut1.1-ODEBimol.ipynb` to run the ODE of Bimolecular reaction solved with Scipy, and `Tut1.2-CMEBimol.ipynb` to run the CME of the Bimolecular reaction with jLM in Lattice Microbe.
 
 We will simulate the association/dissociation reaction of hypothetical molecules:
 ```math
 \ce{A + B <=>[\ce{k_f}][\ce{k_r}]C}
 ```
 
-Let us start out with a low number of each particles: 100 of A and B and 0 of C.  Let us imagine simulating that problem in a microbe sized volume of 1 $fL$. Also, let us start off with forward rate $k_f=1.07\times 10^6M^{-1}s^{-1}$ and backward rate $k_r=0.351/s$.
+Let us start out with a small number of each particles: 100 of A and B and 0 of C.  Let us put these particiles in a microbe sized volume of 1 $fL$. Also, let us start off with forward rate $k_f=1.07\times 10^6M^{-1}s^{-1}$ and backward rate $k_r=0.351/s$.
 
 Under ODE representation using concentrations of species, the change of concentrations for A, B, and C are:
 ```math
@@ -24,27 +24,27 @@ Since we are using counts rather than concentrations in CME,  the forward rate c
 
 ## Run the Jupyter Notebook
 
-Now go to files on your Jupyter Notebook webpage `Tut1.1-ODEBimol.ipynb` to run the ODE of Bimolecular reaction solved with Scipy and `Tut1.2-CMEBimol.ipynb` to run the CME with jLM in Lattice Microbe.
+Now go to files on the Jupyter Notebook webpage `Tut1.1-ODEBimol.ipynb` to run the ODE of Bimolecular reaction solved with Scipy and `Tut1.2-CMEBimol.ipynb` to run the CME with jLM in Lattice Microbe.
 
 ## Recap
 
 ### Set up simulation with jLM
 
-As mentioned in the introduction part, pyLM Problem Solving Environment is intensively used to construct the CME system. To do so, we need to import `jLM` module. 
+As mentioned in the introduction part, jLM Problem Solving Environment is now intensively used to construct the CME system. To do so, we need to import `jLM` modules. 
 
-The line `sim=CME.CMESimulation()` creates an empty simulation object. The next lines define the chemical species; in pyLM species are named by python strings and must be registered with the simulation using the `defineSpecies` command. `addReaction` function adds reactions to the defined species. 
+The line `sim=CME.CMESimulation()` creates an empty simulation object. The next lines define the chemical species; in `jLM.CME` species are named by python strings and must be registered with the simulation using the `defineSpecies` command. `addReaction` function adds reactions to the defined species. 
 
-In Lattice Microbes, you need to specify both the forward and back reactions separately.  The first and second argument can be either a tuple of reactants or a string when only one reactant is specified.  Lattice Microbes currently supports 0th, 1st and 2nd order reactions, and reaction rates must be specified in the stochastic format. In the special case of a 0th order reaction, the empty string `""` should be passed as the reactant.  In addition, annihilation reactions can be specified by passing the empty string `""` as the product parameter.
+In Lattice Microbes, you need to specify both the forward and back reactions separately. The first and second argument can be either a tuple of reactants or a string when only one reactant is specified. `jLM.CME` currently supports 0th, 1st and 2nd order reactions, and reaction rates must be specified in the stochastic format. In the special case of a 0th order reaction, the empty string `""` should be passed as the reactant. In addition, annihilation reactions can be specified by passing the empty string `""` as the product parameter.
 
 The following lines with `addParticles` define the initial species counts.
 
 Next the simulation parameters are specified, time steps will be written out every 30 microseconds and the total simulation will run for 30 seconds.  The next line is of particular importance; the simulation must be saved to a file before running the simulation.  
 
-Finally, we call the `run(...)` command on the simulation object giving it the name of the simulation file, the simulation method and the number of independent trajectories (replicates) to run of that simulation. In this tutorial, we use Direct Gillespie Algorithm to sample stochastic bimolecular reaction system.
+Finally, we call the `run(...)` command on the simulation object giving it the name of the simulation file, the simulation method and the number of independent trajectories (replicates) to run of that simulation. In this tutorial, we use **Direct Gillespie Algorithm** to sample stochastic bimolecular reaction system.
 
 By running the simulation, you will see a long standard output showing the number of finished replicates. Generally, CME simulation will finish rather quickly.
 
-`pySTDLM` is a library of standard functionality such as standard reaction systems, cell systems.  In addition it contains a number of pre- and post-processing functionality. In the post processing part, we showed two build-in functions in `pySTDLM:PostProcessing.plotTrace` for a single replicate and `PostProcessing.plotAvgVarFromFile` for the whole ensemble to visualize the results.
+We showed build-in module `jLM.CMEPostProcessing` to do the standard post-processing, including show the time-dependent traces of species for a certain replicate, and also population average and variance among the population/ensemble.
 
 In the jupyter notebook, we also introduce a more general way to do the analysis where we first serialize the output LM file into a 3D numpy array and plot using custom functions. You will use this method in Tutorial 2 and 3 when doing analysis.
 
