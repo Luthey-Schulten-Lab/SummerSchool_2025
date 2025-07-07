@@ -35,26 +35,26 @@ To successfully login, you need to type your password for NCSA and do 2FA.
 Navigate to your directory
 
 ```bash
-cd /projects/bddt/$USER
+cd /projects/beyi/$USER
 ```
 
 Copy the prepared materials to your directory. This step may take several minutes since the large Apptainer file and prepared CME-ODE WCM trajactories.
 
 ```bash
-cp -r /projects/bddt/LM ./
+cp -r /projects/beyi/CME ./
 ```
 
 ### Launch Jupyter Notebook on Delta
 >[!NOTE]
 >You will use Jupyter Notebook to run Tutorials bimolecule, GIP and the analysis part of Tutorial WCM. 
 
-The advantage of Jupyter Notebook is that you could navigate the folders and run the *.ipynb* file using GUI.
+The advantage of Jupyter Notebook is that you could navigate the folders and run the `.ipynb` files using GUI.
 
 - **First**: Submit a job to a Delta GPU node.  
-    Here *srun* launch interactive job onto Delta, *partition* claims A100 GPU node, and for 6 hours *time*. A four digit number is randomly generated to specify the *port* for Jupyter Notebook. 
+    Here `srun` launch interactive job onto Delta, `partition` claims A100 GPU node, and for 6 hours `time`. A four digit number is randomly generated to specify the `port` for Jupyter Notebook. 
 
   ```bash
-  srun --account=bddt-delta-gpu --partition=gpuA100x4 --time=06:00:00 --mem=64g --gpus-per-node=1 --tasks-per-node=1 --cpus-per-task=16 --nodes=1 apptainer exec --nv --containall --bind /projects/bddt/$USER/:/workspace /projects/bddt/$USER/LM/LM.sif jupyter-notebook /workspace/ --no-browser --port=$((RANDOM%9000+1000)) --ip=0.0.0.0 --allow-root
+  srun --account=beyi-delta-gpu --partition=gpuA100x4 --time=04:00:00 --mem=64g --gpus-per-node=1 --tasks-per-node=1 --cpus-per-task=16 --nodes=1 apptainer exec --nv --containall --bind /projects/beyi/$USER/:/workspace /projects/beyi/$USER/CME/Summer2025_LM.sif jupyter-notebook /workspace/ --no-browser --port=$((RANDOM%9000+1000)) --ip=0.0.0.0 --allow-root
   ```  
 
   Then you should wait for Delta to allocate the resources for you that usually takes less than 1 minute. When you see similar things as the following, you are good to proceed to the second step:
