@@ -228,26 +228,15 @@ The equivalent reaction to duplicate certain gene is in Table \ref{tab:CMErxns} 
 
 **Table 1: Reactions and Rates for Replication, Transcription, Translation and Degradation**
 
-| **Processes**  | **Reactions**                                                                 | **Kinetic Constant**                      |
-|----------------|-------------------------------------------------------------------------------|-------------------------------------------|
-| Replication     | $G_{\text{locusNum}} \rightarrow 2G_{\text{elongation}}$                      | $k_{\text{replication}}^{\text{locusNum}}$ |
-| Transcription   | $RNAP + G_{\text{locusNum}} \rightarrow RNAP:G_{\text{locusNum}}$            | $k_{\text{trsc}}^{\text{binding}}$         |
-|                | $RNAP:G_{\text{locusNum}} \rightarrow R_{\text{locusNum}} + RNAP + G_{\text{locusNum}}$ | $s_{\text{trsc}}^{\text{locusNum}} k_{\text{trsc}}^{\text{elongation}}$ |
-| Translation     | $Ribosome + R_{\text{locusNum}} \rightarrow Ribosome:R_{\text{locusNum}}$     | $k_{\text{trans}}^{\text{binding}}$        |
-|                | $Ribosome:R_{\text{locusNum}} \rightarrow P_{\text{locusNum}} + Ribosome + R_{\text{locusNum}}$ | $k_{\text{trans}}^{\text{elongation}}$ |
-| Degradation     | $Degradosome + R_{\text{locusNum}} \rightarrow Degradosome:R_{\text{locusNum}}$ | $k_{\text{degra}}^{\text{binding}}$       |
-|                | $Degradosome:R_{\text{locusNum}} \rightarrow NMPs + Degradosome$              | $k_{\text{degra}}^{\text{depoly}}$        |
-
-
 | **Processes**   | **Reactions**                                                                                      | **Kinetic Constant**                                 |
 |-----------------|---------------------------------------------------------------------------------------------------|------------------------------------------------------|
-| Replication     | G<sub>locusNum</sub> → 2G<sub>elongation</sub>                                                     | *k*<sup>locusNum</sup><sub>replication</sub>         |
-| Transcription   | RNAP + G<sub>locusNum</sub> → RNAP:G<sub>locusNum</sub>                                            | *k*<sub>trsc</sub><sup>binding</sup>                 |
-|                 | RNAP:G<sub>locusNum</sub> → R<sub>locusNum</sub> + RNAP + G<sub>locusNum</sub>                     | *s*<sup>locusNum</sup><sub>trsc</sub> · *k*<sub>trsc</sub><sup>elongation</sup> |
-| Translation     | Ribosome + R<sub>locusNum</sub> → Ribosome:R<sub>locusNum</sub>                                    | *k*<sub>trans</sub><sup>binding</sup>                |
-|                 | Ribosome:R<sub>locusNum</sub> → P<sub>locusNum</sub> + Ribosome + R<sub>locusNum</sub>             | *k*<sub>trans</sub><sup>elongation</sup>             |
-| Degradation     | Degradosome + R<sub>locusNum</sub> → Degradosome:R<sub>locusNum</sub>                              | *k*<sub>degra</sub><sup>binding</sup>                |
-|                 | Degradosome:R<sub>locusNum</sub> → NMPs + Degradosome                                              | *k*<sub>degra</sub><sup>depoly</sup>                 |
+| Replication     | G<sub>locusNum</sub> → 2G<sub>elongation</sub>                                                     | $k_{\text{replication}}^{\text{locusNum}}$        |
+| Transcription   | RNAP + G<sub>locusNum</sub> → RNAP:G<sub>locusNum</sub>                                            | $k_{\text{trsc}}^{\text{binding}}$                 |
+|                 | RNAP:G<sub>locusNum</sub> → R<sub>locusNum</sub> + RNAP + G<sub>locusNum</sub>                     | $s_{\text{trsc}}^{\text{locusNum}} k_{\text{trsc}}^{\text{elongation}}$ |
+| Translation     | Ribosome + R<sub>locusNum</sub> → Ribosome:R<sub>locusNum</sub>                                    | $k_{\text{trans}}^{\text{binding}}$               |
+|                 | Ribosome:R<sub>locusNum</sub> → P<sub>locusNum</sub> + Ribosome + R<sub>locusNum</sub>             | $k_{\text{trans}}^{\text{binding}}$             |
+| Degradation     | Degradosome + R<sub>locusNum</sub> → Degradosome:R<sub>locusNum</sub>                              | $k_{\text{degra}}^{\text{binding}}$                |
+|                 | Degradosome:R<sub>locusNum</sub> → NMPs + Degradosome                                              | $k_{\text{degra}}^{\text{depoly}}$                 |
 |
 
 
