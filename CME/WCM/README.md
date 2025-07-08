@@ -362,7 +362,7 @@ with the median of 5 min. This highlights the influence of diffusion on the cell
 There is a wide spread of times when each gene is copied. Starting with only one copy of the chromosome, second copies of genes near the terminus like fakA/0420 are available for transcription after 40 min. On average, the entire chromosome was duplicated around 49 minutes.
 
 <p align="center"> 
-  <img src="../figs/plots_WCM/replication initiation.png" width="450" alt="Doubling of DNA, V, SA"> <img src="../figs/plots_WCM/Time G replication.png" width="450" alt="Doubling of DNA, V, SA">  <br>
+  <img src="../figs/plots_WCM/replication initiation.jpg" width="450" alt="Doubling of DNA, V, SA"> <img src="../figs/plots_WCM/Time G replication.jpg" width="450" alt="Doubling of DNA, V, SA">  <br>
   <b>Figure 16. Left: Comparison of replication initiation time with fast and slow DnaA binding rate with ssDNA with median of 1 and 5 min, respectively. The median time from 4DWCM is shown by green line.<br> 
   Right: Early replication of Gene 0001 near the <i>Ori</i> and late replication of gene 0420 near the <i>Ter</i>. </b>
 </p>
@@ -371,7 +371,7 @@ Cell volume doubled at a median time of 67 minutes, after which the partitioning
 surface area to double and the cells to divide, ranged from 93 to 112 with a median of 102 min, which is in good agreement with experimental measured 105 min[^ref].
 
 <p align="center"> 
-  <img src="../figs/plots_WCM/Time Doubling.png" width="600" alt="Doubling of DNA, V, SA">  <br>
+  <img src="../figs/plots_WCM/Time Doubling.jpg" width="600" alt="Doubling of DNA, V, SA">  <br>
   <b>Figure 17. Scaled chromosome, volume and surface area over the entire cell cycle. </b>
 </p>
 
@@ -380,7 +380,7 @@ surface area to double and the cells to divide, ranged from 93 to 112 with a med
 The assembly nearly duplicate the initial 97 RNAPs, 500 ribosomes, and 120 degradosomes. Once the simulation passes the initial transient, the active fractions of RNAP, ribosomes, and degradosomes stabilize at 65%, 73%, and 14%, respectively. The value for RNAP is high compared to the values for naturally occurring bacteria that typically have a larger RNAP to gene ratio. The active ratios maintained at steady-state due to the synchronized assembly of all three complexes along with the cell cycle.
 
 <p align="center"> 
-  <img src="../figs/plots_WCM/Hists of Scaled RNAP, Ribo and Degra.png" width="450" alt="Duplicate RNAP, Ribo, Degra"> <img src="../figs/plots_WCM/Time Active RNAP, Ribo, Deg.png" width="450" alt="Active Ratio RNAP, Ribo, Deg">  <br>
+  <img src="../figs/plots_WCM/Hists of Scaled RNAP, Ribo and Degra.jpg" width="450" alt="Duplicate RNAP, Ribo, Degra"> <img src="../figs/plots_WCM/Time Active RNAP, Ribo, Deg.jpg" width="450" alt="Active Ratio RNAP, Ribo, Deg">  <br>
   <b>Figure 18. Left:  Distribution of scaled RNAP, ribosome, and degradosome at the end of cell cycle with median of 2.09, 1.81, and 1.77. The dotted lines show the median of distribution.<br> 
   Right: Active ratio of RNAP, ribosome and degradosome over the entire cell cycle. </b>
 </p>
@@ -393,7 +393,7 @@ A clear step-like trace of the synthesized protein DnaA/0001 is shown, where the
 Considering the cell division into two daughter cells at the end of the cell cycle, an important metric of WCM Syn3A is whether the protein abundances are duplicated. The averaged scaled protein abundances range from 1.46 to 2.71, with only 32 of the 452 proteins having a value less than 1.8. Two major factor contributing to the span of the distribution are the length of the protein (which should be translated by multiple ribosomes, i.e. polysomes), and the initial proteomics counts.
 
 <p align="center"> 
-  <img src="../figs/plots_WCM/Stochastic Synthesis of Protein DnaA in Rep 4.png" width="450" alt="Stochastic Synthesis of DnaA"> <img src="../figs/plots_WCM/Hist Scaled Entire Proteome.png" width="450" alt="Distribution of scaled proteome">  <br>
+  <img src="../figs/plots_WCM/Stochastic Synthesis of Protein DnaA in Rep 4.png" width="450" alt="Stochastic Synthesis of DnaA"> <img src="../figs/plots_WCM/Hist Scaled Entire Proteome.jpg" width="450" alt="Distribution of scaled proteome">  <br>
   <b>Figure 19. Left: Stochastic gene expression of DnaA/0001. The left y-axis is the active ribosome translating the mRNA of DnaA/0001, and the right  is the synthesized DnaA/0001 The solid lines represent one single cell replicate, the shaded areas the full range of ten replicates.<br> 
   Right: Distribution of population averaged scaled protein abundance at the end of cell cycle with the median of 2.07. </b>
 </p>
@@ -403,7 +403,7 @@ Considering the cell division into two daughter cells at the end of the cell cyc
 Upon transcription, the fate of the mRNAs is determined by the competition between its binding and translation by ribosomes into a protein, and its binding and degradation by degradosomes into NMPs. If one views the competition between the ribosome and the degradosome as a series of **independent Bernoulli trials**, where success means mRNA binding with the ribosome, and failure binding with the degradosome, then the distribution of the number of successes until the first failure occurs, which is the translations per mRNA transcript until mRNA degradation, follows a geometric distribution with the mean being the ratio of success over loss. The time-dependent ratio of mRNA binding with ribosome over binding over degradosome was calculated using $`\frac{k_{bind}^{mRNA:Ribo}\times \# \, Free \, Ribosome}{k_{bind}^{mRNA:Deg}\times \# \, Free \, Degradosome}`$. In our current implementations, the ratio between ribosome and degradosome binding rates was 6.3 ($`\frac{k_{bind}^{mRNA:Ribo}}{k_{bind}^{mRNA:Deg}}=\frac{8.9\times10^4\, \mathrm{M}^{-1} \mathrm{s}^{-1}}{1.4\times10^4\, \mathrm{M}^{-1} \mathrm{s}^{-1}}=6.3`$). The number of available ribosomes over available degradosome was about 1.3 over the cell cycle, which further favor the mRNA to translation instead of degradation ($`\frac{\# \, Free \, Ribosome}{\# \, Free \, Degradosome}=\frac{\# Total \ Ribosome \times (1-\% Active \ Ribosome)}{\# Total \ Degradoeoms \times (1-\%Active \ Degradosome)} \approx 1,3`$). Thus, the mean of translation per mRNA as $`\frac{k_{bind}^{mRNA:Ribo}\times \# \, Free \, Ribosome}{k_{bind}^{mRNA:Deg}\times \# \, Free \, Degradosome}`$ was 8.2. From our simulation, the translation events per each unique mRNA transcript were calculated by dividing the number of translated proteins by the transcribed mRNAs. The distribution ranged from 4.8 to 11, with a prominent peak around 7.7 that was close to the calculated 8.2 in Figure~S7(h).
 
 <p align="center"> 
-  <img src="../figs/plots_WCM/mRNA binding probability to ribosome over degradosome.png" width="450" alt="Stochastic Synthesis of DnaA"> <img src="../figs/plots_WCM/Hist Translation per mRNA entire.png" width="450" alt="Distribution of scaled proteome">  <br>
+  <img src="../figs/plots_WCM/mRNA binding probability to ribosome over degradosome.png" width="450" alt="mRNA binding to ribo or deg"> <img src="../figs/plots_WCM/Hist Translation per mRNA entire.jpg" width="450" alt="translation per mRNA">  <br>
   <b>Figure 19. Left: Ratio of mRNA binding to ribosome over binding to degradosome. The population averaged ratio is 8.2 at steady-state. <br> 
   Right: Distribution of translation per mRNA for 455 unique mRNAs with median 7.76 marked by purple dotted line. </b>
 </p>
@@ -413,6 +413,6 @@ Upon transcription, the fate of the mRNAs is determined by the competition betwe
 The monomer pool regenerated in metablism could drain due to the slow systhesis or overconsumption. For transcription, the low concentrations of UTP slowes down the elongation of RNAs by 20% on average. In certain replicates, the rate can be zero to halt synthesis of RNAs for short time periods if UTP is all used up, and then recover after the UTP resupplied in nucleotide metabolism.
 
 <p align="center"> 
-  <img src="../figs/plots_WCM/Transcription slow down.png" width="450" alt="Slow Transcription"> <br>
+  <img src="../figs/plots_WCM/Transcription slow down.jpg" width="450" alt="Slow Transcription"> <br>
   <b>Figure 20. Low UTP concentration supplied from nucleotide metabolism slows down transcription elongation</b>
 </p>
