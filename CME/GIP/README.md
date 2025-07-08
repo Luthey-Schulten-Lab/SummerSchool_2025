@@ -10,7 +10,21 @@ You can ask ChatGPT to give you more examples. Please also check this answer: [s
 
 With 3 species and 4 reactions, this classic and simplest genetic information process (GIP) starts from the transcription of gene to mRNA. mRNA can be translated to protein or degraded to its monomers. Protein can also be degraded. The reactions and rate constant is shown in Figure \ref{fig:gip2024} and Table \ref{tab:GIP}.
 
+<p align="center">
+  <img src="../figs/figs_GIP/GIP_withCMEs.png" width="600" alt="Simple GIP model">  <br>
+  <b>Figure 1. Genetic information processing model and its chemical master equation, where <i>m, n</i> are the number of mRNAs and proteins </b>
+</p>
+
 The rate constants are for DnaA Coding Gene (G\_0001) of minimal cell. The first three rate constants are calculate based on the initial concentrations of nucleotides and amino acids charged tRNA in the Cell paper \cite{thornburg_fundamental_2022}. We also fix the gene copy number to 1 and assume initial count of mRNA to be 1. The initial count of protein is 0. The degradation rate of protein is estimated based half-life 25 hours \cite{thornburg_kinetic_2019}.
+
+**Table 1. Four reactions with their rate constants**
+
+| **Names**              | **Reaction**                          | **Rate Constant (s<sup>-1</sup>)**                              | **Propensity (s<sup>-1</sup>)**                              |
+|------------------------|----------------------------------------|------------------------------------------------------|---------------------------------------------------|
+| Transcription          | Gene → mRNA                            | *k*<sub>transcription</sub> = 6.41×10<sup>-4</sup>   | *k*<sub>transcription</sub>                       |
+| Degradation of mRNA    | mRNA → ∅                               | *k*<sub>deg,m</sub> = 2.59×10<sup>-3</sup>           | *k*<sub>deg,m</sub> · *N*<sub>mRNA</sub>          |
+| Translation            | mRNA → mRNA + Protein                  | *k*<sub>translation</sub> = 7.20×10<sup>-2</sup>     | *k*<sub>translation</sub> · *N*<sub>mRNA</sub>    |
+| Degradation of Protein | Protein → ∅                            | *k*<sub>deg,p</sub> = 7.70×10<sup>-6</sup>           | *k*<sub>deg,p</sub> · *N*<sub>ptn</sub>           |
 
 ## Run the Jupyter Notebook
 
@@ -24,7 +38,7 @@ Protein synthesis takes place in each single cells. We can plot the traces of mR
 
 <p align="center">
   <img src="../figs/plots_GIP/GIP_mRNA_Protein_10Replicates.png" width="300" alt="mRNA Protein 10 reps"> <img src="../figs/plots_GIP/GIP_mRNA_Protein_Cell1.png" width="300" alt="CME replicate 1"> <br>
-  <b>Figure 1. Left: Population average (solid line) and full span (shaded area) of mRNA (red) and protein(blue) abundances in 10 cell replicates <br> 
+  <b>Figure 2. Left: Population average (solid line) and full span (shaded area) of mRNA (red) and protein(blue) abundances in 10 cell replicates <br> 
   Right: star-stepping trace of mRNA and the burst-like protein synthesis in one single cell replicate</b>
 </p>
 
@@ -39,5 +53,5 @@ The initial count of protein P\_0001/DnaA from experimental proteomics data is 1
 
 <p align="center">
   <img src="../figs/plots_GIP/GIP_Proteins_CycleEnd_100replicates.png" width="450" alt="ODE result"> <br>
-  <b>Figure 2. Distribution of protein abundances among 100 cell replicates at the of the cell cycle</b>
+  <b>Figure 3. Distribution of protein abundances among 100 cell replicates at the of the cell cycle</b>
 </p>
