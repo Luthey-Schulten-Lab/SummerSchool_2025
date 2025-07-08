@@ -238,6 +238,19 @@ The equivalent reaction to duplicate certain gene is in Table \ref{tab:CMErxns} 
 | Degradation     | $Degradosome + R_{\text{locusNum}} \rightarrow Degradosome:R_{\text{locusNum}}$ | $k_{\text{degra}}^{\text{binding}}$       |
 |                | $Degradosome:R_{\text{locusNum}} \rightarrow NMPs + Degradosome$              | $k_{\text{degra}}^{\text{depoly}}$        |
 
+
+| **Processes**   | **Reactions**                                                                                      | **Kinetic Constant**                                 |
+|-----------------|---------------------------------------------------------------------------------------------------|------------------------------------------------------|
+| Replication     | G<sub>locusNum</sub> → 2G<sub>elongation</sub>                                                     | *k*<sup>locusNum</sup><sub>replication</sub>         |
+| Transcription   | RNAP + G<sub>locusNum</sub> → RNAP:G<sub>locusNum</sub>                                            | *k*<sub>trsc</sub><sup>binding</sup>                 |
+|                 | RNAP:G<sub>locusNum</sub> → R<sub>locusNum</sub> + RNAP + G<sub>locusNum</sub>                     | *s*<sup>locusNum</sup><sub>trsc</sub> · *k*<sub>trsc</sub><sup>elongation</sup> |
+| Translation     | Ribosome + R<sub>locusNum</sub> → Ribosome:R<sub>locusNum</sub>                                    | *k*<sub>trans</sub><sup>binding</sup>                |
+|                 | Ribosome:R<sub>locusNum</sub> → P<sub>locusNum</sub> + Ribosome + R<sub>locusNum</sub>             | *k*<sub>trans</sub><sup>elongation</sup>             |
+| Degradation     | Degradosome + R<sub>locusNum</sub> → Degradosome:R<sub>locusNum</sub>                              | *k*<sub>degra</sub><sup>binding</sup>                |
+|                 | Degradosome:R<sub>locusNum</sub> → NMPs + Degradosome                                              | *k*<sub>degra</sub><sup>depoly</sup>                 |
+|
+
+
 Transcription, translation and degradation are all depicted as a two-step binding and (de)polymerizatoin reactions where the polymerization in transcription and translation shares the same rate form as that in replication. The rate for degradation from a mRNA to its monomers is calculate by divide the monomer depletion rate over the length of mRNA.
 
 **Table 2: Rate Form for Replication, Transcription, Translation and Degradation**
