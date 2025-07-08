@@ -4,19 +4,25 @@
 1. [Run CME/ODE Whole-Cell Model in Parallel](#1-run-cmeode-whole-cell-model-in-parallel)
 2. [Minimal Genome and Genetic Information Processes](#2-minimal-genome-and-genetic-information-processes)
 3. [Essential Metabolism](#3-essential-metabolism)
-4. [Hybrid CME-ODE Algorithm](#4-hybrid-cme-ode-algorithm)
-5. [Analysis](#5-analysis)
-6. [Discussion](#6-discussion)
+4. [Macromolecular Complex Assembly]()
+5. [Hybrid CME-ODE Algorithm](#4-hybrid-cme-ode-algorithm)
+6. [Analysis](#5-analysis)
+7. [Discussion](#6-discussion)
   
 ## 1. Run CME/ODE Whole-Cell Model in Parallel
 
-We launch independent cell replicates to sample the statistically significant cellular dynamics. To increase the simulation speed, running independent replicates in parallel is inevitable. In our current implementation, we use `mpirun` module to launch simulation python scripts in parallel.  The
-main script is `WCM CMEODE Hook.py` calling multiple other python scripts to construct and simulate the genetic information processes, metabolism and their interactions over the whole cell cycle. Essentially, we use LM and build-in Gillepsie algorithm to construct and then simulate the genetic information processes. The ODEs are written/constructed by odecell, a package developed by former group member and simulated by well-known LSODA algorithm in Scipy library.
+We launch independent cell replicates to sample the statistically significant cellular dynamics. To increase the simulation speed, running independent replicates in parallel is inevitable. In our current implementation, we use `mpirun` module to launch simulation python scripts in parallel.  
+
+For each indepedent cell replicate, the main script `WCM CMEODE Hook.py` will call multiple python scripts to construct and simulate the genetic information processes, metabolism and their interactions over the whole cell cycle. The CME simulation is executed using Lattice Microbes (LM) with direct Gillespie algorithm. We employ the `hookSimulation` function to interrupt the CME timeline and enable communication with the ODE solver. For the ODE simulation, we use the **[odecell](https://github.com/Luthey-Schulten-Lab/odecell)** software developed by the Luthey-Schulten Lab, which maps metabolic reactions to ordinary differential equations and specifies the corresponding kinetic parameters. The resulting ODE system is solved using the *lsoda* algorithm from the SciPy library.
 
 ### Scripts
 
 <details>
-<summary><strong>Click to EXPAND: Explanation of All Python Scripts </strong></summary>
+<summary><strong>Click to EXPAND: Explanation of All Scripts </strong></summary>
+
+#### Launch Simulation in Parallel
+
+- `mpirun.sh` — Bash file to claim the time length, # of replicates, and communication interval
 
 #### Main Driver
 
@@ -42,11 +48,18 @@ main script is `WCM CMEODE Hook.py` calling multiple other python scripts to con
 
 </details>
 
-<p align="center">
+<!-- <p align="center">
   <img src="../figs/figs_WCM/parallel.png" width="900" alt="mpirun to launch parallel simulation"> <br>
   <b>Figure 1. Launching Independent Whole Cell Simulations in Parallel using mpirun module. The user input will be passed to claim the replicates number, time length, and hook interval.</b> <br>
   <b>Each simulation is independent with each other. In current simulation we have four main input files and the trajectories will be stored in CSV files with an additional log file.</b>
+</p> -->
+
+
+<p align="center">
+  <img src="../figs/figs_WCM/Flowchart_CMEODE_WCM_Poster.png" alt="Flowchart of CMEODE WCM of Syn3A" width="600"> <br>
+  <b> Figure 1. Flowchart of one simulation instance of CME-ODE WCM of Syn3A</b>
 </p>
+
 
 The spatially homogeneous simulations can be efficiently parallelized across up to 25 indepedent cell replicates or more, with each replicate requiring less than 2GB of RAM. On systems equipped with AMD EPYC 7763 “Milan” processors on **[Delta](https://docs.ncsa.illinois.edu/systems/delta/en/latest/index.html)** or Intel Xeon Gold 6154 CPUs @ 3.00 GHz on normal workstation, the parallel simulations of 2 biological hours with communication step of 1 s typically complete within **6 physical hours**.
 
@@ -62,7 +75,7 @@ Due to the time limitation, you will launch 2 minutes simulation of 4 cell repli
 + **Second**: Navigate and Submit the bash file
 
     ``` bash
-    cd /projects/bddt/$USER/LM/CME/WholeCellModel/programs
+    cd /projects/beyi/$USER/CME/WCM/programs
     ```
 
     ```bash
@@ -78,14 +91,14 @@ Due to the time limitation, you will launch 2 minutes simulation of 4 cell repli
     Go to output folder `output_4replicates` 
     
     ``` bash
-    cd /projects/bddt/$USER/LM/CME/WholeCellModel/output_4replicates
+    cd /projects/beyi/$USER/CME/WCM/output_4replicates
     ```
 </details>
 
 Each simulation replicate with index *i* generates:
 
 - `counts_i.csv`: Species count trajectories of metabolites from ODE and genetic particles from CME (units: molecules).
-- `SA_i.csv`: Surface area (nm$^2$ or m$^2$) and volume (L) trajectories.
+- `SA_i.csv`: Surface area (nm$`^2`$ or m$`^2`$) and volume (L) trajectories.
 - `Flux_i.csv`: Fluxes through ODE reactions (units: mM/s).
 - `log_i.txt`: Log file with timestamps, printed reactions, run times, and any warnings/errors.
 
@@ -94,7 +107,7 @@ Output files are saved to directories defined and created in `mpirun.sh`. Typica
 
 ### Input Files
 
-Four main input files are used in whole-cell simulation: one Genbank file, one SBML file, and two Excel files. The `syn3A.gb` Genebank file contains the sequences and functions of genes, RNAs, and proteins, and the `Syn3A_updated.xml` SBML file contains the metabolic reactions (reactants, stoichiometries). `The intitial_concentration.xlsx` file contains the initial count/concentrations of proteins and metabolite while `kinetic params.xlsx` contains the kinetic parameters of the GIP and metabolic reactions.
+Four main input files are used in whole-cell simulation: one Genbank file, one SBML file, and two Excel files. The `syn3A.gb` Genebank file contains the sequences and functions of genes, RNAs, and proteins, and the `Syn3A_updated.xml` SBML file contains the metabolic reactions (reactants, stoichiometries). The `intitial_concentration.xlsx` file contains the initial count/concentrations of proteins and metabolite while `kinetic params.xlsx` contains the kinetic parameters of the GIP and metabolic reactions.
 
 
 <details>
@@ -145,7 +158,7 @@ Go to Genbank file under `input_data` folder and open with text editor. Search *
 SBML (System Biology Markup Language) format is widely used in storing computational models of biological processes. The SBML file here contains the whole metabolic system of Syn3A, including compartments (cellular and extracellular), species, reactions, gene product (enzymatic or transporter proteins associated with reactions), and objective function (for Flux Balance Analysis). 
 It's worth noting that the kinetic constants of 175 reactions are in \textit{kinetic\_params.xlsx}.
 
-Nucleoside Transporter ABC substrate-binding protein encode by gene **JCVISYN3A_0011** functions in reaction DSGNabc, irreversible transport of deoxyguanosine in nucleotide metabolism. Figure \ref{fig:sbml} shows reaction DSGNabc in SBML file. We define \textit{reversible} as \textit{false} since DSGNabc is a irreversible transport reaction. There are three reactants and four products. The geneProductAssociation rule is *and*, meaning the four subunit proteins need to function cooperatively.
+Nucleoside Transporter ABC substrate-binding protein encode by gene **JCVISYN3A_0011** functions in reaction DSGNabc, irreversible transport of deoxyguanosine in nucleotide metabolism. Figure \ref{fig:sbml} shows reaction DSGNabc in SBML file. We define \textit{reversible} as \textit{false} since DSGNabc is a irreversible transport reaction. There are three reactants and four products. The geneProductAssociation rule is *and*, meaning the four subunit proteins (**0008, 0009, 0010, and 0011**) need to assembly to function cooperatively. In the latest WCM with incorporated macromolecular complex formation, we considered the assembly of 21 unique complexes, including this ABC transporter named **rnsBACD**. By doing so, we can use the actual abundance of this complete complex in the simulation of metabolism by ODE. 
 
 <p align="center">
   <img src="../figs/figs_WCM/sbml.png" width="450" alt="SBML entry of DSGNabc reaction"> <br>
@@ -287,8 +300,20 @@ The metabolic network is also stored in standard Systems Biology Markup Language
 
 We can look at one reaction entry in the SBML file for more insights. Go to the SBML file and search DGSNabc. DGSNabc, the irreversible transport of deoxyguanosine (one of RNS ABC import system) in nuclotide metabolism for example, has three reactants and four products with four proteins involved. The geneProductAssociation is AND, meaning four proteins are all needed to perform this reactions. Biologically, four proteins are four sub-units of nucleoside ABC transporter.
 
+## 4. Macromolecular Complex Assembly
 
-## 4. Hybrid CME-ODE Algorithm
+In all organisms including Syn3A, key macromolecular complexes mediate essential cellular processes. In genetic information processing, **RNA polymerase (RNAP)** and **ribosomes** decode genetic information into mRNAs and functional proteins via transcription and translation, respectively. **Degradosomes**, a loose complex of endoribonuclease, exoribonuclease, and a few glycolytic enzymes compete with ribosomes for the binding and processing of mRNA. Several essential complexes interact with chromosomes and facilitate chromosome partitioning during cell division[^ref]. The essential metabolism of Syn3A depends on the activated transport of (deoxy)nucleosides, amino acids, vitamins and fatty acids into the cell by membrane complexes with multiple protein subunits[^ref].
+
+In a recent submitted manuscript[^ref], we investigated the assembly of 21 unique macromolecular complexes in the context of the WCM of Syn3A. Complexes’ compositions were determined by cross-checking the existing genome/proteome annotation and the homology-based function annotation. The assembly pathways, as series of bimolecular association reactions, of the ribosome[^ref], RNAP, and ATP synthase were taken as reported, and of others inferred from interactions between subunits.
+
+For example,  **ABC transporters** in Gram-positive organisms have a domain composition of two peripheral nucleotide binding domains (NBD) that provide ATP hydrolysis, two transmembrane domains (TMD) that form the permease channel, and one substrate binding protein (SBP) that delivers substrates to TMDs. The nucleoside ABC transporter rnsBACD comprises 4 distinct subunits of proteins RnsD/0008 (TMD), RnsC/0009 (TMD), RnsA/0010 (2NBDs), and RnsB/0011 (SBP) with 1:1:1:1 stoichiometries, where protein subunit RnsA/0010 correpsonds to two NBDs. The assembly pathways of the ABC transporters were assumed to obey the following order. The TMDs first bind to each other to form the permease channel, and the peripheral NBDs bind to the channel to form the functional core. SBP will bind with the core at last, if separated from the TMDs.
+
+<p align="center">
+  <img src="../figs/figs_WCM/ABC transporters.png" width="450" alt="ABC transporter"> <br>
+  <b>Figure 14. Typical domain composition of ABC transporter in Gram-positive organisms. SBP: Substrate Binding Protein, TMD: Transmembrane Domain, NBD: Nucleotide Binding Domain. </b> 
+</p>
+
+## 5. Hybrid CME-ODE Algorithm
 
 ### Step-wise Communication Between CME and ODE
 
@@ -306,45 +331,34 @@ To simulate the **co-evolution** of GIP and metabolism, the communication needs 
 
 **(c)** Then a $t_H$ length ODE simulation is performed with the updated concentrations of proteins and metabolites. 
 
-**(d)** The impacts of metabolism on GIP are two-fold: the abundance of metabolites explicitly in GIP and the concentrations of monomers that affect the rates in the polymerization of gene, RNA, and protein.
+**(d)** The impacts of metabolism on GIP are two-fold: the abundance of metabolites explicitly in GIP and the concentrations of monomers that affect the rates of the polymerization of genes, RNAs, and proteins in CME.
 
 <p align="center">
-  <img src="../figs/figs_WCM/communication.png" alt="GIP_Cplx" width="400">
+  <img src="../figs/figs_WCM/communication.png" alt="GIP_Cplx" width="400"> <br>
+  <b> Figure 15. Communication between genetic information in CME and metabolism in ODE </b>
 </p>
-
-### Program Flowchart
-
-The CME simulation is executed using Lattice Microbes (LM) with direct Gillespie algorithm. We employ the `hookSimulation` function to interrupt the CME timeline and enable communication with the ODE solver. For the ODE simulation, we use the **[odecell](https://github.com/Luthey-Schulten-Lab/odecell)** software developed by the Luthey-Schulten Lab, which maps metabolic reactions to ordinary differential equations and specifies the corresponding kinetic parameters. The resulting ODE system is solved using the *lsoda* algorithm from the SciPy library.
 
 One extra thing to notice is that the CME rates are also updated per second after the metabolism simulation in ODE to account for the possible shortage of monomers that will decrease the rate in genetic information process.
 
-<p align="center">
-  <img src="../figs/figs_WCM/Flowchart_CMEODE_WCM_Poster.png" alt="GIP_Cplx" width="400">
-</p>
 
-## 5. Analysis
+## 6. Analysis and Discussion
 
-### Run ~~pkl.ipynb~~ then plotting.ipynb on Jupyter Notebook Webpage
-+ **First**: Navigate to `./LM/CME/WholeCellModel/analysis` in Jupyter Notebook Webpage.
+### Run Notebook `analysis.ipynb`
++ **First**: Navigate to `.../CME/WCM/analysis` and Open `analysis.ipynb` in Jupyter Notebook Webpage.
   
-+ **Second**: Open *pkl.ipynb* and **Run All** to serialize the CSV files into one single python pickle file.  
-  10 CSV files are generated beforehand for the analysis.
-  
-+ **Thrid**: Open *plotting.ipynb* and **Run All** to generate the plots.  
-  Compare the plots with figures in *Summer_School_CME_2024.pdf*.
++ **Second**: Run ALL and Compare the generated plots with figures in this README file.
 
-### Cell growth
+### DNA replication, and Doubling of Cell Volume and Surface Area
 
-### Doubling of Proteome
+Replication of gene 0001 and 0420
 
-### Traces of important metabolite
+Compare with results from 4D WCM
 
-## 6. Discussion
-
-### DNA initiation
-
-### Stochastic translation of protein
+### Stochastic translation of protein and Doubling of Proteome
 
 ### Translation per mRNA
 
+Cute model
+
 ### Slowdown of GIP
+
