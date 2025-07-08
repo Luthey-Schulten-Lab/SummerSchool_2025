@@ -41,7 +41,7 @@ cd /projects/beyi/$USER
 Copy the prepared materials to your directory. This step may take several minutes since the large Apptainer file and prepared CME-ODE WCM trajactories.
 
 ```bash
-cp -r /projects/beyi/CME ./
+cp -r /projects/beyi/enguang/CME ./
 ```
 
 ### Launch Jupyter Notebook on Delta
@@ -54,7 +54,7 @@ The advantage of Jupyter Notebook is that you could navigate the folders and run
     Here `srun` launch interactive job onto Delta, `partition` claims A100 GPU node, and for 6 hours `time`. A four digit number is randomly generated to specify the `port` for Jupyter Notebook. 
 
   ```bash
-  srun --account=beyi-delta-gpu --partition=gpuA100x4 --time=04:00:00 --mem=64g --gpus-per-node=1 --tasks-per-node=1 --cpus-per-task=16 --nodes=1 apptainer exec --nv --containall --bind /projects/beyi/$USER/:/workspace /projects/beyi/$USER/CME/Summer2025_LM.sif jupyter-notebook /workspace/ --no-browser --port=$((RANDOM%9000+1000)) --ip=0.0.0.0 --allow-root
+  srun --account=beyi-delta-gpu --partition=gpuA100x4 --time=04:00:00 --mem=64g --gpus-per-node=1 --tasks-per-node=1 --cpus-per-task=16 --nodes=1 apptainer exec --nv --containall --bind /projects/beyi/$USER/:/workspace /projects/beyi/$USER/CME/summer2025.sif bash -c "source /root/miniconda3/etc/profile.d/conda.sh && conda activate lm_2.5_dev && jupyter notebook /workspace/ --no-browser --port=$((RANDOM%9000+1000)) --ip=0.0.0.0 --allow-root"
   ```  
 
   Then you should wait for Delta to allocate the resources for you that usually takes less than 1 minute. When you see similar things as the following, you are good to proceed to the second step:

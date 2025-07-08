@@ -39,5 +39,5 @@ The initial count of protein P\_0001/DnaA from experimental proteomics data is 1
 
 <p align="center">
   <img src="../figs/plots_GIP/GIP_Proteins_CycleEnd_100replicates.png" width="450" alt="ODE result"> <br>
-  <b>Figure 3. Distribution of protein abundances among 100 cell replicates at the of the cell cycle</b>
+  <b>Figure 2. Distribution of protein abundances among 100 cell replicates at the of the cell cycle</b>
 </p>

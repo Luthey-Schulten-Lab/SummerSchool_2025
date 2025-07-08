@@ -275,7 +275,7 @@ def plot_doubling(fig_dir, fig_name, fig_size,
         title = title.replace('_', '\_')
         ax.set_title(r'{0}'.format(title), fontsize=title_fontsize, pad=4)
 
-    ax.set_xlabel(r'$t$ [Min]',
+    ax.set_xlabel('Time [Min]',
                     fontsize=xlabel_fontsize,
                     labelpad=1.5)
     

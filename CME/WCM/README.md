@@ -13,7 +13,7 @@
 
 We launch independent cell replicates to sample the statistically significant cellular dynamics. To increase the simulation speed, running independent replicates in parallel is inevitable. In our current implementation, we use `mpirun` module to launch simulation python scripts in parallel.  
 
-For each indepedent cell replicate, the main script `WCM CMEODE Hook.py` will call multiple python scripts to construct and simulate the genetic information processes, metabolism and their interactions over the whole cell cycle. The CME simulation is executed using Lattice Microbes (LM) with direct Gillespie algorithm. We employ the `hookSimulation` function to interrupt the CME timeline and enable communication with the ODE solver. For the ODE simulation, we use the **[odecell](https://github.com/Luthey-Schulten-Lab/odecell)** software developed by the Luthey-Schulten Lab, which maps metabolic reactions to ordinary differential equations and specifies the corresponding kinetic parameters. The resulting ODE system is solved using the *lsoda* algorithm from the SciPy library.
+For each indepedent cell replicate, the main script `WCM_CMEODE_Hook.py` will call multiple python scripts to construct and simulate the genetic information processes, metabolism and their interactions over the whole cell cycle. The CME simulation is executed using Lattice Microbes (LM) with direct Gillespie algorithm. We employ the `hookSimulation` function to interrupt the CME timeline and enable communication with the ODE solver. For the ODE simulation, we use the **[odecell](https://github.com/Luthey-Schulten-Lab/odecell)** software developed by the Luthey-Schulten Lab, which maps metabolic reactions to ordinary differential equations and specifies the corresponding kinetic parameters. The resulting ODE system is solved using the *lsoda* algorithm from the SciPy library.
 
 ### Scripts
 
@@ -79,19 +79,21 @@ Due to the time limitation, you will launch 2 minutes simulation of 4 cell repli
     ```
 
     ```bash
-    sbatch mpirun.sh
+    sbatch sbatch.sh
     ```
-  
+> [!NOTE]
+> The sbatch.sh will run the `mpirun.sh` bash file to launch CME-ODE WCM simulations in parallel.
+
 + **Third**: Check the status of your job.  
     ```bash
     squeue -u $USER
     ```
-    *PD* means waiting to run, *R* running.
+    *PD* means waiting to run, *R* running, and vanish means job finished.
 
-    Go to output folder `output_4replicates` 
+    List the files under the output folder `output_4replicates` 
     
     ``` bash
-    cd /projects/beyi/$USER/CME/WCM/output_4replicates
+    ls ../output_4replicates
     ```
 </details>
 
@@ -102,13 +104,11 @@ Each simulation replicate with index *i* generates:
 - `Flux_i.csv`: Fluxes through ODE reactions (units: mM/s).
 - `log_i.txt`: Log file with timestamps, printed reactions, run times, and any warnings/errors.
 
-Output files are saved to directories defined and created in `mpirun.sh`. Typical CSV file size ranges from **100–200 MB** for a 7200 s simulation with 1 s hook intervals.
-
+Output files are saved to directory `../output_4replicates/` defined and created in `mpirun.sh`. Typical CSV file size ranges from **100–200 MB** for a 7200 s simulation with 1 s hook intervals.
 
 ### Input Files
 
 Four main input files are used in whole-cell simulation: one Genbank file, one SBML file, and two Excel files. The `syn3A.gb` Genebank file contains the sequences and functions of genes, RNAs, and proteins, and the `Syn3A_updated.xml` SBML file contains the metabolic reactions (reactants, stoichiometries). The `intitial_concentration.xlsx` file contains the initial count/concentrations of proteins and metabolite while `kinetic params.xlsx` contains the kinetic parameters of the GIP and metabolic reactions.
-
 
 <details>
 <summary><strong>Click to EXPAND: Breakdown of Input Files</strong></summary>
