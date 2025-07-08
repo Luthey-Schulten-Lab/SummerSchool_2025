@@ -18,7 +18,7 @@ jLM is the python-based Problem Solving Environments (PSE) designed to integrate
 A general workflow of jLM in LM is shown as follows. jLM is compatible for both CME and RDME simulations. Designed with Jupyter Notebook interfaces, jLM offers a suite of functions to visualize the RDME simulation states like spatial regions, species and reactions when setting up the system. In the `hookSimulation()`, various algorithms can be incorporated with CME and RDME to fullfile the hybrid algorithms.
 
 <p align="center">
-  <img src="../figs/figs_introduction/Flow_Chart_jLM_pyLM.png" width="300" alt="Workflow of jLM"> <br>
+  <img src="../figs/figs_introduction/jLM_Flowchart.pdf" width="300" alt="Workflow of jLM"> <br>
   <b>Figure 2. Workflow of jLM</b>
 </p>
 
