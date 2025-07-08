@@ -2,7 +2,7 @@
 
 ## Description:
 
-<img align="right" width="300" src="./figs/figs_WCM/syn3A.png">
+<img align="right" width="250" src="./figs/figs_WCM/syn3A.png">
 
 In ***Coupled genetic information processes and metabolism in Minimal Cell*** tutorial, you will first learn the basic of stochastic kinetic simulation of a [bimolecule reaction](bimolecule/), then a model [genetic information process](GIP/) solved by chemical master equations (**CMEs**). The essential metabolism[^breuer_metabolism] in Syn3A imports nutrients in the growth media, and further converts them to generate ATP molecules that energize cellular processes, and monomers for the synthesis of proteins, RNAs, and chromosome. To simulate the [co-evolution of GIP and metabolism in Syn3A](WCM/), we employ a hybrid stochastic-deterministic algorithm[^bianchi_CMEODE] where stepwise communication is performed to describe the interactions between these two subsystems.
 
