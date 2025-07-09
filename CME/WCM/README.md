@@ -185,7 +185,7 @@ JCVI-syn3A's genome is minimal in all living organism, 543 kbp long and containi
 
 Genetic information processes connect the blueprint genes to functional proteins. In our current whole cell model of minimal cell, we mainly consider seven types of processes listed in table.
 
-Replication copies the genetic information with the regulation of replication initiation. Transcription copies sequential information from DNA to RNA. There are three types of RNA, including mRNA, rRNA and tRNA that are tightly connected by translation. Translation takes place on ribosomes, where mRNA is read and an amino acid chain is generated according to the sequence of mRNA. rRNA, together with other ribosome proteins make up ribosomes in ribosomal biogenesis[^earnest_ribosome_2016]. tRNA is the carriers and identifier of amino acid to the ribosome. 
+Replication copies the genetic information with the regulation of replication initiation. Transcription copies sequential information from DNA to RNA. There are three types of RNA, including mRNA, rRNA and tRNA that are tightly connected by translation. Translation takes place on ribosomes, where mRNA is read and an amino acid chain is generated according to the sequence of mRNA. rRNA, together with other ribosome proteins make up ribosomes in ribosomal biogenesis[^earnest_ribosome_2015]. tRNA is the carriers and identifier of amino acid to the ribosome. 
 
 <p align="center">
   <img src="../figs/figs_WCM/gip_table.png" width="450" alt="GIP reactions"> <br>
@@ -231,10 +231,9 @@ The equivalent reaction to duplicate certain gene is in Table \ref{tab:CMErxns} 
 |                 | Ribosome:R<sub>locusNum</sub> → P<sub>locusNum</sub> + Ribosome + R<sub>locusNum</sub>             | $k_{\text{trans}}^{\text{binding}}$             |
 | Degradation     | Degradosome + R<sub>locusNum</sub> → Degradosome:R<sub>locusNum</sub>                              | $k_{\text{degra}}^{\text{binding}}$                |
 |                 | Degradosome:R<sub>locusNum</sub> → NMPs + Degradosome                                              | $k_{\text{degra}}^{\text{depoly}}$                 |
-|
 
 
-Transcription, translation and degradation are all depicted as a two-step binding and (de)polymerizatoin reactions where the polymerization in transcription and translation shares the same rate form as that in replication. The rate for degradation from a mRNA to its monomers is calculate by divide the monomer depletion rate over the length of mRNA.
+Transcription, translation and degradation are all depicted as a two-step binding and (de)polymerizatoin reactions where the polymerization in transcription and translation shares the same rate form as that in replication. The rate for degradation from a mRNA to its monomers is calculated by divide the monomer depletion rate over the length of mRNA.
 
 **Table 2: Rate Form for Replication, Transcription, Translation and Degradation**
 
@@ -300,9 +299,11 @@ We can look at one reaction entry in the SBML file for more insights. Go to the 
 
 In all organisms including Syn3A, key macromolecular complexes mediate essential cellular processes. In genetic information processing, **RNA polymerase (RNAP)** and **ribosomes** decode genetic information into mRNAs and functional proteins via transcription and translation, respectively. **Degradosomes**, a loose complex of endoribonuclease, exoribonuclease, and a few glycolytic enzymes compete with ribosomes for the binding and processing of mRNA. Several essential complexes interact with chromosomes and facilitate chromosome partitioning during cell division[^gilbert_dynamics]. The essential metabolism of Syn3A depends on the activated transport of (deoxy)nucleosides, amino acids, vitamins and fatty acids into the cell by membrane complexes with multiple protein subunits[^breuer_metabolism].
 
-In a recent submitted manuscript[^fu_complex], we investigated the assembly of 21 unique macromolecular complexes in the context of the WCM of Syn3A. Complexes’ compositions were determined by cross-checking the existing genome/proteome annotation and the homology-based function annotation. The assembly pathways, as series of bimolecular association reactions, of the ribosome[^earnest_ribosome_2016], RNAP, and ATP synthase were taken as reported, and of others inferred from interactions between subunits.
+In a recent submitted manuscript[^fu_complex], we investigated the assembly of 21 unique macromolecular complexes in the context of the WCM of Syn3A. Complexes’ compositions were determined by cross-checking the existing genome/proteome annotation and the homology-based function annotation. The assembly pathways, as series of bimolecular association reactions, of the ribosome[^earnest_ribosome_2015], RNAP, and ATP synthase were taken as reported, and of others inferred from interactions between subunits.
 
-For example,  **ABC transporters** in Gram-positive organisms have a domain composition of two peripheral nucleotide binding domains (NBD) that provide ATP hydrolysis, two transmembrane domains (TMD) that form the permease channel, and one substrate binding protein (SBP) that delivers substrates to TMDs. The nucleoside ABC transporter rnsBACD comprises 4 distinct subunits of proteins RnsD/0008 (TMD), RnsC/0009 (TMD), RnsA/0010 (2NBDs), and RnsB/0011 (SBP) with 1:1:1:1 stoichiometries, where protein subunit RnsA/0010 correpsonds to two NBDs. The assembly pathways of the ABC transporters were assumed to obey the following order. The TMDs first bind to each other to form the permease channel, and the peripheral NBDs bind to the channel to form the functional core. SBP will bind with the core at last, if separated from the TMDs.
+The bacterial ribosome comprises a small subunit (30S SSU) and a large subunit (50S LSU), each of which is a ribonucleoprotein complex that assembles independently. The monocistronic rRNA operons (*rrsA*/0069, *rrlA*/0068, *rrfA*/0067 and *rrsB*/0534, *rrlB*/0533, *rrfB*/0532) encode the 16S, 23S, and 5S rRNAs, respectively. 16S rRNA with 20 SSU ribosomal proteins assemble in the SSU; 23S, 5S, and 31 LSU ribosomal proteins assemble in the LSU. In the current model, the SSU assembly pathways were derived from the previous study[^earnest_ribosome_2015] by reducing the number of assembly intermediates from 145 to 19 to maintain the smallest number of complete pathways with the highest fluxes, as shown in the left part of Figure 14. For LSU, we sampled one linear assembly pathway on the rerouted Nierhaus assembly map[^davis_LSU]. SSUs and LSUs will finally associate to form intact ribosomes at a fast rate that will bind to mRNA for the translation process.
+
+**ABC transporters** in Gram-positive organisms have a domain composition of two peripheral nucleotide binding domains (NBD) that provide ATP hydrolysis, two transmembrane domains (TMD) that form the permease channel, and one substrate binding protein (SBP) that delivers substrates to TMDs. The nucleoside ABC transporter rnsBACD comprises 4 distinct subunits of proteins RnsD/0008 (TMD), RnsC/0009 (TMD), RnsA/0010 (2NBDs), and RnsB/0011 (SBP) with 1:1:1:1 stoichiometries, where protein subunit RnsA/0010 correpsonds to two NBDs. The assembly pathways of the ABC transporters were assumed to obey the following order. The TMDs first bind to each other to form the permease channel, and the peripheral NBDs bind to the channel to form the functional core. SBP will bind with the core at last, if separated from the TMDs.
 
 <p align="center">
   <img src="../figs/figs_WCM/ABC transporters.png" width="450" alt="ABC transporter"> <br>
@@ -319,7 +320,7 @@ The discreteness and stochasticity of chemical kinetics play a role when the num
 \frac{dP(\mathbf{x},t)}{dt}=\sum_{r}^{R} [-a_r({{\mathbf{x}}}) P({{\mathbf{x}}},t) + a_r({{\mathbf{x}}}_\nu-\mathbf{S_r}) P({{\mathbf{x}}}-\mathbf{S_r},t)]
 ```
 
-To simulate the **co-evolution** of GIP and metabolism, the communication needs to be performed to describe the interactions between these two subsystems. We then proposed to use **[Hybrid CMEODE simulation](https://ietresearch.onlinelibrary.wiley.com/doi/10.1049/iet-syb.2017.0070)**.  We first discretize the entire simulation length into piecewise communication time steps (hook intervals, $t_H$). During each communication time step, 
+To simulate the **co-evolution** of GIP and metabolism, the communication needs to be performed to describe the interactions between these two subsystems. We then proposed to use a hybrid CME-ODE simulation[^bianchi_CMEODE]. We first discretize the entire simulation length into piecewise communication time steps (hook intervals, $t_H$). During each communication time step, 
 
 **(a)** A CME simulation of length $t_H$ is performed to describe the kinetics in GIP. 
 
@@ -380,8 +381,7 @@ The assembly nearly duplicate the initial 97 RNAPs, 500 ribosomes, and 120 degra
 
 ### Stochastic Synthesis of Protein and Doubling of Proteome
 
-Here, we revisit the stochastic synthesis of protein. The discreteness and stochasticity of protein synthesis is intrinsic at the single-cell level.
-A clear step-like trace of the synthesized protein DnaA/0001 is shown, where the stalled protein synthesis in the horizontal regions corresponded to no ribosomes translating this mRNA. This is the improvement from the simplified gene expression model in last tutorial, where we define the explicit ribosome binding with mRNA. 
+Here, we revisit the stochastic synthesis of protein. The discreteness and stochasticity of protein synthesis is intrinsic at the single-cell level. A clear step-like trace of the synthesized protein DnaA/0001 is shown, where the stalled protein synthesis in the horizontal regions corresponded to no ribosomes translating this mRNA. This is the improvement from the simplified gene expression model in last tutorial, where we define the explicit ribosome binding with mRNA. 
 
 Considering the cell division into two daughter cells at the end of the cell cycle, an important metric of WCM Syn3A is whether the protein abundances are duplicated. The averaged scaled protein abundances range from 1.46 to 2.71, with only 32 of the 452 proteins having a value less than 1.8. Two major factor contributing to the span of the distribution are the length of the protein (which should be translated by multiple ribosomes, i.e. polysomes), and the initial proteomics counts.
 
@@ -415,7 +415,7 @@ The monomer pool regenerated in metablism could drain due to the slow systhesis 
 
 [^breuer_metabolism]: Breuer, M., Earnest, T. M., Merryman, C., Wise, K. S., Sun, L., Lynott, M. R., Hutchison, C. A., Smith, H. O., Lapek, J. D., Gonzalez, D. J., De Crécy-Lagard, V., Haas, D., Hanson, A. D., Labhsetwar, P., Glass, J. I., & Luthey-Schulten, Z. (2019). Essential metabolism for a minimal cell. eLife, 8. https://doi.org/10.7554/elife.36842
 
-[^earnest_ribosome_2016]: Earnest, T. M., Cole, J. A., Peterson, J. R., Hallock, M. J., Kuhlman, T. E., & Luthey‐Schulten, Z. (2016). Ribosome biogenesis in replicating cells: Integration of experiment and theory. Biopolymers, 105(10), 735–751. https://doi.org/10.1002/bip.22892
+[^earnest_ribosome_2015]: Earnest, T. M., Lai, J., Chen, K., Hallock, M. J., Williamson, J. R., & Luthey-Schulten, Z. (2015). Toward a Whole-Cell model of ribosome biogenesis: Kinetic Modeling of SSU Assembly. Biophysical Journal, 109(6), 1117–1135. https://doi.org/10.1016/j.bpj.2015.07.030
 
 [^thornburg_kinetic]: Thornburg, Z. R., Melo, M. C. R., Bianchi, D., Brier, T. A., Crotty, C., Breuer, M., Smith, H. O., Hutchison, C. A., Glass, J. I., & Luthey-Schulten, Z. (2019). Kinetic modeling of the genetic information processes in a minimal cell. Frontiers in Molecular Biosciences, 6. https://doi.org/10.3389/fmolb.2019.00130
 
@@ -426,6 +426,12 @@ The monomer pool regenerated in metablism could drain due to the slow systhesis 
 [^gilbert_dynamics]: Gilbert, B. R., Thornburg, Z. R., Brier, T. A., Stevens, J. A., Grünewald, F., Stone, J. E., Marrink, S. J., & Luthey-Schulten, Z. (2023). Dynamics of chromosome organization in a minimal bacterial cell. Frontiers in Cell and Developmental Biology, 11. https://doi.org/10.3389/fcell.2023.1214962
 
 [^fu_complex]: Fu, E., Thornburg, Z. R., Brier, T. A., Wei, R., Bo, Y., Gilbert, B. R., Wang, S., & Luthey-Schulten, Z. (2025). Assembly of macromolecular complexes in the Whole-Cell model of a minimal cell. bioRxiv (Cold Spring Harbor Laboratory). https://doi.org/10.1101/2025.07.02.662439
+
+[^davis_LSU]: Davis, J. H., Tan, Y. Z., Carragher, B., Potter, C. S., Lyumkis, D., & Williamson, J. R. (2016). Modular assembly of the bacterial large ribosomal subunit. Cell, 167(6), 1610-1622.e15. https://doi.org/10.1016/j.cell.2016.11.020
+
+[^bianchi_CMEODE]: Bianchi, D. M., Peterson, J. R., Earnest, T. M., Hallock, M. J., & Luthey‐Schulten, Z. (2018). Hybrid CME–ODE method for efficient simulation of the galactose switch in yeast. IET Systems Biology, 12(4), 170–176. https://doi.org/10.1049/iet-syb.2017.0070
+
+[^cheng_DnaA]: Cheng, H., Gröger, P., Hartmann, A., & Schlierf, M. (2014). Bacterial initiators form dynamic filaments on single-stranded DNA monomer by monomer. Nucleic Acids Research, 43(1), 396–405. https://doi.org/10.1093/nar/gku1284
 
 [^thornburg_maytin_4DWCM]: Thornburg, Z. R., Maytin, A., Kwon, J., Brier, T. A., Gilbert, B. R., Fu, E., Gao, Y., Quenneville, J., Wu, T., Li, H., Long, T., Pezeshkian, W., Sun, L., Glass, J., Mehta, A., Ha, T., & Luthey-Schulten, Z. (2025). Bringing the genetically minimal cell to life on a computer in 4D. bioRxiv (Cold Spring Harbor Laboratory). https://doi.org/10.1101/2025.06.10.658899
 
