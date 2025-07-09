@@ -1,21 +1,24 @@
-# Stochastic Genetic Information Processs in CME
+# Stochastic Genetic Information Processes in CME
 
-Open [ChatGPT](https://chatgpt.com/) and ask this question:
+Open [ChatGPT](https://chatgpt.com/) and ask the following question:
 
-**Give an example on large differences in rate constants that lead to significant fluctuations**
+**Give an example of large differences in rate constants that lead to significant fluctuations.**
 
-You can ask ChatGPT to give you more examples. Please also check this answer: [stochastic genetic information processes](https://chatgpt.com/c/91d87e61-bae5-4b89-b078-d1d4cfa44274), which is this tutorial.
+You can ask ChatGPT for additional examples. For reference, please also review this previous response: [Stochastic Genetic Information Processes](https://chatgpt.com/c/91d87e61-bae5-4b89-b078-d1d4cfa44274), which corresponds to this tutorial.
 
-## Classic Genetic Information Processes Reactions
+## Classic Genetic Information Process Reactions
 
-With 3 species and 4 reactions, this classic and simplest genetic information process (GIP) starts from the transcription of gene to mRNA. mRNA can be translated to protein or degraded to its monomers. Protein can also be degraded. The reactions and rate constant is shown as the followings.
+This classic and minimal genetic information process (GIP) consists of 3 species and 4 reactions. It begins with the transcription of a gene into mRNA. The mRNA can be translated into protein or degraded into its monomers. The resulting protein can also undergo degradation. The reaction scheme and associated rate constants are shown below.
 
 <p align="center">
   <img src="../figs/figs_GIP/GIP_withCMEs.png" width="600" alt="Simple GIP model">  <br>
-  <b>Figure 1. Genetic information processing model and its chemical master equation, where <i>m, n</i> are the number of mRNAs and proteins </b>
+  <b>Figure 1. Genetic information processing model and its corresponding chemical master equation, where <i>m</i> and <i>n</i> are the counts of mRNAs and proteins.</b>
 </p>
 
-The rate constants are for DnaA Coding Gene (G\_0001) of minimal cell. The first three rate constants are calculate based on the initial concentrations of nucleotides and amino acids charged tRNA in the Cell paper[^thornburg_cell]. We also fix the gene copy number to 1 and assume initial count of mRNA to be 1. The initial count of protein is 0. The degradation rate of protein is estimated based half-life 25 hours[^thornburg_kinetic].
+The rate constants are based on the protein DnaA from the minimal cell. The first three rate constants were calculated using the initial concentrations of nucleotides and aminoacyl-tRNAs reported in the *Cell* paper[^thornburg_cell]. 
+
+We assume the gene copy number is fixed at 1 and the initial mRNA count is 1, while the initial protein count is 148 from the proteomics study. The protein degradation rate is estimated based on a half-life of 25 hours[^thornburg_kinetic].
+
 
 **Table 1. Four reactions with their rate constants**
 
@@ -28,32 +31,39 @@ The rate constants are for DnaA Coding Gene (G\_0001) of minimal cell. The first
 
 ## Run the Jupyter Notebook
 
-Now go to file on your Jupyter Notebook webpage `Tut2.1-GeneticInformationProcess.ipynb` to simulate this toy GIP model. The default simulation length `simtime` is 6300 seconds, the entire cell cycle of minimal cell.We simulate 10 independent cell `reps` and write out the trajectories at `writeInterval` of 1 second.
+Open the Jupyter Notebook interface and navigate to the directory `/CME/GIP/`. Run the notebook `Tut2.1-GeneticInformationProcess.ipynb` to simulate this toy model of genetic information processing (GIP). 
+
+By default:
+- The total simulation time `simtime` is set to 6300 seconds, representing the full cell cycle of the minimal cell.
+- We simulate 10 independent cells (`reps = 10`).
+- Trajectories are recorded at intervals of 1 second (`writeInterval = 1`).
 
 ## Stochastic Protein Synthesis
 
-We first look at the average and span of mRNA and protein abundances among the cell population of 10 replicates. The population averaged mRNA abundace fluctuates below 1 along the cell cycle, and the protein counts increase accumulatively from the translation processes (protein degradation was minor compared to translation under this set of kinetic parameters).
+We begin by examining the average and variation in mRNA and protein abundances across the population of 10 simulated cells. The population-averaged mRNA abundance fluctuates below 1 throughout the cell cycle, while protein levels increase steadily due to translation. Protein degradation is minor under this set of kinetic parameters.
 
-Protein synthesis takes place in each single cells. We can plot the traces of mRNA and protein in different single replicates to see the stair-stepping trace of mRNA and the burst of protein. You will an increase/burst in protein when there are mRNAs, and the halting or even decrease of protein with no mRNA. You are encouraged to compare the pattern shown here to your own plots.
+Protein synthesis is a stochastic process that occurs in individual cells. By plotting the time traces of mRNA and protein for several replicates, you can observe the characteristic stair-step pattern of mRNA production and burst-like synthesis of proteins. You will see that protein levels increase or "burst" when mRNAs are present, and may plateau or decrease when mRNAs are absent. We encourage you to compare the patterns shown here with your own simulation results.
 
 <p align="center">
-  <img src="../figs/plots_GIP/GIP_mRNA_Protein_10Replicates.png" width="300" alt="mRNA Protein 10 reps"> <img src="../figs/plots_GIP/GIP_mRNA_Protein_Cell1.png" width="300" alt="CME replicate 1"> <br>
-  <b>Figure 2. Left: Population average (solid line) and full span (shaded area) of mRNA (red) and protein(blue) abundances in 10 cell replicates <br> 
-  Right: star-stepping trace of mRNA and the burst-like protein synthesis in one single cell replicate</b>
+  <img src="../figs/plots_GIP/GIP_mRNA_Protein_10Replicates.png" width="300" alt="mRNA Protein 10 reps"> 
+  <img src="../figs/plots_GIP/GIP_mRNA_Protein_Cell1.png" width="300" alt="CME replicate 1"> <br>
+  <b>Figure 2. Left: Population average (solid line) and full range (shaded area) of mRNA (red) and protein (blue) abundances across 10 cell replicates. <br> 
+  Right: Stair-step mRNA trace and burst-like protein synthesis in a single cell replicate.</b>
 </p>
 
 ## Discussion
 
-### 1. Stedy-state
+### 1. Steady-State
 
-Do mRNA and protein reach steady-state during the 6300 seconds' simulation? How can you tell this from the plots? If the fluctuation is large, try to increase the replicates numbers `reps` from 10 to 100.
+Do mRNA and protein levels reach a steady state during the 6300-second simulation? How can you tell from the plots? If the fluctuations are large, try increasing the number of replicates `reps` from 10 to 100.
 
-### 2. Doubling the initial abundace of protein for cell division
-The initial count of protein P\_0001/DnaA from experimental proteomics data is 148. In the following histogram, the population average of DnaA at the end of the cell cycle is 270. Compare the mean count of protein at the end of the cell cycle to this experimental count. Does the simulation roughly generate 148 proteins during the entire cell cycle? And why this is important? Please consider cell division.
+### 2. Doubling the Initial Abundance of Protein for Cell Division
+
+The initial count of protein P\_0001 (DnaA) from experimental proteomics data is 148. In the histogram below, the average DnaA count at the end of the cell cycle is approximately 270. Compare the mean protein count at the end of the simulation to this experimental value. Does the simulation produce roughly 148 new proteins over the full cell cycle? Why is this important? Consider the implications for protein doubling during cell division.
 
 <p align="center">
-  <img src="../figs/plots_GIP/GIP_Proteins_CycleEnd_100replicates.png" width="450" alt="ODE result"> <br>
-  <b>Figure 3. Distribution of protein abundances among 100 cell replicates at the of the cell cycle</b>
+  <img src="../figs/plots_GIP/GIP_Proteins_CycleEnd_100replicates.png" width="450" alt="Protein end-cycle distribution"> <br>
+  <b>Figure 3. Distribution of protein abundances among 100 cell replicates at the end of the cell cycle.</b>
 </p>
 
 ## References:

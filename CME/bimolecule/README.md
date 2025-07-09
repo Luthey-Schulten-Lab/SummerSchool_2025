@@ -2,16 +2,17 @@
 
 ## Biomolecular Reaction
 
-In this tutorial, we will motivate stochastic modeling with a simple bimolecular reaction. The counts of reactants are small enough that you will see the fluctuations and variance of the stochastic result compared to the deterministic one. You will use `Tut1.1-ODEBimol.ipynb` to run the ODE of Bimolecular reaction solved with Scipy, and `Tut1.2-CMEBimol.ipynb` to run the CME of the Bimolecular reaction with jLM in Lattice Microbe.
+In this tutorial, we will introduce stochastic modeling using a simple bimolecular reaction. The numbers of reactant molecules are small enough that you will observe fluctuations and variance in the stochastic results compared to the deterministic ones.
 
-We will simulate the association/dissociation reaction of hypothetical molecules:
+We will model the reversible association/dissociation reaction of hypothetical molecules:
 ```math
 \ce{A + B <=>[\ce{k_f}][\ce{k_r}]C}
 ```
 
-Let us start out with a small number of each particles: 100 of A and B and 0 of C.  Let us put these particiles in a microbe sized volume of 1 $fL$. Also, let us start off with forward rate $k_f=1.07\times 10^6M^{-1}s^{-1}$ and backward rate $k_r=0.351/s$.
+We begin with small initial counts: 100 molecules of A, 100 of B, and 0 of C. These molecules are placed in a microbe-sized volume of 1 fL. Also, let us start off with forward rate $k_f$=1.07$\times10^6$ M<sup>-1</sup>s<sup>-1</sup> and backward rate $k_r$=0.351 s<sup>-1</sup>.
 
-Under ODE representation using concentrations of species, the change of concentrations for A, B, and C are:
+Under ODE representation using concentrations of species, the rates of change of A, B, and C are:
+
 ```math
 \begin{aligned}
 \frac{d[A]}{dt}&=-k_f[A][B]+k_r[C]\\
@@ -20,64 +21,73 @@ Under ODE representation using concentrations of species, the change of concentr
 \end{aligned}
 ```
 
-Since we are using counts rather than concentrations in CME,  the forward rate constant (2nd order) is divided by Avogadro's number and the volume of the cell which takes us to units of molecules per second.
+In contrast, when using the CME, we work with discrete molecular counts instead of concentrations. To make the forward rate constant compatible with molecule-based stochastic simulation, we convert it by dividing by Avogadro’s number and the system volume, yielding units of reactions per molecule per second.
 
 ## Run the Jupyter Notebook
 
-Now go to files on the Jupyter Notebook webpage `Tut1.1-ODEBimol.ipynb` to run the ODE of Bimolecular reaction solved with Scipy and `Tut1.2-CMEBimol.ipynb` to run the CME with jLM in Lattice Microbe.
+Now go to Jupyter Notebook interface and navigate to directory `/CME/bimolecule/`. You will use the notebook `Tut1.1-ODEBimol.ipynb` to simulate the bimolecular reaction using ordinary differential equations (ODEs) solved with SciPy, and `Tut1.2-CMEBimol.ipynb` to simulate the same reaction using the Chemical Master Equation (CME) with jLM in Lattice Microbes.
 
 ## Recap
 
-### Set up simulation with jLM
+### Set Up Simulation and Analyze with jLM
 
-As mentioned in the introduction part, jLM Problem Solving Environment is now intensively used to construct the CME system. To do so, we need to import `jLM` modules. 
+As introduced earlier, the jLM Problem Solving Environment is now widely used to construct CME systems. To get started, we first import the necessary `jLM` modules.
 
-The line `sim=CME.CMESimulation()` creates an empty simulation object. The next lines define the chemical species; in `jLM.CME` species are named by python strings and must be registered with the simulation using the `defineSpecies` command. `addReaction` function adds reactions to the defined species. 
+The line `sim = CME.CMESimulation()` creates an empty simulation object. The next lines define the chemical species. In `jLM.CME`, species are represented by Python strings and must be registered with the simulation using the `defineSpecies` command. Reactions are then added using the `addReaction` function.
 
-In Lattice Microbes, you need to specify both the forward and back reactions separately. The first and second argument can be either a tuple of reactants or a string when only one reactant is specified. `jLM.CME` currently supports 0th, 1st and 2nd order reactions, and reaction rates must be specified in the stochastic format. In the special case of a 0th order reaction, the empty string `""` should be passed as the reactant. In addition, annihilation reactions can be specified by passing the empty string `""` as the product parameter.
+In Lattice Microbes, both the forward and reverse reactions must be specified separately. The first and second arguments of `addReaction` can be either a tuple of reactants or a single string if only one reactant is involved. `jLM.CME` currently supports 0th-, 1st-, and 2nd-order reactions, and reaction rate constants must be given in stochastic units. For 0th-order reactions, use the empty string `""` as the reactant. Similarly, annihilation reactions can be specified by passing `""` as the product.
 
-The following lines with `addParticles` define the initial species counts.
+The following lines with `addParticles` define the initial counts of each species accumulatively.
 
-Next the simulation parameters are specified, time steps will be written out every 30 microseconds and the total simulation will run for 30 seconds.  The next line is of particular importance; the simulation must be saved to a file before running the simulation.  
+Next, simulation parameters are specified. In this tutorial, we write simulation output every 30 microseconds and run the simulation for a total of 30 seconds. An important detail: the simulation must be saved to a file before it can be executed.
 
-Finally, we call the `run(...)` command on the simulation object giving it the name of the simulation file, the simulation method and the number of independent trajectories (replicates) to run of that simulation. In this tutorial, we use **Direct Gillespie Algorithm** to sample stochastic bimolecular reaction system.
+Finally, we call the `run(...)` command on the simulation object, specifying the filename, the simulation method, and the number of independent trajectories (replicates) to run. In this tutorial, we use the **Direct Gillespie Algorithm** to sample the stochastic dynamics of the bimolecular reaction system.
 
-By running the simulation, you will see a long standard output showing the number of finished replicates. Generally, CME simulation will finish rather quickly.
+When the simulation runs, you will see a standard output listing the number of completed replicates. In general, CME simulations finish relatively quickly.
 
-We showed build-in module `jLM.CMEPostProcessing` to do the standard post-processing, including show the time-dependent traces of species for a certain replicate, and also population average and variance among the population/ensemble.
+We use the built-in module `jLM.CMEPostProcessing` for basic post-processing tasks. These include plotting time-dependent trajectories for individual replicates, and calculating population averages and variances across replicates.
 
-In the jupyter notebook, we also introduce a more general way to do the analysis where we first serialize the output LM file into a 3D numpy array and plot using custom functions. You will use this method in Tutorial 2 and 3 when doing analysis.
+Additionally, the Jupyter notebook demonstrates a more flexible analysis approach: the simulation output is first serialized into a 3D NumPy array (with dimensions of species, time, and replicates) and then visualized using custom plotting functions. You will apply this method in Tutorials 2 and 3 for more advanced analysis.
 
-### Compare CME with ODE result
+### Compare CME with ODE Results
 
-In ODE result, what you should note is that the count of each species varies smoothly across the time course. However, the count of each reactant must be in integer numbers due to the discreteness of molecules. Further, the reactions occur via the collision between two molecules, so the change of count also in integer units. Under such reasoning, the ODE result is not accurate anymore for microscopic reactions where the counts of reactants are low. Stochastic modeling was designed to address this point.  
+In the ODE results, you'll notice that the counts of each species change smoothly over time. However, in reality, molecule counts must be integers due to the discrete nature of matter. Since reactions occur through collisions between individual molecules, the changes in molecular counts also happen in integer steps. For systems with low molecule counts, this discreteness becomes significant, and ODEs no longer provide accurate descriptions. Stochastic modeling was developed to capture this behavior.
 
 <p align="center">
-  <img src="../figs/plots_bimolecule/bimolecule_ODE_1foldrate.png" width="300" alt="ODE result"> <img src="../figs/plots_bimolecule/bimolecule_CME_traces_rep5_1foldrates.png" width="300" alt="CME replicate 1"> <br>
-  <b>Figure 1. Comparison between ODE trajectory and CME trajectory of one replicate</b>
+  <img src="../figs/plots_bimolecule/bimolecule_ODE_1foldrate.png" width="300" alt="ODE result"> 
+  <img src="../figs/plots_bimolecule/bimolecule_CME_traces_rep5_1foldrates.png" width="300" alt="CME replicate 1"> <br>
+  <b>Figure 1. Comparison between ODE trajectory and one CME replicate</b>
 </p>
 
-You might note that the behavior in stochastic result is qualitatively the same to the deterministic ODE result, however there appears to be considerable fluctuation, even after the system has come to equilibrium.  This is due to the stochastic nature of the process, where the reaction can transiently fluctuate away from the equilibrium value.  In addition, you may be able to tell that the changes in particle number from one time to another are in integer increments, though this will become considerably more obvious at lower number of particles.
+You may notice that the behavior in the stochastic (CME) results is qualitatively similar to the deterministic ODE results. However, the CME trajectories exhibit considerable fluctuations, even after the system reaches equilibrium. These fluctuations arise from the intrinsic randomness of the process, where reactions can transiently deviate from the equilibrium state.
 
-
+Additionally, you might observe that the particle counts change in discrete steps between time points—this feature becomes even more apparent when molecule counts are lower.
 
 ## Discussion
 
-### 1. Increase the sample size 
+### 1. Increase the Sample Size
 
-Change the replicates number from 10 to 100 or even more in Tutorial 1.2. You need to change the variable `reps` and restart the Jupyter Notebook kernel to start a new CME simulation. See **Figure 2** for the situation with 10 and 100 replicates. Does the higher replicates number lead to a smoother average and variance?
+In Tutorial 1.2, try increasing the number of replicates from 10 to 100—or even more. To do this, change the variable `reps` and restart the Jupyter Notebook kernel to begin a new CME simulation. 
 
-<p align="center">
-  <img src="../figs/plots_bimolecule/bimolecule_CME_A_10replicates_1foldrates.png" width="300" alt="ODE result"> <img src="../figs/plots_bimolecule/bimolecule_CME_A_100replicates_1foldrates.png" width="300" alt="CME replicate 1"> <br>
-  <b>Figure 2. Population average of particle A in 10 (Left) and 100 (Right) replicates solved stochastically.</b>
-</p>
-
-### 2. Increase the reaction rate
-
-Multiple both the forward and backward rate constants by 10 or even 100 by changing variable `fold`, and restart and run ODE and CME Jupyter Notebooks again. In ODE, does the system converge to equilibrium faster? Does the equilibrium count change? In CME, does the fluctuation in single replicate become faster? How about the ensemble average? See **Figure 3**.
+See **Figure 2** for a comparison of the results using 10 and 100 replicates. Does increasing the number of replicates lead to smoother population averages and reduced variance?
 
 <p align="center">
-  <img src="../figs/plots_bimolecule/bimolecule_ODE_10foldrate.png" width="300" alt="ODE result"> <img src="../figs/plots_bimolecule/bimolecule_CME_traces_rep5_10foldrates.png" width="300" alt="CME replicate 1"> <br>
-  <b>Figure 3. ODE trajectory and CME trajectory of replicate 1 with 10 times faster forward and backward rates.</b>
+  <img src="../figs/plots_bimolecule/bimolecule_CME_A_10replicates_1foldrates.png" width="300" alt="CME 10 replicates"> 
+  <img src="../figs/plots_bimolecule/bimolecule_CME_A_100replicates_1foldrates.png" width="300" alt="CME 100 replicates"> <br>
+  <b>Figure 2. Population average of species A across 10 (left) and 100 (right) stochastic replicates.</b>
 </p>
 
+### 2. Increase the Reaction Rate
+
+Multiply both the forward and backward rate constants by 10 or 100 by modifying the variable `fold`. Then, restart and rerun both the ODE and CME Jupyter Notebooks.
+
+- In the ODE simulation, does the system reach equilibrium more quickly? Does the equilibrium concentration change?
+- In the CME simulation, do the fluctuations in a single replicate occur more rapidly? How does the ensemble average respond?
+
+See **Figure 3** for a comparison.
+
+<p align="center">
+  <img src="../figs/plots_bimolecule/bimolecule_ODE_10foldrate.png" width="300" alt="ODE result with faster rate"> 
+  <img src="../figs/plots_bimolecule/bimolecule_CME_traces_rep5_10foldrates.png" width="300" alt="CME replicate with faster rate"> <br>
+  <b>Figure 3. ODE trajectory and a single CME replicate with 10× faster forward and backward rates.</b>
+</p>
