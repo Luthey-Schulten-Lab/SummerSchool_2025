@@ -112,5 +112,6 @@ The advantage of Jupyter Notebook is that you could navigate the folders and run
 **Go to [CME-ODE WCM of Syn3A](WCM/)**
 
 ## References:
-[^breuer_metabolism]: Essential metabolism https://doi.org/10.3389/fmicb.2021.685687 Solved
-[^bianchi_CMEODE]: Communication 10.1049/iet-syb.2017.0070 Solved
+[^breuer_metabolism]: Breuer, M., Earnest, T. M., Merryman, C., Wise, K. S., Sun, L., Lynott, M. R., Hutchison, C. A., Smith, H. O., Lapek, J. D., Gonzalez, D. J., De Crécy-Lagard, V., Haas, D., Hanson, A. D., Labhsetwar, P., Glass, J. I., & Luthey-Schulten, Z. (2019). Essential metabolism for a minimal cell. eLife, 8. https://doi.org/10.7554/elife.36842
+
+[^bianchi_CMEODE]: Bianchi, D. M., Peterson, J. R., Earnest, T. M., Hallock, M. J., & Luthey‐Schulten, Z. (2018). Hybrid CME–ODE method for efficient simulation of the galactose switch in yeast. IET Systems Biology, 12(4), 170–176. https://doi.org/10.1049/iet-syb.2017.0070
