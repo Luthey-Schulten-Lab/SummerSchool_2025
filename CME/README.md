@@ -112,5 +112,5 @@ The advantage of Jupyter Notebook is that you could navigate the folders and run
 **Go to [CME-ODE WCM of Syn3A](WCM/)**
 
 ## References:
-[^breuer_metabolism]: Essential metabolism https://doi.org/10.3389/fmicb.2021.685687 After mannual solve
+[^breuer_metabolism]: Essential metabolism https://doi.org/10.3389/fmicb.2021.685687 initialize another commit
 [^bianchi_CMEODE]: Communication 10.1049/iet-syb.2017.0070 After mannual solve
