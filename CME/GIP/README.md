@@ -8,14 +8,14 @@ You can ask ChatGPT to give you more examples. Please also check this answer: [s
 
 ## Classic Genetic Information Processes Reactions
 
-With 3 species and 4 reactions, this classic and simplest genetic information process (GIP) starts from the transcription of gene to mRNA. mRNA can be translated to protein or degraded to its monomers. Protein can also be degraded. The reactions and rate constant is shown in Figure \ref{fig:gip2024} and Table \ref{tab:GIP}.
+With 3 species and 4 reactions, this classic and simplest genetic information process (GIP) starts from the transcription of gene to mRNA. mRNA can be translated to protein or degraded to its monomers. Protein can also be degraded. The reactions and rate constant is shown as the followings.
 
 <p align="center">
   <img src="../figs/figs_GIP/GIP_withCMEs.png" width="600" alt="Simple GIP model">  <br>
   <b>Figure 1. Genetic information processing model and its chemical master equation, where <i>m, n</i> are the number of mRNAs and proteins </b>
 </p>
 
-The rate constants are for DnaA Coding Gene (G\_0001) of minimal cell. The first three rate constants are calculate based on the initial concentrations of nucleotides and amino acids charged tRNA in the Cell paper \cite{thornburg_fundamental_2022}. We also fix the gene copy number to 1 and assume initial count of mRNA to be 1. The initial count of protein is 0. The degradation rate of protein is estimated based half-life 25 hours \cite{thornburg_kinetic_2019}.
+The rate constants are for DnaA Coding Gene (G\_0001) of minimal cell. The first three rate constants are calculate based on the initial concentrations of nucleotides and amino acids charged tRNA in the Cell paper[^thornburg_cell]. We also fix the gene copy number to 1 and assume initial count of mRNA to be 1. The initial count of protein is 0. The degradation rate of protein is estimated based half-life 25 hours[^thornburg_kinetic].
 
 **Table 1. Four reactions with their rate constants**
 
@@ -55,3 +55,8 @@ The initial count of protein P\_0001/DnaA from experimental proteomics data is 1
   <img src="../figs/plots_GIP/GIP_Proteins_CycleEnd_100replicates.png" width="450" alt="ODE result"> <br>
   <b>Figure 3. Distribution of protein abundances among 100 cell replicates at the of the cell cycle</b>
 </p>
+
+## References:
+[^thornburg_cell]: Thornburg, Z. R., Bianchi, D. M., Brier, T. A., Gilbert, B. R., Earnest, T. M., Melo, M. C., Safronova, N., Sáenz, J. P., Cook, A. T., Wise, K. S., Hutchison, C. A., Smith, H. O., Glass, J. I., & Luthey-Schulten, Z. (2022). Fundamental behaviors emerge from simulations of a living minimal cell. Cell, 185(2), 345-360.e28. https://doi.org/10.1016/j.cell.2021.12.025
+
+[^thornburg_kinetic]: Thornburg, Z. R., Melo, M. C. R., Bianchi, D., Brier, T. A., Crotty, C., Breuer, M., Smith, H. O., Hutchison, C. A., Glass, J. I., & Luthey-Schulten, Z. (2019). Kinetic modeling of the genetic information processes in a minimal cell. Frontiers in Molecular Biosciences, 6. https://doi.org/10.3389/fmolb.2019.00130
