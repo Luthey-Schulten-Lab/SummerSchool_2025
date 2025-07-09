@@ -4,10 +4,9 @@
 1. [Run CME/ODE Whole-Cell Model in Parallel](#1-run-cmeode-whole-cell-model-in-parallel)
 2. [Minimal Genome and Genetic Information Processes](#2-minimal-genome-and-genetic-information-processes)
 3. [Essential Metabolism](#3-essential-metabolism)
-4. [Macromolecular Complex Assembly]()
-5. [Hybrid CME-ODE Algorithm](#4-hybrid-cme-ode-algorithm)
-6. [Analysis](#5-analysis)
-7. [Discussion](#6-discussion)
+4. [Macromolecular Complex Assembly](#4-macromolecular-complex-assembly)
+5. [Hybrid CME-ODE Algorithm](#5-hybrid-cme-ode-algorithm)
+6. [Analysis and Discussion](#6-analysis-and-discussion)
   
 ## 1. Run CME/ODE Whole-Cell Model in Parallel
 
@@ -148,7 +147,7 @@ Now, we will focus on gene **JCVISYN3A_0011** to show how the different input fi
 
 The genome information of JCVI-syn3A is stored as standard Genbank file on NCBI with [ACCESSION Number CP016816.2](https://www.ncbi.nlm.nih.gov/nuccore/CP016816.2/). The Genbank file holds much more information than the pure nucleotide sequence. 
 
-Go to Genbank file under `input_data` folder and open with text editor. Search **JVCISYN3A_0011** and you wil see the following figure. **JCVISYN3A_0011** is the LocusTag of this certain gene in organism JCVI-syn3A, and *JCVISYN3A_* serving as a unique idetifier. 0011 is the locusNum that will be heavily used in the modelling to distinguish unique genes, RNAs, and proteins from each other. The start and end index of **JCVISYN3A_0011** is 15153 and 16799, respectively and the nucleotide sequence is at the end of the Genbank file. **JCVISYN3A_0011** is protein-coding gene and the protein is "Nucleoside Transporter ABC substrate-binding protein" with amino acid sequence shown. This protein is one subunit of ribonucleoside ATP-binding cassette (ABC) transporters that is assumed to import all nucleosides for Syn3A.
+Go to Genbank file under `.../input_data/` folder and open with text editor. Search **JVCISYN3A_0011** and you wil see the following figure. **JCVISYN3A_0011** is the LocusTag of this certain gene in organism JCVI-syn3A, and *JCVISYN3A_* serving as a unique idetifier. 0011 is the locusNum that will be heavily used in the modelling to distinguish unique genes, RNAs, and proteins from each other. The start and end index of **JCVISYN3A_0011** is 15153 and 16799, respectively and the nucleotide sequence is at the end of the Genbank file. **JCVISYN3A_0011** is protein-coding gene and the protein is "Nucleoside Transporter ABC substrate-binding protein" with amino acid sequence shown. This protein is one subunit of ribonucleoside ATP-binding cassette (ABC) transporters that is assumed to import all nucleosides for Syn3A.
 
 <p align="center">
   <img src="../figs/figs_WCM/jcvisyn3a_0011.png" width="450" alt="mpirun to launch parallel simulation"> <br>
@@ -156,16 +155,16 @@ Go to Genbank file under `input_data` folder and open with text editor. Search *
 </p>
 
 SBML (System Biology Markup Language) format is widely used in storing computational models of biological processes. The SBML file here contains the whole metabolic system of Syn3A, including compartments (cellular and extracellular), species, reactions, gene product (enzymatic or transporter proteins associated with reactions), and objective function (for Flux Balance Analysis). 
-It's worth noting that the kinetic constants of 175 reactions are in \textit{kinetic\_params.xlsx}.
+It's worth noting that the kinetic constants of 175 reactions are in `kinetic_params.xlsx`.
 
-Nucleoside Transporter ABC substrate-binding protein encode by gene **JCVISYN3A_0011** functions in reaction DSGNabc, irreversible transport of deoxyguanosine in nucleotide metabolism. Figure \ref{fig:sbml} shows reaction DSGNabc in SBML file. We define \textit{reversible} as \textit{false} since DSGNabc is a irreversible transport reaction. There are three reactants and four products. The geneProductAssociation rule is *and*, meaning the four subunit proteins (**0008, 0009, 0010, and 0011**) need to assembly to function cooperatively. In the latest WCM with incorporated macromolecular complex formation, we considered the assembly of 21 unique complexes, including this ABC transporter named **rnsBACD**. By doing so, we can use the actual abundance of this complete complex in the simulation of metabolism by ODE. 
+Nucleoside Transporter ABC substrate-binding protein encode by gene **JCVISYN3A_0011** functions in reaction DSGNabc, irreversible transport of deoxyguanosine in nucleotide metabolism. Figure 3 shows reaction DSGNabc in SBML file. We define *reversible* as *false* since DSGNabc is a irreversible transport reaction. There are three reactants and four products. The geneProductAssociation rule is *and*, meaning the four subunit proteins (**0008, 0009, 0010, and 0011**) need to assembly to function cooperatively. In the latest WCM with incorporated macromolecular complex formation, we considered the assembly of 21 unique complexes, including this ABC transporter named **rnsBACD**. By doing so, we can use the actual abundance of this complete complex in the simulation of metabolism by ODE. 
 
 <p align="center">
   <img src="../figs/figs_WCM/sbml.png" width="450" alt="SBML entry of DSGNabc reaction"> <br>
   <b>Figure 3. Entry Reaction DSGNabc in SBML file</b>
 </p>
 
-The kinetic constants for this DSGNabc reaction in `kinetic\_params.xlsx` is shown as following.
+The kinetic constants for this DSGNabc reaction in `kinetic_params.xlsx` is shown as following.
 
 <p align="center">
   <img src="../figs/figs_WCM/dsgnabc_kinetic.png" width="450" alt="SBML entry of DSGNabc reaction"> <br>
@@ -201,7 +200,7 @@ Replication copies the genetic information with the regulation of replication in
 
 The translation and degradation reactions in current whole cell model are more precise compared to the simplest case in Tutorial 2 as for each reaction, mRNA first needs to bind with a complex machinery, degradosome or ribosome. As the busiest species in genetic information processes, mRNA can also be degraded by binding with degradosome. This competition of mRNA to bind with ribosome or degradosome is a important pathway to regulate genetic information processes that will shown in the following result.
 
-Replication initiation is modeled by the binding of multi-domain protein DnaA (encoded by JCVISYN3A\_0001) and replisome with certain region called oriC on the chromosome[^thornburg_kinetic]. 
+Replication initiation is modeled by the binding of multi-domain protein DnaA (encoded by JCVISYN3A_0001) and replisome with certain region called oriC on the chromosome[^thornburg_kinetic]. 
 
 <p align="center">
   <img src="../figs/figs_WCM/oric_dnaA.png" width="450" alt="DnaA with Ori"> <br>
@@ -270,7 +269,7 @@ The whole metabolism network can be separated to five connected sub-networks, in
   <b>Figure 11. Whole Metabolism of JCVI-syn3A with five subsystems: central, nucleotide, lipid, cofactor and amino acid. </b> 
 </p>
 
-In our current whole cell modeling, 197 metabolites are included, 148 cytoplasmic and 49 extracellular. 175 reactions connect the metabolites. Shown in the network of central metabolism, the orange nodes are the metabolite IDs. We use suffix '\_c' to denote cytoplasmic and '\_e' for extracellular. The blue arrows are reactions connecting different metabolites, with names in dark blue and related proteins' locusNums under the names. 
+In our current whole cell modeling, 197 metabolites are included, 148 cytoplasmic and 49 extracellular. 175 reactions connect the metabolites. Shown in the network of central metabolism, the orange nodes are the metabolite IDs. We use suffix '_c' to denote cytoplasmic and '_e' for extracellular. The blue arrows are reactions connecting different metabolites, with names in dark blue and related proteins' locusNums under the names. 
 
 ATP as the major energetic molecules energize cellular processes, without which the cell will die. In JCVI-syn3A, glycolysis is the only way to generate ATP. Phosphoenolpyruvate (pep) is an intermediate in both the upstream and downstream in glycolysis.
 
