@@ -66,9 +66,6 @@ Due to the time limitation, you will launch 2 minutes simulation of 4 cell repli
 
 ### Launch Four Cell Replicates
 
-<details>
-<summary><strong>Click to EXPAND: Launch Simulation in Parallel </strong></summary>
-
 + **First**: Open **another** new terminal and login to Delta again
 
 + **Second**: Navigate and Submit the bash file
@@ -94,7 +91,6 @@ Due to the time limitation, you will launch 2 minutes simulation of 4 cell repli
     ``` bash
     ls ../output_4replicates
     ```
-</details>
 
 Each simulation replicate with index *i* generates:
 
