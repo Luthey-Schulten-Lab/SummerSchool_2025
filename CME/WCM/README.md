@@ -176,9 +176,9 @@ The kinetic constants for this DSGNabc reaction in `kinetic\_params.xlsx` is sho
 
 ### Genetically Minimized Bacterium, JCVI-Syn3A
 
-Minimal cell, JCVI-syn3A is a synthetic bacterium based on mother organism Mycoplasma mycoides capri published by J. Craig Venter Institute in 2016 \cite{hutchison_design_2016}. JCVI-syn3A has a doubling time of about 2 hours and consistently forms spherical cells of approximately 200 nm in radius.
+Minimal cell, JCVI-syn3A is a synthetic bacterium based on mother organism Mycoplasma mycoides capri published by J. Craig Venter Institute in 2016[^hutchison_design]. JCVI-syn3A has a doubling time of about 2 hours and consistently forms spherical cells of approximately 200 nm in radius.
 
-JCVI-syn3A's genome is minimal in all living organism, 543 kbp long and containing 452 genes code for proteins and 38 genes for RNAs. The ratio of unclear protein-coding genes is 90 out of 452, which is also smallest compared to other well-studied organism, including yeast and E. coli \cite{breuer_essential_2019}.
+JCVI-syn3A's genome is minimal in all living organism, 543 kbp long and containing 452 genes code for proteins and 38 genes for RNAs. The ratio of unclear protein-coding genes is 90 out of 452, which is also smallest compared to other well-studied organism, including yeast and E. coli[^breuer_metabolism].
 
 <p align="center">
   <img src="../figs/figs_WCM/syn3A_genome.png" width="450" alt="Minimized Genome"> <br>
@@ -190,7 +190,7 @@ JCVI-syn3A's genome is minimal in all living organism, 543 kbp long and containi
 
 Genetic information processes connect the blueprint genes to functional proteins. In our current whole cell model of minimal cell, we mainly consider seven types of processes listed in table.
 
-Replication copies the genetic information with the regulation of replication initiation. Transcription copies sequential information from DNA to RNA. There are three types of RNA, including mRNA, rRNA and tRNA that are tightly connected by translation. Translation takes place on ribosomes, where mRNA is read and an amino acid chain is generated according to the sequence of mRNA. rRNA, together with other ribosome proteins make up ribosomes in ribosomal biogenesis \cite{earnest_ribosome_2016}. tRNA is the carriers and identifier of amino acid to the ribosome. 
+Replication copies the genetic information with the regulation of replication initiation. Transcription copies sequential information from DNA to RNA. There are three types of RNA, including mRNA, rRNA and tRNA that are tightly connected by translation. Translation takes place on ribosomes, where mRNA is read and an amino acid chain is generated according to the sequence of mRNA. rRNA, together with other ribosome proteins make up ribosomes in ribosomal biogenesis[^earnest_ribosome_2016]. tRNA is the carriers and identifier of amino acid to the ribosome. 
 
 <p align="center">
   <img src="../figs/figs_WCM/gip_table.png" width="450" alt="GIP reactions"> <br>
@@ -201,13 +201,12 @@ Replication copies the genetic information with the regulation of replication in
 
 The translation and degradation reactions in current whole cell model are more precise compared to the simplest case in Tutorial 2 as for each reaction, mRNA first needs to bind with a complex machinery, degradosome or ribosome. As the busiest species in genetic information processes, mRNA can also be degraded by binding with degradosome. This competition of mRNA to bind with ribosome or degradosome is a important pathway to regulate genetic information processes that will shown in the following result.
 
-
-Replication initiation is modeled by the binding of multi-domain protein DnaA (encoded by JCVISYN3A\_0001) and replisome with certain region called oriC on the chromosome \cite{thornburg_kinetic_2019}. 
+Replication initiation is modeled by the binding of multi-domain protein DnaA (encoded by JCVISYN3A\_0001) and replisome with certain region called oriC on the chromosome[^thornburg_kinetic]. 
 
 <p align="center">
   <img src="../figs/figs_WCM/oric_dnaA.png" width="450" alt="DnaA with Ori"> <br>
   <b>Figure 7. Left: Left: oriC region. 9 nucleotide signature binding with DnaA domain IV shown in yellow and red, 3 nuclotide AT rich region binding with DnaA domain III shown in grey. <br>
-  Right: PDB structure of DnaA domain IV and domain III binding with chromosome a): \cite{fujikawa_structural_2003} b): \cite{duderstadt_dna_2011} </b> 
+  Right: PDB structure of DnaA domain IV and domain III binding with chromosome a): PDB entry 1J1V b): PDB entry 3R8F </b> 
 </p>
 
 First stage of initiation is the binding of DnaA's Domain IV with nine-nucleotide signatures on double-strand DNA(three of them, shown in red and yellow in Figure \ref{oric_dnaA}). This binding will open a pocket for DnaA's Domain III to bind with AT rich region on single-strand DNA following the nine-nucleotide signatures to build a filament of DnaA on single-strand DNA. The final step is the binding of replisome with the chromosome after the filament grows above 15 DnaA with 30 DnaA maximum due to the length of AT rich region is 90. In current model, the assembly of replisome is not explicitly included.
@@ -224,7 +223,7 @@ Replication occurs gene by gene when replisomes move along the circular chromoso
   <b>Figure 9. Ordered and Bidirectional Replication </b> 
 </p>
 
-The equivalent reaction to duplicate certain gene is in Table \ref{tab:CMErxns} The rate to replicate one gene in Table \ref{tab:CMErates} is determined by a polymerization rate form proposed in \cite{hofmeyr_generic_2013}.  
+The equivalent reaction to duplicate certain gene is in Table \ref{tab:CMErxns} The rate to replicate one gene in Table \ref{tab:CMErates} is determined by a polymerization rate form proposed by Hofmyer *et. al.*[^hofmyer_rate].  
 
 **Table 1: Reactions and Rates for Replication, Transcription, Translation and Degradation**
 
@@ -283,7 +282,7 @@ ATP as the major energetic molecules energize cellular processes, without which 
 
 ### Convenience Rate Law
 
-Most reactions in the metabolism requires certain proteins produced in genetic information processes as enzymes or transporters. Convenience rate law and random binding model are used to depict the kinetics of these reactions \cite{liebermeister_bringing_2006}.
+Most reactions in the metabolism requires certain proteins produced in genetic information processes as enzymes or transporters. Convenience rate law and random binding model are used to depict the kinetics of these reactions[^liebermeister_convenience].
 
 The random binding model assumes the substrates bind to the enzyme/transporter in arbitrary order and are converted into the products, which then dissociate from the enzyme in arbitrary order. Convenience rate law further assumes the conversion step is the rate-determining step and the binding reactions are in quasi-equilibrium. For reaction
 
@@ -304,9 +303,9 @@ We can look at one reaction entry in the SBML file for more insights. Go to the 
 
 ## 4. Macromolecular Complex Assembly
 
-In all organisms including Syn3A, key macromolecular complexes mediate essential cellular processes. In genetic information processing, **RNA polymerase (RNAP)** and **ribosomes** decode genetic information into mRNAs and functional proteins via transcription and translation, respectively. **Degradosomes**, a loose complex of endoribonuclease, exoribonuclease, and a few glycolytic enzymes compete with ribosomes for the binding and processing of mRNA. Several essential complexes interact with chromosomes and facilitate chromosome partitioning during cell division[^ref]. The essential metabolism of Syn3A depends on the activated transport of (deoxy)nucleosides, amino acids, vitamins and fatty acids into the cell by membrane complexes with multiple protein subunits[^ref].
+In all organisms including Syn3A, key macromolecular complexes mediate essential cellular processes. In genetic information processing, **RNA polymerase (RNAP)** and **ribosomes** decode genetic information into mRNAs and functional proteins via transcription and translation, respectively. **Degradosomes**, a loose complex of endoribonuclease, exoribonuclease, and a few glycolytic enzymes compete with ribosomes for the binding and processing of mRNA. Several essential complexes interact with chromosomes and facilitate chromosome partitioning during cell division[^gilbert_dynamics]. The essential metabolism of Syn3A depends on the activated transport of (deoxy)nucleosides, amino acids, vitamins and fatty acids into the cell by membrane complexes with multiple protein subunits[^breuer_metabolism].
 
-In a recent submitted manuscript[^ref], we investigated the assembly of 21 unique macromolecular complexes in the context of the WCM of Syn3A. Complexes’ compositions were determined by cross-checking the existing genome/proteome annotation and the homology-based function annotation. The assembly pathways, as series of bimolecular association reactions, of the ribosome[^ref], RNAP, and ATP synthase were taken as reported, and of others inferred from interactions between subunits.
+In a recent submitted manuscript[^fu_complex], we investigated the assembly of 21 unique macromolecular complexes in the context of the WCM of Syn3A. Complexes’ compositions were determined by cross-checking the existing genome/proteome annotation and the homology-based function annotation. The assembly pathways, as series of bimolecular association reactions, of the ribosome[^earnest_ribosome_2016], RNAP, and ATP synthase were taken as reported, and of others inferred from interactions between subunits.
 
 For example,  **ABC transporters** in Gram-positive organisms have a domain composition of two peripheral nucleotide binding domains (NBD) that provide ATP hydrolysis, two transmembrane domains (TMD) that form the permease channel, and one substrate binding protein (SBP) that delivers substrates to TMDs. The nucleoside ABC transporter rnsBACD comprises 4 distinct subunits of proteins RnsD/0008 (TMD), RnsC/0009 (TMD), RnsA/0010 (2NBDs), and RnsB/0011 (SBP) with 1:1:1:1 stoichiometries, where protein subunit RnsA/0010 correpsonds to two NBDs. The assembly pathways of the ABC transporters were assumed to obey the following order. The TMDs first bind to each other to form the permease channel, and the peripheral NBDs bind to the channel to form the functional core. SBP will bind with the core at last, if separated from the TMDs.
 
@@ -356,7 +355,7 @@ One extra thing to notice is that the CME rates are also updated per second afte
 
 We first consider DNA replication and doubling of cell volume and surface area. 
 
-For DNA replication initiation, the on and off rates of DnaA binding to ssDNA during filament formation obtained from smFRET experiments[^ref] were modified from the average quantities ($1\times10^5$ to $1.4\times 10^5 \text{M}^{-1}\text{s}^{-1}$ ) and from (0.55 to 0.42 $\text{s}^{-1}$ ), respectively, that were measured for genetic constructs with DnaA boxes (dsDNA signatures) preceding the ssDNA signatures. The higher DnaA binding rate with ssDNA gives unrealistic fast replication initiation between 0.5 and 2.25 min with the mean of 1 min, which means a very short B period. However, the 4DWCM including the explicit diffusion of DnaA predicted a longer initiation time of mean time 5.5 min[^ref], where some cell replicates requiring 10 min or longer to form the DnaA filament and initiate DNA replication. Changing back to the slower DnaA binding rate in the spatially homogeneous CME-ODE WCM, the expected initiation time recovered
+For DNA replication initiation, the on and off rates of DnaA binding to ssDNA during filament formation obtained from smFRET experiments[^cheng_DnaA] were modified from the average quantities ($1\times10^5$ to $1.4\times 10^5 \text{M}^{-1}\text{s}^{-1}$ ) and from (0.55 to 0.42 $\text{s}^{-1}$ ), respectively, that were measured for genetic constructs with DnaA boxes (dsDNA signatures) preceding the ssDNA signatures. The higher DnaA binding rate with ssDNA gives unrealistic fast replication initiation between 0.5 and 2.25 min with the mean of 1 min, which means a very short B period. However, the 4DWCM including the explicit diffusion of DnaA predicted a longer initiation time of mean time 5.5 min[^thornburg_maytin_4DWCM], where some cell replicates requiring 10 min or longer to form the DnaA filament and initiate DNA replication. Changing back to the slower DnaA binding rate in the spatially homogeneous CME-ODE WCM, the expected initiation time recovered
 with the median of 5 min. This highlights the influence of diffusion on the cellular behaviors, and the necessity to adopt different parameterization strategies with and without considering diffusion.
 
 There is a wide spread of times when each gene is copied. Starting with only one copy of the chromosome, second copies of genes near the terminus like fakA/0420 are available for transcription after 40 min. On average, the entire chromosome was duplicated around 49 minutes.
@@ -367,8 +366,7 @@ There is a wide spread of times when each gene is copied. Starting with only one
   Right: Early replication of Gene 0001 near the <i>Ori</i> and late replication of gene 0420 near the <i>Ter</i>. </b>
 </p>
 
-Cell volume doubled at a median time of 67 minutes, after which the partitioning of the chromosomes is assumed to occur. The cell cycle, defined as the time for
-surface area to double and the cells to divide, ranged from 93 to 112 with a median of 102 min, which is in good agreement with experimental measured 105 min[^ref].
+Cell volume doubled at a median time of 67 minutes, after which the partitioning of the chromosomes is assumed to occur. The cell cycle, defined as the time for surface area to double and the cells to divide, ranged from 93 to 112 with a median of 102 min, which is in good agreement with experimental measured 105 min[^pelletier_division].
 
 <p align="center"> 
   <img src="../figs/plots_WCM/Time Doubling.jpg" width="600" alt="Doubling of DNA, V, SA">  <br>
@@ -416,3 +414,24 @@ The monomer pool regenerated in metablism could drain due to the slow systhesis 
   <img src="../figs/plots_WCM/Transcription slow down.jpg" width="450" alt="Slow Transcription"> <br>
   <b>Figure 20. Low UTP concentration supplied from nucleotide metabolism slows down transcription elongation</b>
 </p>
+
+## References:
+[^hutchison_design]: Hutchison, C. A., Chuang, R., Noskov, V. N., Assad-Garcia, N., Deerinck, T. J., Ellisman, M. H., Gill, J., Kannan, K., Karas, B. J., Ma, L., Pelletier, J. F., Qi, Z., Richter, R. A., Strychalski, E. A., Sun, L., Suzuki, Y., Tsvetanova, B., Wise, K. S., Smith, H. O., . . . Venter, J. C. (2016). Design and synthesis of a minimal bacterial genome. Science, 351(6280). https://doi.org/10.1126/science.aad6253
+
+[^breuer_metabolism]: Breuer, M., Earnest, T. M., Merryman, C., Wise, K. S., Sun, L., Lynott, M. R., Hutchison, C. A., Smith, H. O., Lapek, J. D., Gonzalez, D. J., De Crécy-Lagard, V., Haas, D., Hanson, A. D., Labhsetwar, P., Glass, J. I., & Luthey-Schulten, Z. (2019). Essential metabolism for a minimal cell. eLife, 8. https://doi.org/10.7554/elife.36842
+
+[^earnest_ribosome_2016]: Earnest, T. M., Cole, J. A., Peterson, J. R., Hallock, M. J., Kuhlman, T. E., & Luthey‐Schulten, Z. (2016). Ribosome biogenesis in replicating cells: Integration of experiment and theory. Biopolymers, 105(10), 735–751. https://doi.org/10.1002/bip.22892
+
+[^thornburg_kinetic]: Thornburg, Z. R., Melo, M. C. R., Bianchi, D., Brier, T. A., Crotty, C., Breuer, M., Smith, H. O., Hutchison, C. A., Glass, J. I., & Luthey-Schulten, Z. (2019). Kinetic modeling of the genetic information processes in a minimal cell. Frontiers in Molecular Biosciences, 6. https://doi.org/10.3389/fmolb.2019.00130
+
+[^hofmyer_rate]: Hofmeyr, J. S., Gqwaka, O. P. C., & Rohwer, J. M. (2013). A generic rate equation for catalysed, template‐directed polymerisation. FEBS Letters, 587(17), 2868–2875. https://doi.org/10.1016/j.febslet.2013.07.011
+
+[^liebermeister_convenience]: Liebermeister, W., & Klipp, E. (2006). Bringing metabolic networks to life: convenience rate law and thermodynamic constraints. Theoretical Biology and Medical Modelling, 3(1). https://doi.org/10.1186/1742-4682-3-41
+
+[^gilbert_dynamics]: Gilbert, B. R., Thornburg, Z. R., Brier, T. A., Stevens, J. A., Grünewald, F., Stone, J. E., Marrink, S. J., & Luthey-Schulten, Z. (2023). Dynamics of chromosome organization in a minimal bacterial cell. Frontiers in Cell and Developmental Biology, 11. https://doi.org/10.3389/fcell.2023.1214962
+
+[^fu_complex]: Fu, E., Thornburg, Z. R., Brier, T. A., Wei, R., Bo, Y., Gilbert, B. R., Wang, S., & Luthey-Schulten, Z. (2025). Assembly of macromolecular complexes in the Whole-Cell model of a minimal cell. bioRxiv (Cold Spring Harbor Laboratory). https://doi.org/10.1101/2025.07.02.662439
+
+[^thornburg_maytin_4DWCM]: Thornburg, Z. R., Maytin, A., Kwon, J., Brier, T. A., Gilbert, B. R., Fu, E., Gao, Y., Quenneville, J., Wu, T., Li, H., Long, T., Pezeshkian, W., Sun, L., Glass, J., Mehta, A., Ha, T., & Luthey-Schulten, Z. (2025). Bringing the genetically minimal cell to life on a computer in 4D. bioRxiv (Cold Spring Harbor Laboratory). https://doi.org/10.1101/2025.06.10.658899
+
+[^pelletier_division]: Pelletier, J. F., Sun, L., Wise, K. S., Assad-Garcia, N., Karas, B. J., Deerinck, T. J., Ellisman, M. H., Mershin, A., Gershenfeld, N., Chuang, R., Glass, J. I., & Strychalski, E. A. (2021). Genetic requirements for cell division in a genomically minimal cell. Cell, 184(9), 2430-2440.e16. https://doi.org/10.1016/j.cell.2021.03.008
