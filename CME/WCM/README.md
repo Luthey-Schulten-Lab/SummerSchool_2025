@@ -16,8 +16,8 @@ For each indepedent cell replicate, the main script `WCM_CMEODE_Hook.py` will ca
 
 ### Scripts
 
-<details>
-<summary><strong>Click to EXPAND: Explanation of All Scripts </strong></summary>
+<details open> 
+<summary><strong>Click to COLLAPSE: Explanation of All Scripts </strong></summary>
 
 #### Launch Simulation in Parallel
 
@@ -105,8 +105,8 @@ Output files are saved to directory `../output_4replicates/` defined and created
 
 Four main input files are used in whole-cell simulation: one Genbank file, one SBML file, and two Excel files. The `syn3A.gb` Genebank file contains the sequences and functions of genes, RNAs, and proteins, and the `Syn3A_updated.xml` SBML file contains the metabolic reactions (reactants, stoichiometries). The `intitial_concentration.xlsx` file contains the initial count/concentrations of proteins and metabolite while `kinetic params.xlsx` contains the kinetic parameters of the GIP and metabolic reactions.
 
-<details>
-<summary><strong>Click to EXPAND: Breakdown of Input Files</strong></summary>
+<details open>
+<summary><strong>Click to COLLAPSE: Breakdown of Input Files</strong></summary>
 
 - `syn3A.gb` — GenBank file of JCVI-Syn3A 
   - Obtained from ([NCBI Accession: CP016816](https://www.ncbi.nlm.nih.gov/nuccore/CP016816)).
@@ -146,17 +146,16 @@ The genome information of JCVI-syn3A is stored as standard Genbank file on NCBI 
 Go to Genbank file under `.../input_data/` folder and open with text editor. Search **JVCISYN3A_0011** and you wil see the following figure. **JCVISYN3A_0011** is the LocusTag of this certain gene in organism JCVI-syn3A, and *JCVISYN3A_* serving as a unique idetifier. 0011 is the locusNum that will be heavily used in the modelling to distinguish unique genes, RNAs, and proteins from each other. The start and end index of **JCVISYN3A_0011** is 15153 and 16799, respectively and the nucleotide sequence is at the end of the Genbank file. **JCVISYN3A_0011** is protein-coding gene and the protein is "Nucleoside Transporter ABC substrate-binding protein" with amino acid sequence shown. This protein is one subunit of ribonucleoside ATP-binding cassette (ABC) transporters that is assumed to import all nucleosides for Syn3A.
 
 <p align="center">
-  <img src="../figs/figs_WCM/jcvisyn3a_0011.png" width="450" alt="mpirun to launch parallel simulation"> <br>
+  <img src="../figs/figs_WCM/jcvisyn3a_0011.png" width="300" alt="mpirun to launch parallel simulation"> <br>
   <b>Figure 2. Entry JCVISYN3A_0011 in Syn3A's Genbank file</b>
 </p>
 
-SBML (System Biology Markup Language) format is widely used in storing computational models of biological processes. The SBML file here contains the whole metabolic system of Syn3A, including compartments (cellular and extracellular), species, reactions, gene product (enzymatic or transporter proteins associated with reactions), and objective function (for Flux Balance Analysis). 
-It's worth noting that the kinetic constants of 175 reactions are in `kinetic_params.xlsx`.
+SBML (System Biology Markup Language) format is widely used in storing computational models of biological processes. The SBML file here contains the whole metabolic system of Syn3A, including compartments (cellular and extracellular), species, reactions, gene product (enzymatic or transporter proteins associated with reactions), and objective function (for Flux Balance Analysis). It's worth noting that the kinetic constants of 175 reactions are in `kinetic_params.xlsx`.
 
 Nucleoside Transporter ABC substrate-binding protein encode by gene **JCVISYN3A_0011** functions in reaction DSGNabc, irreversible transport of deoxyguanosine in nucleotide metabolism. Figure 3 shows reaction DSGNabc in SBML file. We define *reversible* as *false* since DSGNabc is a irreversible transport reaction. There are three reactants and four products. The geneProductAssociation rule is *and*, meaning the four subunit proteins (**0008, 0009, 0010, and 0011**) need to assembly to function cooperatively. In the latest WCM with incorporated macromolecular complex formation, we considered the assembly of 21 unique complexes, including this ABC transporter named **rnsBACD**. By doing so, we can use the actual abundance of this complete complex in the simulation of metabolism by ODE. 
 
 <p align="center">
-  <img src="../figs/figs_WCM/sbml.png" width="450" alt="SBML entry of DSGNabc reaction"> <br>
+  <img src="../figs/figs_WCM/sbml.png" width="600" alt="SBML entry of DSGNabc reaction"> <br>
   <b>Figure 3. Entry Reaction DSGNabc in SBML file</b>
 </p>
 
@@ -188,23 +187,22 @@ Genetic information processes connect the blueprint genes to functional proteins
 Replication copies the genetic information with the regulation of replication initiation. Transcription copies sequential information from DNA to RNA. There are three types of RNA, including mRNA, rRNA and tRNA that are tightly connected by translation. Translation takes place on ribosomes, where mRNA is read and an amino acid chain is generated according to the sequence of mRNA. rRNA, together with other ribosome proteins make up ribosomes in ribosomal biogenesis[^earnest_ribosome_2015]. tRNA is the carriers and identifier of amino acid to the ribosome. 
 
 <p align="center">
-  <img src="../figs/figs_WCM/gip_table.png" width="450" alt="GIP reactions"> <br>
+  <img src="../figs/figs_WCM/gip_table.png" width="600" alt="GIP reactions"> <br>
   <b>Figure 6. Left: Genetic Information Flow. <br>
   Right: Functions of GIP reactions. </b> 
 </p>
-
 
 The translation and degradation reactions in current whole cell model are more precise compared to the simplest case in Tutorial 2 as for each reaction, mRNA first needs to bind with a complex machinery, degradosome or ribosome. As the busiest species in genetic information processes, mRNA can also be degraded by binding with degradosome. This competition of mRNA to bind with ribosome or degradosome is a important pathway to regulate genetic information processes that will shown in the following result.
 
 Replication initiation is modeled by the binding of multi-domain protein DnaA (encoded by JCVISYN3A_0001) and replisome with certain region called oriC on the chromosome[^thornburg_kinetic]. 
 
 <p align="center">
-  <img src="../figs/figs_WCM/oric_dnaA.png" width="450" alt="DnaA with Ori"> <br>
+  <img src="../figs/figs_WCM/oric_dnaA.png" width="600" alt="DnaA with Ori"> <br>
   <b>Figure 7. Left: Left: oriC region. 9 nucleotide signature binding with DnaA domain IV shown in yellow and red, 3 nuclotide AT rich region binding with DnaA domain III shown in grey. <br>
   Right: PDB structure of DnaA domain IV and domain III binding with chromosome a): PDB entry 1J1V b): PDB entry 3R8F </b> 
 </p>
 
-First stage of initiation is the binding of DnaA's Domain IV with nine-nucleotide signatures on double-strand DNA(three of them, shown in red and yellow in Figure \ref{oric_dnaA}). This binding will open a pocket for DnaA's Domain III to bind with AT rich region on single-strand DNA following the nine-nucleotide signatures to build a filament of DnaA on single-strand DNA. The final step is the binding of replisome with the chromosome after the filament grows above 15 DnaA with 30 DnaA maximum due to the length of AT rich region is 90. In current model, the assembly of replisome is not explicitly included.
+First stage of initiation is the binding of DnaA's Domain IV with nine-nucleotide signatures on double-strand DNA(three of them, shown in red and yellow in Figure 8. This binding will open a pocket for DnaA's Domain III to bind with AT rich region on single-strand DNA following the nine-nucleotide signatures to build a filament of DnaA on single-strand DNA. The final step is the binding of replisome with the chromosome after the filament grows above 15 DnaA with 30 DnaA maximum due to the length of AT rich region is 90. In current model, the assembly of replisome is not explicitly included.
 
 <p align="center">
   <img src="../figs/figs_WCM/initiation.png" width="450" alt="DnaA with Ori"> <br>
@@ -214,7 +212,7 @@ First stage of initiation is the binding of DnaA's Domain IV with nine-nucleotid
 Replication occurs gene by gene when replisomes move along the circular chromosome from oriC to ter in two directions. Since the locations of genes are fixed, the replication happens in order. So our replication model is ordered and bidirectional.
 
 <p align="center">
-  <img src="../figs/figs_WCM/rep.png" width="450" alt="DnaA with Ori"> <br>
+  <img src="../figs/figs_WCM/rep.png" width="450" alt=" Bidirectional replication"> <br>
   <b>Figure 9. Ordered and Bidirectional Replication </b> 
 </p>
 
@@ -253,7 +251,7 @@ As mentioned, replication, transcription, and translation all require monomers (
 All the supply of monomers comes from metabolism of JCVI-syn3A. The (d)NTPs are generated in nucleotide metabolism that transport extracellular nucleoside and convert nucleoside to (d)NTPs used in the DNA and RNA synthesis. The other building blocks, such as phosphoribosyl pyrophosphate (prpp), phosphoenolpyruvate (pep), and 1,3-Bisphosphoglyceric acid (1,3dpg) along these pathways are the products in glycolysis in central metabolism \ref{NTP_supply}.
 
 <p align="center">
-  <img src="../figs/figs_WCM/NTP_supply.png" width="450" alt="GTP synthesis"> <br>
+  <img src="../figs/figs_WCM/NTP_supply.png" width="600" alt="GTP synthesis"> <br>
   <b>Figure 10. Supply of GTP and dGTP for DNA and RNA synthesis in nucleotide metabolism. The metabolites in the bracket come from central metabolism </b> 
 </p>
 
@@ -273,7 +271,6 @@ ATP as the major energetic molecules energize cellular processes, without which 
   <b>Figure 12. Central Metabolism in JCVI-syn3A. Phosphoenolpyruvate (pep) is both the upstream and downstream of glycolysis. 1,3-Bisphosphoglyceric acid (1,3dpg), Phosphoribosyl pyrophosphate (prpp) and pep are in nucleotide metabolism. </b> 
 </p>
 
-
 ### Convenience Rate Law
 
 Most reactions in the metabolism requires certain proteins produced in genetic information processes as enzymes or transporters. Convenience rate law and random binding model are used to depict the kinetics of these reactions[^liebermeister_convenience].
@@ -287,7 +284,7 @@ The random binding model assumes the substrates bind to the enzyme/transporter i
 , the rate law is
 
 <p align="center">
-  <img src="../figs/figs_WCM/convenience.png" width="450" alt="GTP synthesis"> <br>
+  <img src="../figs/figs_WCM/convenience.png" width="600" alt="convenience rate law"> <br>
   <b>Figure 13. Mechanism of reaction A+X to B+Y in random binding model. [E] is the concentration of enzyme, [A] concentration of molecule A </b> 
 </p>
 
@@ -301,13 +298,14 @@ In all organisms including Syn3A, key macromolecular complexes mediate essential
 
 In a recent submitted manuscript[^fu_complex], we investigated the assembly of 21 unique macromolecular complexes in the context of the WCM of Syn3A. Complexes’ compositions were determined by cross-checking the existing genome/proteome annotation and the homology-based function annotation. The assembly pathways, as series of bimolecular association reactions, of the ribosome[^earnest_ribosome_2015], RNAP, and ATP synthase were taken as reported, and of others inferred from interactions between subunits.
 
-The bacterial ribosome comprises a small subunit (30S SSU) and a large subunit (50S LSU), each of which is a ribonucleoprotein complex that assembles independently. The monocistronic rRNA operons (*rrsA*/0069, *rrlA*/0068, *rrfA*/0067 and *rrsB*/0534, *rrlB*/0533, *rrfB*/0532) encode the 16S, 23S, and 5S rRNAs, respectively. 16S rRNA with 20 SSU ribosomal proteins assemble in the SSU; 23S, 5S, and 31 LSU ribosomal proteins assemble in the LSU. In the current model, the SSU assembly pathways were derived from the previous study[^earnest_ribosome_2015] by reducing the number of assembly intermediates from 145 to 19 to maintain the smallest number of complete pathways with the highest fluxes, as shown in the left part of Figure 14. For LSU, we sampled one linear assembly pathway on the rerouted Nierhaus assembly map[^davis_LSU]. SSUs and LSUs will finally associate to form intact ribosomes at a fast rate that will bind to mRNA for the translation process.
+The bacterial ribosome comprises a small subunit (30S SSU) and a large subunit (50S LSU), each of which is a ribonucleoprotein complex that assembles independently. In Syn3A, the rRNA operons (*rrsA*/0069, *rrlA*/0068, *rrfA*/0067 and *rrsB*/0534, *rrlB*/0533, *rrfB*/0532) encode the 16S, 23S, and 5S rRNAs, respectively. 16S rRNA with 20 SSU ribosomal proteins assemble in the SSU; 23S, 5S, and 31 LSU ribosomal proteins assemble in the LSU. In the current model, the SSU assembly pathways were derived from the previous study[^earnest_ribosome_2015] by reducing the number of assembly intermediates from 145 to 19 to maintain the smallest number of complete pathways with the highest fluxes, as shown in the left part of Figure 14. For LSU, we sampled one linear assembly pathway on the rerouted Nierhaus assembly map[^davis_LSU]. SSUs and LSUs will finally associate to form intact ribosomes at a fast rate that will bind to mRNA for the translation process.
 
 **ABC transporters** in Gram-positive organisms have a domain composition of two peripheral nucleotide binding domains (NBD) that provide ATP hydrolysis, two transmembrane domains (TMD) that form the permease channel, and one substrate binding protein (SBP) that delivers substrates to TMDs. The nucleoside ABC transporter rnsBACD comprises 4 distinct subunits of proteins RnsD/0008 (TMD), RnsC/0009 (TMD), RnsA/0010 (2NBDs), and RnsB/0011 (SBP) with 1:1:1:1 stoichiometries, where protein subunit RnsA/0010 correpsonds to two NBDs. The assembly pathways of the ABC transporters were assumed to obey the following order. The TMDs first bind to each other to form the permease channel, and the peripheral NBDs bind to the channel to form the functional core. SBP will bind with the core at last, if separated from the TMDs.
 
 <p align="center">
-  <img src="../figs/figs_WCM/ABC transporters.png" width="450" alt="ABC transporter"> <br>
-  <b>Figure 14. Typical domain composition of ABC transporter in Gram-positive organisms. SBP: Substrate Binding Protein, TMD: Transmembrane Domain, NBD: Nucleotide Binding Domain. </b> 
+  <img src="../figs/figs_WCM/SSU_reduced.jpg" width="450" alt="ABC transporter"> <img src="../figs/figs_WCM/ABC transporters.png" width="450" alt="ABC transporter"> <br>
+  <b>Figure 14. Left: Hierarchical and parallel assembly pathway of SSU with 145 assembly intermediates, where the thickness of edged represents the fluxes. The marked green pathway is the reduced pathway wit he largest flux and 19 intermediates. <br> 
+  Right:Typical domain composition of ABC transporter in Gram-positive organisms. SBP: Substrate Binding Protein, TMD: Transmembrane Domain, NBD: Nucleotide Binding Domain. </b> 
 </p>
 
 ## 5. Hybrid CME-ODE Algorithm
@@ -331,16 +329,16 @@ To simulate the **co-evolution** of GIP and metabolism, the communication needs 
 **(d)** The impacts of metabolism on GIP are two-fold: the abundance of metabolites explicitly in GIP and the concentrations of monomers that affect the rates of the polymerization of genes, RNAs, and proteins in CME.
 
 <p align="center">
-  <img src="../figs/figs_WCM/communication.png" alt="GIP_Cplx" width="400"> <br>
+  <img src="../figs/figs_WCM/communication.png" alt="CMEODE communication" width="600"> <br>
   <b> Figure 15. Communication between genetic information in CME and metabolism in ODE </b>
 </p>
 
 One extra thing to notice is that the CME rates are also updated per second after the metabolism simulation in ODE to account for the possible shortage of monomers that will decrease the rate in genetic information process.
 
-
 ## 6. Analysis and Discussion
 
 ### Run Notebook `analysis.ipynb` on Ten Prepared Cell Replicates
+
 + **First**: Navigate to `.../CME/WCM/analysis` and Open `analysis.ipynb` in Jupyter Notebook Webpage.
   
 + **Second**: Run ALL and Compare the generated plots with figures in this README file.
@@ -365,7 +363,7 @@ There is a wide spread of times when each gene is copied. Starting with only one
 Cell volume doubled at a median time of 67 minutes, after which the partitioning of the chromosomes is assumed to occur. The cell cycle, defined as the time for surface area to double and the cells to divide, ranged from 93 to 112 with a median of 102 min, which is in good agreement with experimental measured 105 min[^pelletier_division].
 
 <p align="center"> 
-  <img src="../figs/plots_WCM/Time Doubling.jpg" width="600" alt="Doubling of DNA, V, SA">  <br>
+  <img src="../figs/plots_WCM/Time Doubling.jpg" width="450" alt="Doubling of DNA, V, SA">  <br>
   <b>Figure 17. Scaled chromosome, volume and surface area over the entire cell cycle. </b>
 </p>
 
@@ -393,11 +391,13 @@ Considering the cell division into two daughter cells at the end of the cell cyc
 
 ### Translation per mRNA
 
-Upon transcription, the fate of the mRNAs is determined by the competition between its binding and translation by ribosomes into a protein, and its binding and degradation by degradosomes into NMPs. If one views the competition between the ribosome and the degradosome as a series of **independent Bernoulli trials**, where success means mRNA binding with the ribosome, and failure binding with the degradosome, then the distribution of the number of successes until the first failure occurs, which is the translations per mRNA transcript until mRNA degradation, follows a geometric distribution with the mean being the ratio of success over loss. The time-dependent ratio of mRNA binding with ribosome over binding over degradosome was calculated using $`\frac{k_{bind}^{mRNA:Ribo}\times \# \, Free \, Ribosome}{k_{bind}^{mRNA:Deg}\times \# \, Free \, Degradosome}`$. In our current implementations, the ratio between ribosome and degradosome binding rates was 6.3 ($`\frac{k_{bind}^{mRNA:Ribo}}{k_{bind}^{mRNA:Deg}}=\frac{8.9\times10^4\, \mathrm{M}^{-1} \mathrm{s}^{-1}}{1.4\times10^4\, \mathrm{M}^{-1} \mathrm{s}^{-1}}=6.3`$). The number of available ribosomes over available degradosome was about 1.3 over the cell cycle, which further favor the mRNA to translation instead of degradation ($`\frac{\# \, Free \, Ribosome}{\# \, Free \, Degradosome}=\frac{\# Total \ Ribosome \times (1-\% Active \ Ribosome)}{\# Total \ Degradoeoms \times (1-\%Active \ Degradosome)} \approx 1,3`$). Thus, the mean of translation per mRNA as $`\frac{k_{bind}^{mRNA:Ribo}\times \# \, Free \, Ribosome}{k_{bind}^{mRNA:Deg}\times \# \, Free \, Degradosome}`$ was 8.2. From our simulation, the translation events per each unique mRNA transcript were calculated by dividing the number of translated proteins by the transcribed mRNAs. The distribution ranged from 4.8 to 11, with a prominent peak around 7.7 that was close to the calculated 8.2 in Figure~S7(h).
+Upon transcription, the fate of the mRNAs is determined by the competition between its binding and translation by ribosomes into a protein, and its binding and degradation by degradosomes into NMPs. If one views the competition between the ribosome and the degradosome as a series of **independent Bernoulli trials**, where success means mRNA binding with the ribosome, and failure binding with the degradosome, then the distribution of the number of successes until the first failure occurs, which is the translations per mRNA transcript until mRNA degradation, follows a geometric distribution with the mean being the ratio of success over loss. 
+
+The time-dependent ratio of mRNA binding with ribosome over binding over degradosome was calculated using $`\frac{k_{bind}^{mRNA:Ribo}\times \# \, Free \, Ribosome}{k_{bind}^{mRNA:Deg}\times \# \, Free \, Degradosome}`$. In our current implementations, the ratio between ribosome and degradosome binding rates was 6.3 ($`\frac{k_{bind}^{mRNA:Ribo}}{k_{bind}^{mRNA:Deg}}=\frac{8.9\times10^4\, \mathrm{M}^{-1} \mathrm{s}^{-1}}{1.4\times10^4\, \mathrm{M}^{-1} \mathrm{s}^{-1}}=6.3`$). The number of available ribosomes over available degradosome was about 1.3 over the cell cycle, which further favor the mRNA to translation instead of degradation ($`\frac{\# \, Free \, Ribosome}{\# \, Free \, Degradosome}=\frac{\# Total \ Ribosome \times (1-\% Active \ Ribosome)}{\# Total \ Degradoeoms \times (1-\%Active \ Degradosome)} \approx 1,3`$). Thus, the mean of translation per mRNA as $`\frac{k_{bind}^{mRNA:Ribo}\times \# \, Free \, Ribosome}{k_{bind}^{mRNA:Deg}\times \# \, Free \, Degradosome}`$ was 8.2. From our simulation, the translation events per each unique mRNA transcript were calculated by dividing the number of translated proteins by the transcribed mRNAs. The distribution ranged from 4.8 to 11, with a prominent peak around 7.7 that was close to the calculated 8.2.
 
 <p align="center"> 
   <img src="../figs/plots_WCM/mRNA binding probability to ribosome over degradosome.png" width="450" alt="mRNA binding to ribo or deg"> <img src="../figs/plots_WCM/Hist Translation per mRNA entire.jpg" width="450" alt="translation per mRNA">  <br>
-  <b>Figure 19. Left: Ratio of mRNA binding to ribosome over binding to degradosome. The population averaged ratio is 8.2 at steady-state. <br> 
+  <b>Figure 20. Left: Ratio of mRNA binding to ribosome over binding to degradosome. The population averaged ratio is 8.2 at steady-state. <br> 
   Right: Distribution of translation per mRNA for 455 unique mRNAs with median 7.76 marked by purple dotted line. </b>
 </p>
 
@@ -407,7 +407,7 @@ The monomer pool regenerated in metablism could drain due to the slow systhesis 
 
 <p align="center"> 
   <img src="../figs/plots_WCM/Transcription slow down.jpg" width="450" alt="Slow Transcription"> <br>
-  <b>Figure 20. Low UTP concentration supplied from nucleotide metabolism slows down transcription elongation</b>
+  <b>Figure 21. Low UTP concentration supplied from nucleotide metabolism slows down transcription elongation</b>
 </p>
 
 ## References:
