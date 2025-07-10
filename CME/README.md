@@ -32,7 +32,7 @@ To successfully log in, you need to type your password for NCSA and complete two
 
 ###  Copy Tutorials into Your Own Directory
 
-Navigate to your user directory under `/projects/beyi/`
+Navigate to your user directory `/projects/beyi/$USER` that automatically created after Delta adding you to this project.
 
 ```bash
 cd /projects/beyi/$USER
