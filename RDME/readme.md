@@ -2,7 +2,7 @@
 
 First, we need to get the data from this github repository:
 ```bash
-https://github.com/Luthey-Schulten-Lab/SummerSchool_2025.git
+git clone https://github.com/Luthey-Schulten-Lab/SummerSchool_2025.git
 
 cd ./SummerSchool_2025/RDME/
 ```
