@@ -24,12 +24,16 @@ Since VMD requires a graphical interface, we'll use Open OnDemand's Desktop inte
    - GPUs: `1`
 
 5. Wait for the job status to change from "starting" to "running" in My Interactive Sessions. 
-![starting](https://docs.ncsa.illinois.edu/systems/delta/en/latest/_images/desktop-starting.png)
-![running](https://docs.ncsa.illinois.edu/systems/delta/en/latest/_images/desktop-connect.png)
+   ![starting](https://docs.ncsa.illinois.edu/systems/delta/en/latest/_images/desktop-starting.png)
+
+   Click "Connect to Desktop" to access the Linux graphical interface.
+
+   ![running](https://docs.ncsa.illinois.edu/systems/delta/en/latest/_images/desktop-connect.png)
 ## 2. Load VMD Module
-Click "Connect to Desktop" to access the Linux graphical interface. Open a terminal and run:
+ Open a terminal and run:
 
 ```bash
+cd /projects/beyi/$USER/SummerSchool_2025/RDME/
 bash launch_vmd.sh
 ```
 
@@ -38,11 +42,16 @@ bash launch_vmd.sh
 1. Load the `MinCell_1.lm` trajectory file
 ```bash
 # it should be saved under: 
-/projects/beyi/$USER/workshop_2025_RDME/trajectory/
+/projects/beyi/$USER/workshop_2025_RDME/trajectory/MinCell_1.lm
 ```
 
 2. Load the visualization state `render.vmd`
-
+```bash
+/projects/beyi/$USER/workshop_2025_RDME/trajectory/render.vmd
+```
 Explore the trajectory visualization as needed. 
 
 ![cell_traj_snapshot](./figures/VMD_render.png)
+
+>[!NOTE]
+>We also prepared 3 more trajectories you can explore in the same directory.
