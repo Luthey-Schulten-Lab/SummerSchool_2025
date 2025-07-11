@@ -20,6 +20,7 @@ bash copy.sh
 ```
 
 If it works properly, you should find two directories created: `data` and `trajectory`.
+
 ---
 
 Then we launch the server for jupyter notebook(this is the same process as CME part): 
