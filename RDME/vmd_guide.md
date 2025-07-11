@@ -7,7 +7,7 @@ VMD and the [VMD plugin](https://github.com/Luthey-Schulten-Lab/LMVMDPlugin) are
 Since VMD requires a graphical interface, we'll use Open OnDemand's Desktop interactive app to access a Linux GUI for launching VMD and viewing trajectories.
 
 ## 1. Initialize the OOD Interactive Session
-1. Navigate to the Open OnDemand dashboard.
+1. Navigate to the [Open OnDemand dashboard](https://openondemand.delta.ncsa.illinois.edu/pun/sys/dashboard).
 
 2. Log in through CILogon with your NCSA username, password, and Duo MFA.
 
@@ -24,11 +24,11 @@ Since VMD requires a graphical interface, we'll use Open OnDemand's Desktop inte
    - GPUs: `1`
 
 5. Wait for the job status to change from "starting" to "running" in My Interactive Sessions. 
-   ![starting](https://docs.ncsa.illinois.edu/systems/delta/en/latest/_images/desktop-starting.png)
+   <img src="https://docs.ncsa.illinois.edu/systems/delta/en/latest/_images/desktop-starting.png" alt="starting" width="300">
 
    Click "Connect to Desktop" to access the Linux graphical interface.
 
-   ![running](https://docs.ncsa.illinois.edu/systems/delta/en/latest/_images/desktop-connect.png)
+   <img src="https://docs.ncsa.illinois.edu/systems/delta/en/latest/_images/desktop-connect.png" alt="running" width="300">
 ## 2. Load VMD Module
  Open a terminal and run:
 
