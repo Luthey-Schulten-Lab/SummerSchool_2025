@@ -24,11 +24,13 @@ Since VMD requires a graphical interface, we'll use Open OnDemand's Desktop inte
    - GPUs: `1`
 
 5. Wait for the job status to change from "starting" to "running" in My Interactive Sessions. 
+
    <img src="https://docs.ncsa.illinois.edu/systems/delta/en/latest/_images/desktop-starting.png" alt="starting" width="300">
 
    Click "Connect to Desktop" to access the Linux graphical interface.
 
    <img src="https://docs.ncsa.illinois.edu/systems/delta/en/latest/_images/desktop-connect.png" alt="running" width="300">
+
 ## 2. Load VMD Module
  Open a terminal and run:
 
