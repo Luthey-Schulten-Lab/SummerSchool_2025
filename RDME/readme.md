@@ -23,7 +23,7 @@ If it works properly, you should find two directories created: `data` and `traje
 
 ---
 
-Then we launch the server for jupyter notebook(this is the same process as CME part): 
+Then we launch the server for **jupyter notebook** (This is the same process as CME part): 
 
 
 - **First**: Submit a job to a Delta GPU node.  
