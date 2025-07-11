@@ -37,7 +37,7 @@ cd /projects/beyi/$USER/SummerSchool_2025/RDME/
 bash launch_vmd.sh
 ```
 
-## 3. Load Trajectory and Visualization State
+## 3. 
 
 1. Load the `MinCell_1.lm` trajectory file
 ```bash
