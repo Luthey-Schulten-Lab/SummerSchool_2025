@@ -19,8 +19,8 @@ Since VMD requires a graphical interface, we'll use Open OnDemand's Desktop inte
    - Partition: `GPUA40x4-interactive`
    - Duration: `00-01:00:00`
    - Reservation: leave empty if none
-   - CPUs: `2`
-   - RAM: `16GB`
+   - CPUs: `4`
+   - RAM: `32GB`
    - GPUs: `1`
 
 5. Wait for the job status to change from "starting" to "running" in My Interactive Sessions. 

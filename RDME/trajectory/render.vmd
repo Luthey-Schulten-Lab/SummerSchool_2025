@@ -295,6 +295,8 @@ display aodirect 0.300000
 display dof off
 display dof_fnumber 64.000000
 display dof_focaldist 0.700000
+display dof_focaldist 0.700000
+axes location off
 
 mol delrep 0 top
 mol representation LatticeCubes 1.000000
