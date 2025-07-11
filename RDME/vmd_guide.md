@@ -41,6 +41,9 @@ vmd
 ## 3. Load Trajectory and Visualization State
 
 1. Load the `MinCell_1.lm` trajectory file
+```bash
+# it should be saved under: 
+/projects/beyi/$USER/workshop_2025_RDME/trajectory/
 2. Load the visualization state `render.vmd`
 
 Explore the trajectory visualization as needed. 
