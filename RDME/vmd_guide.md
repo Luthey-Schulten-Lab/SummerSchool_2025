@@ -30,12 +30,7 @@ Since VMD requires a graphical interface, we'll use Open OnDemand's Desktop inte
 Click "Connect to Desktop" to access the Linux graphical interface. Open a terminal and run:
 
 ```bash
-
-module load 
-source activate /projects/beyi/sw/conda/envs/vmdplugin
-module load vmd/1.9.4lm
-export LD_LIBRARY_PATH="$CONDA_PREFIX/lib:$LD_LIBRARY_PATH"
-vmd
+bash launch_vmd.sh
 ```
 
 ## 3. Load Trajectory and Visualization State
