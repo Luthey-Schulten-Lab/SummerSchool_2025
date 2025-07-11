@@ -39,6 +39,8 @@ bash launch_vmd.sh
 ```bash
 # it should be saved under: 
 /projects/beyi/$USER/workshop_2025_RDME/trajectory/
+```
+
 2. Load the visualization state `render.vmd`
 
 Explore the trajectory visualization as needed. 
