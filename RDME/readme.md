@@ -1,6 +1,9 @@
 # Summer School Tutorial: 4D Whole-Cell Model (4DWCM) of *JCVI-syn3A*
 
 First, we need to get the data from this github repository:
+>[!NOTE]
+> Dont forget to login to Delta first!
+
 ```bash
 git clone https://github.com/Luthey-Schulten-Lab/SummerSchool_2025.git
 
