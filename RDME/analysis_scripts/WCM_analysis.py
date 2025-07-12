@@ -29,8 +29,8 @@ def _load_single_traj(traj_file):
 
 
 # use LaTeX fonts in the plot
-plt.rcParams['text.usetex'] = True
-plt.rcParams['text.latex.preamble'] = r'\usepackage[helvet]{sfmath}'
+# plt.rcParams['text.usetex'] = True
+# plt.rcParams['text.latex.preamble'] = r'\usepackage[helvet]{sfmath}'
 
 plt.rcParams['font.family'] = 'sans-serif'
 plt.rcParams['font.sans-serif'] = 'Arial'
