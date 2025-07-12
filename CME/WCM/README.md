@@ -1,7 +1,6 @@
 # CME-ODE Whole-Cell Model of a Genetically Minimal Cell, JCVI-Syn3A
 
 Now, we are at the last tutorial, the CME-ODE WCM of Syn3A.
-<img align="right" width="300" src="../figs/figs_WCM/syn3A_wcomplex.png">
 
 ## Outline:
 1. [Run CME/ODE Whole-Cell Model in Parallel](#1-run-cmeode-whole-cell-model-in-parallel)
@@ -10,7 +9,7 @@ Now, we are at the last tutorial, the CME-ODE WCM of Syn3A.
 4. [Macromolecular Complex Assembly](#4-macromolecular-complex-assembly)
 5. [Hybrid CME-ODE Algorithm](#5-hybrid-cme-ode-algorithm)
 6. [Analysis and Discussion](#6-analysis-and-discussion)
-  
+
 ## 1. Run CME/ODE Whole-Cell Model in Parallel
 
 To capture statistically meaningful cellular dynamics, we simulate multiple independent cell replicates. To accelerate this process, running the simulations in parallel is essential. In our current setup, we use the `mpirun` module to launch the Python simulation scripts in parallel.
@@ -195,9 +194,11 @@ The minimal cell **JCVI-syn3A** is a synthetic bacterium derived from the parent
 JCVI-syn3A possesses the smallest genome among autonomously replicating organisms, measuring 543 kbp and encoding 452 protein-coding genes and 38 RNA genes. Remarkably, only 90 of the 452 protein-coding genes are of unknown function—a lower fraction than observed in other well-studied organisms such as *Saccharomyces cerevisiae* and *Escherichia coli*[^breuer_metabolism].
 
 <p align="center">
-  <img src="../figs/figs_WCM/syn3A_genome.png" width="450" alt="Minimized Genome"> <br>
+  <img src="../figs/figs_WCM/genome.png" width="300" alt="Minimized Genome"> 
+  <img src="../figs/figs_WCM/syn3A_wcomplex.png" width="300" alt="Minimized Genome"> 
+  <br>
   <b>Figure 5. Left: Annotated protein-coding genes in JCVI-syn3A, with fewer than 90 of unknown function. <br>
-  Right: A visual summary of JCVI-syn3A’s genetic information processes and metabolism.</b>
+  Right: A visual summary of JCVI-syn3A’s genetic information processes, complex formation, and metabolism.</b>
 </p>
 
 ### Genetic Information Processes
