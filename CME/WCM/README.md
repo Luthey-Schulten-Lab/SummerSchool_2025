@@ -1,6 +1,7 @@
 # CME-ODE Whole-Cell Model of a Genetically Minimal Cell, JCVI-Syn3A
 
 Now, we are at the last tutorial, the CME-ODE WCM of Syn3A.
+<img align="right" width="300" src="../figs/figs_WCM/syn3A_wcomplex.png">
 
 ## Outline:
 1. [Run CME/ODE Whole-Cell Model in Parallel](#1-run-cmeode-whole-cell-model-in-parallel)
