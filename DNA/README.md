@@ -26,22 +26,13 @@ Here, we simulate DNA replication and dynamics using the C++ program btree_chrom
 
 The DNA that btree_chromo simulates is coarse-grained at a 10 bp resolution. This means that a single, 3.4 nm diameter bead is used to represent 10 base pairs. We also use beads to represent ribosomes (10 nm), and the cell membrane. The program emulates the effects of SMC (structural maintenence of chromosomes) proteins that extrude loops of DNA to effect chromosome organization, as well as type II topoisomerases which allow for DNA strand crossings when they become tangled.
 
-ZLS group member Ben Gilbert (recently graduated) wrote the program and used it to investigate chromosome disentanglement of replicated DNA strands and partitioning of the daughter strands into separate halves of a toy model cell (50 kbp genome), as well as create chromosome contact maps based on the simulated trajectories[^gilbert2023]. Ongoing research using btree_chromo involves integrating btree_chromo with Lattice Microbes, as well as investigating disentanglement and partitioning of a full minimal cell model (543 kbp genome). 
-
-<div align="center">
-
-| <img src="./figures/1.%20Introduction%20to%20simulation%20with%20btree_chromo%20and%20LAMMPS/division_2chromo_5000bp_separation.png" width="300"/>  | <img src="./figures/1.%20Introduction%20to%20simulation%20with%20btree_chromo%20and%20LAMMPS/partition.png" width="300"/> |
-|:--:|:--:|
-| Figure 1: Cell division of 50 kbp toy model. A repulsive force between the two circular DNA strands (blue, red) helps to partition DNA into the two sides of the cell, accompanying the cell membrane (green) shape change during cell division. | Figure 2: DNA partitioning of 543 kbp model. SMC looping and topoisomerase action has been performed corresponding to the biological time of DNA replication (~60 mins), along with Brownian dynamics timesteps that amount to 20 ms of biological time |
-
-</div>
-Today you will run a simulation using a variant of LAMMPS which utilizes the GPUs on the Delta HPC cluster. We will simulate the entire minimal cell including the effects of SMC proteins, topoisomerase, and Brownian dynamics. 
+Today you will run a simulation using a variant of LAMMPS which utilizes the GPUs on the Delta HPC cluster. We will simulate the cell cycle of the minimal cell including the effects of SMC proteins, topoisomerase, and Brownian dynamics. We will start by generating an initial configuration for the DNA and ribosomes of the minimal cell in a spherical cell membrane. The DNA will replicate, disentangle, and partition, and the cell membrane will grow and divide. At the end of the simulation we should have two cells that each look roughly like the cell we started with.
 
 ## 2. Setting up and running your first simulation on Delta
 In this section, we will log on to Delta and launch a container which has btree_chromo and LAMMPS already installed. Then, we will start running a simulation of the minimal cell chromosome. 
 
 > [!NOTE]
-The reason we are doing this first, is so that the simulation will be left running throughout the tutorial. At the end of this tutorial, we will visualize and analyze the results of our simulations.
+The reason we are doing this first, is so that the simulation will be left running throughout the day. Then tomorrow we can visualize the results of our simulations.
 > 
 
 **Step 1: Log in to Delta**
