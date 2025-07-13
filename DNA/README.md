@@ -5,7 +5,7 @@
 
 We will walk you through how to set up and run a simulation using the program btree_chromo, on the Delta HPC cluster. We will simulate the DNA dynamics of the Minimal Cell, including DNA replication, disentanglement of daughter chromosomes, and partitioning of daughter chromosomes into their respective daughter volumes. The coarse-grained model of the DNA, ribosomes and cell membrane will be discussed, as well as the use of LAMMPS to perform energy minimizations and Brownian dynamics. We will also go into greater detail about how we model biological mechanisms such as SMC looping and topoisomerase. You will get a chance to visualize and analyze a simulation trajectory in VMD.
 
-*This tutorial was prepared for the 2nd edition of the STC QCB Summer School, held during July of 2025.*
+*This tutorial was prepared for the second edition of the STC QCB Summer School, held during July of 2025.*
 
 ## Outline of tutorial:
 
@@ -16,7 +16,7 @@ We will walk you through how to set up and run a simulation using the program bt
 5. Understanding btree_chromo commands
 6. Visualization with VMD
 
-Most of the content of this tutorial, especially the implmentation of energy terms for the DNA polymer, DNA disentanglement, and general procedure for simulating Brownian dynamics and energy minimization with LAMMPS on a GPU, has been submitted as part of a manuscript[^thornburg2025] which is currently under review. The content on SMC blocking/bypassing and daughter chromosome partitioning without the need for an additional fictitious force is a work in progress. 
+Most of the content of this tutorial, including the implementation of energy terms for the DNA polymer, DNA disentanglement, and general procedure for simulating Brownian dynamics and energy minimization with LAMMPS on a GPU, is also explained in our recent manuscript[^thornburg2025] which you can go check it out on bioRxiv. The content on SMC blocking/bypassing and daughter chromosome partitioning without the need for an additional fictitious force is a work in progress. 
 
 ## 1. Introduction to DNA Simulation with btree_chromo and LAMMPS
 
@@ -32,7 +32,7 @@ Today you will run a simulation using a variant of LAMMPS which utilizes the GPU
 In this section, we will log on to Delta and launch a container which has btree_chromo and LAMMPS already installed. Then, we will start running a simulation of the minimal cell chromosome. 
 
 > [!NOTE]
-The reason we are doing this first, is so that the simulation will be left running throughout the day. Then tomorrow we can visualize the results of our simulations.
+The reason we are doing this first, is so that the simulation will be left running throughout the rest of day and tomorrow morning. Tomorrow morning/afternoon we can visualize the results of our simulations.
 > 
 
 **Step 1: Log in to Delta**
