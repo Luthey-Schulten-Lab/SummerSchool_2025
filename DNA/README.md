@@ -1,7 +1,7 @@
 # Simulating DNA using btree_chromo and LAMMPS
 
 ## Description:
-<img align="right" width="300" src="./figures/1. Introduction to simulation with btree_chromo and LAMMPS/initial_state.png">
+<img align="right" width="300" src="./figures/1. Introduction to simulation with btree_chromo and LAMMPS/spotlight.png">
 
 We will walk you through how to set up and run a simulation using the program btree_chromo, on the Delta HPC cluster. We will simulate the DNA dynamics of the Minimal Cell, including DNA replication, disentanglement of daughter chromosomes, and partitioning of daughter chromosomes into their respective daughter volumes. The coarse-grained model of the DNA, ribosomes and cell membrane will be discussed, as well as the use of LAMMPS to perform energy minimizations and Brownian dynamics. We will also go into greater detail about how we model biological mechanisms such as SMC looping and topoisomerase. You will get a chance to visualize and analyze a simulation trajectory in VMD.
 
@@ -56,9 +56,9 @@ bash /projects/bddt/DNA/files/prelaunch_btree_chromo.sh
 
 This bash script creates a workspace `/projects/bddt/${USER}/btree_chromo_workspace`. It also copies the `examples` directory into the workspace, which contains example input and output files for **btree_chromo**.
 
-**Running btree_chromo via non-interactive job**
+**Running our simulations**
 
-Alternatively, we can run our btree_chromo simulation via a bash script that submits a job to Delta such that it runs non-interactively. This has the advantage over the interactive session in that it will perform all the same commands above, while not putting you into the Apptainer shell (the command-line interface within the container). 
+We will run our btree_chromo simulation via a bash script that submits a job to Delta such that it runs non-interactively. This has the advantage over the interactive session in that it will perform all the same commands above, while not putting you into the Apptainer shell (the command-line interface within the container). 
 
 You will still obtain output in the folder `/projects/bddt/${USER}/btree_chromo_workspace` in the file `full_model.lammpstrj` but you will no longer get the continous output stream from btree_chromo clogging up your terminal.
 
@@ -112,17 +112,11 @@ The first part of the python script we ran above generated initial configuration
 
 The JCVI-syn3A minimal cell has a 543379 bp (543 kbp) genome comprised of 493 genes. This means an unreplicated chromosome is represented as a circular polymer of 54338 beads. Replication begins at a location on the genome called the origin (_Ori_), proceeds along the DNA in the clockwise and counterclockwise directions with Y-shaped structures (Fork), and ends at the terminal site, also called the terminus (_Ter_).  It turns out the replication states of the minimal cell aren't that interesting: it undergoes one replication initiation event per cell cycle, which means it starts with one unreplicated circular chromosome, and replication proceeds from _Ori_ to _Ter_ until we have two complete circular chromosomes.
 
-<img align="center" width="600" src="./figures/3. Modeling the minimal cell/topology_simple.png">
+<img align="center" width="500" src="./figures/3. Modeling the minimal cell/topology_simple.png">
 
 **Figure 3: Representing replication states.**  _Ori_, _Ter_, and Forks given in red, orange, and magenta respectively.
 
-We can use a binary tree to represent the replication state of the chromosome. An unreplicated chromosome is represented by a single node, which we call the mother (m). When unreplicated, the chromosome is circular. As replication proceeds (starting from the _Ori_, along the Forks), the mother branches into two nodes, which we call the left and right daughters (ml and mr). The structure is now no longer circular; it is now called a "theta structure" due to its resemblance to the Greek letter $\theta$. Both the left and right daughters have their own _Ori_'s, so in principle, they could begin to replicate too. 
-
-In the figure below we illustrate replication of a 100 bead chromsome. The origin is depicted in red, the terminus, in orange, and forks in magenta. For each of the four stages of replication, we show the theta structure, the binary tree representation, the physical structure, and finally the bond topology. The bond topology displays all monomers using a colorbar, with the orange arc representing the bond at the terminus, and the pink arcs representing the bonds between the strand of newly created beads at the forks.
-
-<img align="center" width="1000" src="./figures/3. Modeling the minimal cell/replication_topology_0.png">
-
-**Figure 4: Different ways of representing replication states.**  For an unreplicated (left) and partially replicated (right) chromosome, the theta structure is shown in the top-left, the binary tree representation in the top-middle, the physical model in the top-right, and the bond topology of the physical model in the bottom. _Ori_, _Ter_, and Forks given in red, orange, and magenta respectively.
+We can use a binary tree to represent the replication state of the chromosome. An unreplicated chromosome is represented by a single node, which we call the mother (m). When unreplicated, the chromosome is circular. As replication proceeds (starting from the _Ori_, along the Forks), the mother branches into two nodes, which we call the left and right daughters (ml and mr). The structure is now no longer circular; it is now called a "theta structure" due to its resemblance to the Greek letter $\theta$. Both the left and right daughters have their own _Ori_'s, so in principle, they could begin to replicate too. However, DNA sequencing of the minimal cell indicates that we have only one replication initiation event per cell cycle.
 
 For our simulations, we implement the "train-track" model of bacterial DNA replication[^gogou2021], where replisomes independently move along the opposite arms of the mother chromosome at each replication fork, replicating the DNA. There is another model called the "replication factory" model, but since Syn3A has so few regulatory mechanisms, this second one unlikely. (Plus, the train track model is also more consistent with our understanding of replication initiation[^thornburg2022].) In our implementation, new monomers are added to the left and right daughter chromosomes during replication by creating pairs of monomers centered around the corresponding position of the mother chromosome's monomers. 
 
@@ -165,11 +159,13 @@ In the large friction limit, i.e. where $\gamma_i$ is very large, we can neglect
 
 <img align="center" height=50 src="./figures/4. Modeling chromosome dynamics/Brownian_eq.png">
 
+<img align="right" width=250 src="./figures/4. Modeling chromosome dynamics/bdry_alt.svg">
+
 LAMMPS uses this equation to update positions, according to a simple first order integration scheme known as the Euler-Maruyama method (basically, the Euler method).
 
 Both Langevin and Brownian dynamics can be used to correctly sample the NVT ensemble, but Brownian dynamics is preferred in our case since it allows us to take comparatively large time steps. Brownian dynamics is also sometimes called overdamped Langevin dynamics. This approximation is valid for timesteps that satisfy $\Delta t \gg m_i/\gamma_i$.
 
-<img align="right" width=250 src="./figures/4. Modeling chromosome dynamics/bdry_alt.svg">
+There is also an excluded volume interaction between the DNA/ribosomes and "boundary" beads (cell membrane) that ensure the DNA and ribosomes stay inside the spherical/overlapping sphere shaped volume.
 
 ### SMC looping and topoisomerases
 
@@ -179,7 +175,7 @@ During the genome reduction process of Syn3A, guided by transposon mutagenesis s
 
 **Figure 6: Real-time imaging of DNA loop extrusion by SMC complex.**  A series of snapshots shows DNA loop extrusion intermediates cuased by an SMC dimer on a SxO-stained double-tethered DNA strand. A constant flow at a large angle to DNA axis stretches extruded loop and maintains DNA in imaging plane. Adapted from Ganji et al[^ganji2018].
 
-<img align="right" width=250 src="./figures/4. Modeling chromosome dynamics/looping_bidirectional.png">
+<img align="right" width=500 src="./figures/4. Modeling chromosome dynamics/looping_bidirectional.png">
 
 Ganji et al. directly visualized the process by which condensin (aka, an SMC dimer) complexes extrude DNA into loops[^ganji2018]. They demonstrated that a single condensin can pull in DNA from one side at a force-dependent rate, supporting the loop extrusion model as a mechanism for chromosome organization. This finding provides strong evidence that SMC protein complexes like condensin actively shape the spatial arrangement of the genome.
 
@@ -192,14 +188,17 @@ The simulation methodology we use for SMC looping is that of Bonato and Michiele
 | Unbind/Rebind frequency (s^-1) | How often does the anchor move to a new location? |
 | Extrusion step size (bp) | ~200 bp[^ryu2022]|
 
+<img align="right" width=300 src="./figures/4. Modeling chromosome dynamics/topo.png">
 
 Also found to be essential were topoisomerases. There is evidence for coordination between topoisomerases and SMC complexes[^zawadzki2015]. For our simulations, topoisomerase is modeled by periodically running a set of minimizations and Brownian dynamics steps with DNA-DNA pair interactions replaced by soft potentials, which permits strand-crossings.
 
-<img align="right" width=250 src="./figures/4. Modeling chromosome dynamics/topo.png">
+We don't have a great way of keeping track of strand crossings, but they usually happen when the SMC loops update, pulling strands of DNA taught against one another.
 
-<img align="right" width=250 src="./figures/4. Modeling chromosome dynamics/topo2.png">
+<img align="center" width=250 src="./figures/4. Modeling chromosome dynamics/topo2.png">
 
-<img align="right" width=250 src="./figures/4. Modeling chromosome dynamics/SMC_block_bypass.png">
+In order to get the daughter chromosomes to partition, it turns out it is necessary to model another type of SMC behavior, namely blocking/bypassing. When SMCs encounter each other in our simulations, they block each other from translocating any further, and there is some rate for bypassing each other. Similarly, there is some rate for SMCs to bypass replication forks, but for these simulations we set that to zero.
+
+<img align="center" width=600 src="./figures/4. Modeling chromosome dynamics/SMC_block_bypass.png">
 
 ## 5. Understanding btree_chromo Commands
 
