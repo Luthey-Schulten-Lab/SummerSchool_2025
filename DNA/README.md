@@ -188,6 +188,10 @@ The simulation methodology we use for SMC looping is that of Bonato and Michiele
 | Unbind/Rebind frequency (s^-1) | How often does the anchor move to a new location? |
 | Extrusion step size (bp) | ~200 bp[^ryu2022]|
 
+In order to get the daughter chromosomes to partition, it turns out it is necessary to model another type of SMC behavior, namely blocking/bypassing. When SMCs encounter each other in our simulations, they block each other from translocating any further, and there is some rate for bypassing each other. Similarly, there is some rate for SMCs to bypass replication forks, but for these simulations we set that to zero.
+
+<img align="center" width=600 src="./figures/4. Modeling chromosome dynamics/SMC_block_bypass.png">
+
 <img align="right" width=300 src="./figures/4. Modeling chromosome dynamics/topo.png">
 
 Also found to be essential were topoisomerases. There is evidence for coordination between topoisomerases and SMC complexes[^zawadzki2015]. For our simulations, topoisomerase is modeled by periodically running a set of minimizations and Brownian dynamics steps with DNA-DNA pair interactions replaced by soft potentials, which permits strand-crossings.
@@ -195,10 +199,6 @@ Also found to be essential were topoisomerases. There is evidence for coordinati
 We don't have a great way of keeping track of strand crossings, but they usually happen when the SMC loops update, pulling strands of DNA taught against one another.
 
 <img align="center" width=250 src="./figures/4. Modeling chromosome dynamics/topo2.png">
-
-In order to get the daughter chromosomes to partition, it turns out it is necessary to model another type of SMC behavior, namely blocking/bypassing. When SMCs encounter each other in our simulations, they block each other from translocating any further, and there is some rate for bypassing each other. Similarly, there is some rate for SMCs to bypass replication forks, but for these simulations we set that to zero.
-
-<img align="center" width=600 src="./figures/4. Modeling chromosome dynamics/SMC_block_bypass.png">
 
 ## 5. Understanding btree_chromo Commands
 
