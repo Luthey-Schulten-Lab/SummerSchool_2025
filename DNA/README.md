@@ -3,11 +3,9 @@
 ## Description:
 <img align="right" width="300" src="./figures/1. Introduction to simulation with btree_chromo and LAMMPS/initial_state.png">
 
-The purpose of this tutorial is to give you a crash course on modeling and simulating the chromosome of the minimal cell. 
+We will walk you through how to set up and run a simulation using the program btree_chromo, on the Delta HPC cluster. We will simulate the DNA dynamics of the Minimal Cell, including DNA replication, disentanglement of daughter chromosomes, and partitioning of daughter chromosomes into their respective daughter volumes. The coarse-grained model of the DNA, ribosomes and cell membrane will be discussed, as well as the use of LAMMPS to perform energy minimizations and Brownian dynamics. We will also go into greater detail about how we model biological mechanisms such as SMC looping and topoisomerase. You will get a chance to visualize and analyze a simulation trajectory in VMD.
 
-We will walk you through how to set up and run a simulation using the program btree_chromo, on the Delta HPC cluster. The coarse-grained model of the DNA, ribosomes and cell membrane will be discussed, as well as the use of LAMMPS to perform energy minimizations and Brownian dynamics. We will also go into greater detail about how we model biological mechanisms such as SMC looping and topoisomerase. Finally, you will get a chance to visualize and analyze a simulation trajectory in VMD.
-
-*This tutorial was prepared for the STC QCB Summer School, held during August of 2024.*
+*This tutorial was prepared for the 2nd edition of the STC QCB Summer School, held during July of 2025.*
 
 ## Outline of tutorial:
 
@@ -16,8 +14,9 @@ We will walk you through how to set up and run a simulation using the program bt
 3. Modeling DNA initial structure and replication
 4. Modeling chromosome dynamics
 5. Understanding btree_chromo commands
-6. Visualization and analysis with VMD
-7. Movie-making with VMD and FFmpeg (_Added 8/7_)
+6. Visualization with VMD
+
+Most of the content of this tutorial, especially the implmentation of energy terms for the DNA polymer, DNA disentanglement, and general procedure for simulating Brownian dynamics and energy minimization with LAMMPS on a GPU, has been submitted as part of a manuscript[^thornburg2025] which is currently under review. The content on SMC blocking/bypassing and daughter chromosome partitioning without the need for an additional fictitious force is a work in progress. 
 
 ## 1. Introduction to DNA Simulation with btree_chromo and LAMMPS
 
@@ -66,48 +65,6 @@ bash /projects/bddt/DNA/files/prelaunch_btree_chromo.sh
 
 This bash script creates a workspace `/projects/bddt/${USER}/btree_chromo_workspace`. It also copies the `examples` directory into the workspace, which contains example input and output files for **btree_chromo**.
 
-Next, we will run a job in interactive mode. If you would rather run the job non-interactively, please skip ahead to "Running btree_chromo via non-interactive job."
-
-**Running btree_chromo in interactive session**
-
-***Launch the container***
-
-```bash
-bash /projects/bddt/${USER}/btree_chromo_workspace/launch_btree_chromo.sh
-
-```
-
-This will run the container in interactive mode. You should now see the `Apptainer>` prompt which indicates your have entered the container. We will be running btree_chromo and viewing the terminal output in the container.
-
-Do the command
-
-```bash
-export LD_LIBRARY_PATH="/usr/local/lib64:/usr/local/lib:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs"
-```
-This ensures the program uses the nvidia drivers appropriate for the NVIDIA A100 GPUs on Delta.
-
-***Run btree_chromo***
-
-In the container, please navigate into the folder where the btree_chromo executable is located:
-
-```bash
-cd /Software/btree_chromo/build/apps
-
-```
-
-Next, run 'full_model.inp'. Do the command:
-
-```bash
-./btree_chromo /mnt/full_model.inp
-
-```
-This command starts a simulation of the full 543 kbp chromosome in a 500 nm diameter spherical cell. By the end of this tutorial, our goal is to understand what is going on in the simulation, the contents of the input file `full_model.inp`, as well as some background biological knowledge. The output of the simulation will be located in
-
-```bash
-/projects/bddt/${USER}/btree_chromo_workspace
-```
-and it will be called `full_model.lammpstrj`.
-
 **Running btree_chromo via non-interactive job**
 
 Alternatively, we can run our btree_chromo simulation via a bash script that submits a job to Delta such that it runs non-interactively. This has the advantage over the interactive session in that it will perform all the same commands above, while not putting you into the Apptainer shell (the command-line interface within the container). 
@@ -140,16 +97,16 @@ to see when the last time your `full_model.lammpstrj` was updated, as well as it
 
 
 > [!TIP]
-Zealous students who are interested in changing their PRNG (pseudorandom number generator) seed before they launch their simulation (so that they a get different result from your peers) may do so by editing the number on line 12 in `/projects/bddt/${USER}/btree_chromo_workspace/full_model.inp`, and changing it to any integer greater than zero. This is easy if you are familiar with using command-line text editors like vim. If you would like to learn more about how to use vim, see the Appendix at the end of this tutorial.
+RNG seed...
 >
 
 > [!TIP]
-Currently, the jobs are set to run for a maximum of 2 hours. If you would like to extend this time, you can do so by editing line 4 in `run_btree_chromo.sh`. We have enough resources allocated for the Summer School that you can certainly request 8 hours (how long it would take to fully replicated the chromosome based on the parameters in `full_model.inp`. 
+Job run time...
 > 
 
 
 ## 3. Modeling DNA initial structure and replication 
-In this section you will learn how we generate initial conditions for the chromsome and ribosome bead positions. You will also learn about DNA replication in the minimal cell, and how to represent replication states with a binary tree model. 
+In this section you will learn how we generate initial conditions for the chromsome and ribosome bead positions. You will also learn about DNA replication in the minimal cell, and how to represent replication states with a binary tree model.
 
 ### Growing the DNA
 <img align="right" width="300" src="./figures/3. Modeling the minimal cell/sc_growth_composite_0.png">
@@ -158,11 +115,11 @@ At the start of every simulation, we need initial configuration, i.e. coordinate
 
 See the figure on the right for  a schematic of algorithm used to generate initial conditions of the chromosome. The beads coordinates generated by this algorithm are somewhat jagged, but an energy minimization will relax the structure. We will discuss energy minimizations in the next section. You can double click the image to open up a larger version in a different tab.
 
-_Update 1/7/24_: There has been interest expressed in using the code for generating initial configurations for the DNA and ribosomes. The code for performing this algorithm is available at [github.com/brg4/sc_chain_generation](https://github.com/brg4/sc_chain_generation). For the DNA in our simulations we will run below, we used coordinates generated from this program. If one would like to generate coordinates for DNA, as well as ribosomes, one should download, compile and run `sc_chain_generation` from the github link above. In the following simulations, ribosomes have not been included, but it is straightforward to include those: just vary the number of obstacles `N_o` in the input script (`.inp` file) for `sc_chain_generation`. For your convenience, an input script for `sc_chain_generation` for generating a 54338 bead chromosome with 500 ribosomes has been included in this github repository, in `SummerSchool_2024/DNA/files/Syn3A_chromosome_init.inp`. The program `sc_chain_generation` can output the coordinates in either a `.bin`, `.dat`, or `.xyz` file format, the first of which is meant to be read by btree_chromo, and the last of which is human readable and easily read by VMD. To run the input file, you can do  `/path/to/sc_chain_generation/src/gen_sc_chain --i_f=${input_fname} --o_d=${outputDirectory} --o_l=Syn3A_chromosome_init --s=10 --l=${log_fname} --n_t=8 --bin --xyz`.
+The first part of the python script we ran above generated initial configurations for the DNA and ribosomes. The code for performing this algorithm is available at [github.com/brg4/sc_chain_generation](https://github.com/brg4/sc_chain_generation). For the DNA in our simulations we will run below, we used coordinates generated from this program. If one would like to generate coordinates for DNA, as well as ribosomes, one should download, compile and run `sc_chain_generation` from the github link above. In the following simulations, ribosomes have not been included, but it is straightforward to include those: just vary the number of obstacles `N_o` in the input script (`.inp` file) for `sc_chain_generation`. For your convenience, an input script for `sc_chain_generation` for generating a 54338 bead chromosome with 500 ribosomes has been included in this github repository, in `SummerSchool_2024/DNA/files/Syn3A_chromosome_init.inp`. The program `sc_chain_generation` can output the coordinates in either a `.bin`, `.dat`, or `.xyz` file format, the first of which is meant to be read by btree_chromo, and the last of which is human readable and easily read by VMD. To run the input file, you can do  `/path/to/sc_chain_generation/src/gen_sc_chain --i_f=${input_fname} --o_d=${outputDirectory} --o_l=Syn3A_chromosome_init --s=10 --l=${log_fname} --n_t=8 --bin --xyz`.
 
 ### Modeling Replication States
 
-The JCVI-syn3A minimal cell has a 543379 bp (543 kbp) genome comprised of 493 genes. This means an unreplicated chromosome is represented as a circular polymer of 54338 beads. DNA replication, even in the minimal cell where the replication machinery retains only the essential components, is still rather complicated. For today, all we need to understand is that replication begins at a location on the genome called the origin (_Ori_), proceeds along the DNA in the clockwise and counterclockwise directions with Y-shaped structures (Fork), and ends at the terminal site, also called the terminus (_Ter_). 
+The JCVI-syn3A minimal cell has a 543379 bp (543 kbp) genome comprised of 493 genes. This means an unreplicated chromosome is represented as a circular polymer of 54338 beads. Replication begins at a location on the genome called the origin (_Ori_), proceeds along the DNA in the clockwise and counterclockwise directions with Y-shaped structures (Fork), and ends at the terminal site, also called the terminus (_Ter_).  It turns out the replication states of the minimal cell aren't that interesting: it undergoes one replication initiation event per cell cycle, which means it starts with one unreplicated circular chromosome, and replication proceeds from _Ori_ to _Ter_ until we have two complete circular chromosomes.
 
 <img align="center" width="600" src="./figures/3. Modeling the minimal cell/topology_simple.png">
 
@@ -175,76 +132,6 @@ In the figure below we illustrate replication of a 100 bead chromsome. The origi
 <img align="center" width="1000" src="./figures/3. Modeling the minimal cell/replication_topology_0.png">
 
 **Figure 4: Different ways of representing replication states.**  For an unreplicated (left) and partially replicated (right) chromosome, the theta structure is shown in the top-left, the binary tree representation in the top-middle, the physical model in the top-right, and the bond topology of the physical model in the bottom. _Ori_, _Ter_, and Forks given in red, orange, and magenta respectively.
-
-Quickly, let's see how btree_chromo handles replication states. In a new terminal log on to Delta again, and navigate to `/projects/bddt/$USERNAME/btree_chromo_workspace/examples/preparing_chromosome`:
-
-```bash
-cd /projects/bddt/$USERNAME/btree_chromo_workspace/examples/preparing_chromosome
-ls
-
-```
-
-You should see the following files:
-
-| File name | Description |
-| --- | --- |
-| preparing_chromosome_directives.inp | contains directives (commands to be executed by btree_chromo) |
-| chromo_state_0.dat | contains the initial replication state |
-| chromo_state_1.dat | contains the final replication state |
-| transforms.dat | contains a set of replication events |
-
-Using a text exitor such as **vim**, open 'preparing_chromosome_directives.inp'. Scroll through the file to see all of the commands. Here, **btree_chromo** first creates a chromosome with 1000 monomers, and then applies a series of transforms, printing the replication state at each step, and finally outputs the final state.
-
-> [!WARNING]
-Make sure that the "terminate'' at the top is commented to execute all of the commands.
-> 
-
-Next, we will run the program. Please do the following steps:
-
-
-```bash
-bash /projects/bddt/DNA/files/launch_btree_chromo.sh
-```
-```bash
-export LD_LIBRARY_PATH="/usr/local/lib64:/usr/local/lib:/usr/local/nvidia/lib:/usr/local/nvidia/lib64:/.singularity.d/libs"
-```
-```bash
-cd /Software/btree_chromo/build/apps
-```
-```bash
-./btree_chromo /mnt/examples/preparing_chromosome/preparing_chromosome_directives.inp
-```
-
-Check out the terminal output. Notice how **btree_chromo** starts by testing the validity of all the commands and parameters and prints them to the terminal output. It then executes each of the commands. For example, you should see this output corresponding to the first replication transformation:
-
-```bash
-COMMAND: transform
-	param_0: m_cw100_ccw200
-
-COMMAND: print
-
-printing tree with 2 leaves and 1 forks
-fork breakdown: 0 completed, 1 active
-leaves:
-ml mr
-active forks:
-m
-total_size = 1300
-| generation = 0
-| rho_t = 300/1000, rho_cw = 100/800, rho_ccw = 200/900
-| start = 0, mid = 500, end = 999
-| start_link = 999, end_link = 0
-| left branch
-  | generation = 1
-  | start = 0, mid = 500, end = 999
-  | start_link = 999, end_link = 0
-| right branch
-  | generation = 1
-  | start = 1000, mid = 1200, end = 1299
-  | start_link = 299, end_link = 600
-
-```
-This is a very thorough way of keeping track of what each bead corresponds to in your simulation. If one needs to simulate complicated theta structures, then keeping track of replication states this way is helpful. For our purposes, we don't need to worry about the binary tree formalism too much.
 
 For our simulations, we implement the "train-track" model of bacterial DNA replication[^gogou2021], where replisomes independently move along the opposite arms of the mother chromosome at each replication fork, replicating the DNA. There is another model called the "replication factory" model, but since Syn3A has so few regulatory mechanisms, this second one unlikely. (Plus, the train track model is also more consistent with our understanding of replication initiation[^thornburg2022].) In our implementation, new monomers are added to the left and right daughter chromosomes during replication by creating pairs of monomers centered around the corresponding position of the mother chromosome's monomers. 
 
@@ -291,6 +178,8 @@ LAMMPS uses this equation to update positions, according to a simple first order
 
 Both Langevin and Brownian dynamics can be used to correctly sample the NVT ensemble, but Brownian dynamics is preferred in our case since it allows us to take comparatively large time steps. Brownian dynamics is also sometimes called overdamped Langevin dynamics. This approximation is valid for timesteps that satisfy $\Delta t \gg m_i/\gamma_i$.
 
+<img align="right" width=250 src="./figures/4. Modeling chromosome dynamics/bdry_alt.svg">
+
 ### SMC looping and topoisomerases
 
 During the genome reduction process of Syn3A, guided by transposon mutagenesis studies on the original JCVI-syn1.0 genome and its intermediate reduced versions, it was found that structural maintenence of chromosomes (SMC) proteins were essential. However, the effect of SMC looping during the minimal cell replication cycle is not fully understood. While magnetic tweezer experiments have been done to determine loop extrusion step size of ~200 bp[^ryu2022], and simulations indicate an extrusion frequency of ~2.5 steps/s[^nomidis2022], we have limited experimental results for SMC looping in the crowded in-cell environment. 
@@ -299,7 +188,7 @@ During the genome reduction process of Syn3A, guided by transposon mutagenesis s
 
 **Figure 6: Real-time imaging of DNA loop extrusion by SMC complex.**  A series of snapshots shows DNA loop extrusion intermediates cuased by an SMC dimer on a SxO-stained double-tethered DNA strand. A constant flow at a large angle to DNA axis stretches extruded loop and maintains DNA in imaging plane. Adapted from Ganji et al[^ganji2018].
 
-<img align="right" width=250 src="./figures/4. Modeling chromosome dynamics/DNA_model_looping_0.png">
+<img align="right" width=250 src="./figures/4. Modeling chromosome dynamics/looping_bidirectional.png">
 
 Ganji et al. directly visualized the process by which condensin (aka, an SMC dimer) complexes extrude DNA into loops[^ganji2018]. They demonstrated that a single condensin can pull in DNA from one side at a force-dependent rate, supporting the loop extrusion model as a mechanism for chromosome organization. This finding provides strong evidence that SMC protein complexes like condensin actively shape the spatial arrangement of the genome.
 
@@ -315,93 +204,21 @@ The simulation methodology we use for SMC looping is that of Bonato and Michiele
 
 Also found to be essential were topoisomerases. There is evidence for coordination between topoisomerases and SMC complexes[^zawadzki2015]. For our simulations, topoisomerase is modeled by periodically running a set of minimizations and Brownian dynamics steps with DNA-DNA pair interactions replaced by soft potentials, which permits strand-crossings.
 
+<img align="right" width=250 src="./figures/4. Modeling chromosome dynamics/topo.png">
+
+<img align="right" width=250 src="./figures/4. Modeling chromosome dynamics/topo2.png">
+
+<img align="right" width=250 src="./figures/4. Modeling chromosome dynamics/SMC_block_bypass.png">
+
 ## 5. Understanding btree_chromo Commands
 
-Let's take a look in `full_model.inp` to get a feel for how to write input files for btree_chromo. You can either use a text editor to open the file in your terminal window, or simply view it on github at [files/full_model.inp](https://github.com/enguangfu/SummerSchool_2024/blob/main/DNA/files/full_model.inp).
-
-```bash
-switch_skip_runs:F
-
-btree_prng_seed:10
-replicator_prng_seed:10
-new_chromo:54338
-
-load_BD_lengths:/mnt/in_BD_lengths_LAMMPS_test.txt
-load_mono_coords:/mnt/x_chain_Syn3A_chromosome_init_rep00001.bin,row
-load_bdry_coords:/mnt/2500A_bdry.bin,row
-prepare_simulator:/mnt/logfile0.log
-simulator_set_prng_seed:42
-simulator_set_nProc:8
-simulator_set_DNA_model:/Software/btree_chromo/LAMMPS_DNA_model_kk
-simulator_set_output_details:/mnt/,full_model
-simulator_set_delta_t:1.0E+5
-```
-These commands create a new chromosome and load in coordinates for the DNA and boundary, creates output files, sets the LAMMPS random number generator seed, and sets the timestep to 0.1 ns
-
-```bash
-switch_twisting_angles: F
-```
-This command disables twisting angles between DNA monomers (default T). Turning off twisting removes the $U_i^t$ and $U_i^a$ (cosine potentials for twisting and aligning).
-
-```bash
-simulator_minimize_soft_harmonic:500
-```
-This performs an energy minimization according to the [conjugate gradient algorithm](https://docs.lammps.org/minimize.html).
-
-```bash
-sync_simulator_and_system
-set_initial_state
-transform:m_cw1360_ccw1360
-set_final_state
-map_replication
-sys_write_sim_read_LAMMPS_data:/mnt/data.lammps_0
-```
-These commands copy the LAMMPS simulation bead coordinates into the binary tree data structure in btree_chromo, replicates by moving both forks by 1360 beads, maps the binary tree structure back onto the bead coordinates, and then updates the bead coordinates in the LAMMPS simulation.
-
-```bash
-simulator_run_loops:100,15000,500,1000,append,nofirst
-```
-This command runs Brownian dynamics with the hard/FENE potential for 15k timesteps with 100 loops randomly placed, while printing thermodynamic information every 500 steps and dumping the coordinates every 1000 steps.
-
-```bash
-simulator_load_loop_params:/mnt/loop_params.txt
-```
-
-This command loads in a file that specifies various parameters related to SMC looping and topoisomerases. If we take a look at loop_params.txt, we find that it specifies the minimum number of monomers separating anchor and hinge, the distribution of extrusion steps, hinge unbinding probability and grab radius, loop update frequency and topoisomerase relaxation frequency.
-
-```bash
-# system parameters
-
-# minimum distance separating anchor and hinge on strand - [# monomers]
-min_dist=5
-
-# distribution family for steps
-family=poisson
-# average extrusion distance [# monomers]
-ext_avg=20.0
-# max extrusion distance [# monomers]
-ext_max=30
-
-# hinge unbinding probability
-p_unbinding=0.0
-# grab radius - [A]
-r_g=5.0E+2
-
-# simulator parameters
-
-# loop update frequency - [# timesteps]
-freq_loop=1500
-
-# topoisomerase relaxation (soft DNA-DNA pairs) frequency - [# timesteps]
-freq_topo=3000
-# topoisomerase relaxation (soft DNA-DNA pairs) interval - [# timesteps]
-dNt_topo=50000
-
-```
+Need to update this section
 
 ## 6. Visualization and analysis with VMD
 
 You will now copy over the .lammpstrj files from Delta to your local machine in order to visualize them in vmd. Open up a new terminal, which we will call **Local terminal**.
+
+We can use VMD on DELTA
 
 In the **Local terminal**:
 
@@ -433,13 +250,7 @@ Each entry should produce “SUCCESS: Specified value was saved.”
 
 This workaround is only needed on Windows VMD (i.e. not on Linux and Mac VMD). This issue will be addressed in upcoming VMD releases. As of writing this, the latest VMD is Version 1.9.4.
 
-If you follow the steps above and all goes well, you should see something like the figure below. The sphere resolution for the DNA and boundary beads have been set to 7.0, but if VMD is running slow on your computer you might benefit from setting them even lower (`Graphics > Representations`). In the VMD Main window, you can hit the right arrow to loop through the trajectory. See the DNA polymer replicate! 
-
-<img align="center" width="1000" src="./figures/6. Visualization and analysis with VMD/screenshot_example.png">
-
-**Figure 7: Screenshot of VMD on Macbook air.**  This is an example of what your screen should look like if you follow the steps above.
-
-Notice how the changes between each frame are sometimes small; this corresponds to brownian dynamics of 1000 timesteps (100 ns) without looping. Sometimes the changes are large in certain areas; this corresponds to updating of each of the 100 SMC hinges. Finally, sometimes the changes are quite drastic; this corresponds to both SMC hinge updates as well as permitting strand crossings, i.e. topoisomerase action.
+VMD Render stuff
 
 | Monomer type | Color | Bead Size |
 | --- | --- | --- |
@@ -447,176 +258,16 @@ Notice how the changes between each frame are sometimes small; this corresponds 
 | Ori | red | 39.0 |
 | Ter | orange | 39.0 |
 | Fork | magenta | 39.0 |
-| Ribosome* | mauve | 70.0 |
+| Ribosome | mauve | 70.0 |
 | Boundary | gray | 32.5 |
 | Anchor | black | 19.5 |
 | Hinge | white | 19.5 |
-
-*Not present in our current simulations.
-
-### Calculate and plot the Radius of Gyration
-We'll write a small script in the Tcl Console to calculate the radius of gyration for each frame of the trajectory and store the results.
-
-Define Variables for the output file and number of frames:
-
-```bash
-set outfile [open "rgyr_vs_frame.txt" w]
-set num_frames [molinfo top get numframes]
-```
-
-Loop Over All Frames:
-
-```bash
-for {set i 0} {$i < $num_frames} {incr i} {
-    animate goto $i
-    set DNA [atomselect top {vy>2}]
-    set rg [measure rgyr $DNA]
-    puts $outfile "$i $rg"
-}
-```
-
-This script calculates the radius of gyration for all atoms in each frame and stores the values in the list rg_values.
-
-Next, save the data to the designated output file:
-
-```bash
-close $outfile
-```
-To visualize the change in RoG over time, we can use the following python script:
-```python
-import matplotlib.pyplot as plt
-
-# Read the data from the file
-frames = []
-rgy_values = []
-
-with open("rgyr_vs_frame.txt", "r") as file:
-    for line in file:
-        frame, rg = line.split()
-        frames.append(int(frame))
-        rgy_values.append(float(rg))
-
-# Get the initial radius of gyration value for percentage calculation
-initial_rg = rgy_values[0]
-
-# Calculate the percentage values
-percentage_values = [(rg / initial_rg) * 100 for rg in rgy_values]
-
-# Create the plot
-fig, ax1 = plt.subplots(figsize=(10, 6))
-
-# Plot radius of gyration on the primary y-axis
-ax1.plot(frames, rgy_values, marker='o', linestyle='-', color='b', label='Radius of Gyration', linewidth=1)
-ax1.set_xlabel('Frame')
-ax1.set_ylabel('Radius of Gyration (Å)', color='b')
-ax1.tick_params(axis='y', labelcolor='b')
-ax1.grid(True)
-
-# Create a secondary y-axis for percentage values
-ax2 = ax1.twinx()
-ax2.plot(frames, percentage_values, marker='o', linestyle='--', color='r', label='Percentage of Initial Value', linewidth=1)
-ax2.set_ylabel('Percentage of Initial Radius of Gyration (%)', color='r')
-ax2.tick_params(axis='y', labelcolor='r')
-
-# Add titles and labels
-plt.title('Radius of Gyration vs. Frame')
-
-# Save the plot as a PNG file
-plt.savefig("radius_of_gyration_vs_frame.png")
-
-# Show the plot
-plt.show()
-```
-
-The output should be a png image that shows how the radius of gyration changes over time:
-
-<img align="center" width="1000" src="./figures/6. Visualization and analysis with VMD/rgyr_example.png">
-
-## 7. Movie-making with VMD and FFmpeg (_Added 8/7_)
-
-Now that you are able to load a LAMMPS trajectory in to VMD, let's create a movie that loops through that trajectory when we play it. To do this, we will render each of the frames and output them as individual .tga files, and then combine them into a .mp4 movie. You could then use that .mp4 movie for your presentation on Friday. Windows users, not sure if the following steps will work for you, you might have to make a few adjustments, but you are welcome to try.
-
-First, double check you have a good view of the DNA. If you would like to use the same visualization settings that I did, you can source (or copy some of the lines) from my .tcl file located in [files/load_btree_chromo_v2.tcl](https://github.com/enguangfu/SummerSchool_2024/blob/main/DNA/files/load_btree_chromo_v2.tcl) in this repository. This .tcl file is just like the .tcl file you have been using, I just changed some of the representations and moved the camera around.
-
-Next, we will create a folder called `frames`, then render the frames using the Tachyon renderer (the version that uses in-memory rendering) and output each of the frames as .tga files into `frames` (they will be called `frame0001.tga`, `frame0001.tga`, etc.). To do this, please download from the github repo [files/render_full_model.tcl](https://github.com/enguangfu/SummerSchool_2024/blob/main/DNA/files/render_full_model.tcl) and source it:
-
-```bash
-source render_full_model.tcl
-```
-
-Rendering takes a while. I had around 600 frames, and rendering all of them took me around half an hour on my MacBook Air.
-
-Next, we will create a video from the frames using FFmpeg. If you are on a mac, we can install it using homebrew.
-
-Installing Homebrew:
-```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-```
-
-Updating Homebrew:
-```bash
-brew update
-```
-
-Installing FFmpeg:
-```bash
-brew install ffmpeg
-```
-
-The commands to create the movie are in [files/create_movie.sh](https://github.com/enguangfu/SummerSchool_2024/blob/main/DNA/files/create_movie.sh) which you can download. Make sure you put it in the frames folder, where you have all of your frames.
-
-Then, in the folder with all of your frames and the `create_movie.sh`, do 
-```bash
-bash create_movie.sh
-```
-After a few seconds, you should have a file `replicate_DNA.mp4`. It should look something like this:
-
-https://github.com/user-attachments/assets/de2f6c68-4c4e-4105-8e5c-bc8bcf9a022a
-
-
-## Appendix: Using Vim
-
-### Opening a File in Vim
-
-To open a file with Vim, use the following command:
-
-```bash
-vim filename
-```
-For example, to open full_model.inp in the workspace directory, you would use:
-
-```bash
-vim /projects/bddt/${USER}/btree_chromo_workspace/full_model.inp
-```
-
-Vim operates primarily in three modes:
-
-Normal Mode: The default mode for navigation and command execution. You start in this mode.
-
-Insert Mode: For inserting and editing text. You enter this mode by pressing i.
-
-Command Mode: For executing commands. You enter this mode by pressing : from Normal Mode.
-
-Here are some basic commands to get you started:
-
-In Normal Mode:
-
-`i`: Enter Insert Mode before the cursor.
-
-`:w`: Save the file.
-
-`:q`: Quit Vim.
-
-`:wq`: Save and quit Vim.
-
-`:q!`: Quit without saving changes.
-
-In Insert Mode, you can ype as you normally would. Use the Backspace key to delete. Press `Esc` to return to Normal Mode. When you are done editing, type `:wq` and press enter to save and quit Vim.
 
 ## References
 [^gilbert2023]: Gilbert, Benjamin R., Zane R. Thornburg, Troy A. Brier, Jan A. Stevens, Fabian Grünewald, John E. Stone, Siewert J. Marrink, and Zaida Luthey-Schulten. “Dynamics of Chromosome Organization in a Minimal Bacterial Cell.” Frontiers in Cell and Developmental Biology 11 (August 9, 2023). https://doi.org/10.3389/fcell.2023.1214962.
 [^gogou2021]: Gogou, Christos, Aleksandre Japaridze, and Cees Dekker. “Mechanisms for Chromosome Segregation in Bacteria.” Frontiers in Microbiology 12 (June 2021). https://doi.org/10.3389/fmicb.2021.685687.
 [^thornburg2022]: Thornburg, Zane R., David M. Bianchi, Troy A. Brier, Benjamin R. Gilbert, Tyler M. Earnest, Marcelo C. R. Melo, Nataliya Safronova, et al. “Fundamental Behaviors Emerge from Simulations of a Living Minimal Cell.” Cell 185, no. 2 (January 20, 2022): 345-360.e28. https://doi.org/10.1016/j.cell.2021.12.025.
+[^thornburg2025]: Thornburg, Zane R., Andrew Maytin, Jiwoong Kwon, Troy A. Brier, Benjamin R. Gilbert, Enguang Fu, Yang-Le Gao, Jordan Quenneville, Tianyu Wu, Henry Li, Talia Long, Weria Pezeshkian, Lijie Sun, John I. Glass, Angad Mehta, Taekjip Ha, and Zaida Luthey-Schulten. “Bringing the Genetically Minimal Cell to Life on a Computer in 4D.” bioRxiv, June 10, 2025. https://doi.org/10.1101/2025.06.10.658899.
 [^ryu2022]: Ryu, Je-Kyung, Sang-Hyun Rah, Richard Janissen, Jacob W J Kerssemakers, Andrea Bonato, Davide Michieletto, and Cees Dekker. “Condensin Extrudes DNA Loops in Steps up to Hundreds of Base Pairs That Are Generated by ATP Binding Events.” Nucleic Acids Research 50, no. 2 (January 25, 2022): 820–32. https://doi.org/10.1093/nar/gkab1268.
 [^nomidis2022]: Nomidis, Stefanos K, Enrico Carlon, Stephan Gruber, and John F Marko. “DNA Tension-Modulated Translocation and Loop Extrusion by SMC Complexes Revealed by Molecular Dynamics Simulations.” Nucleic Acids Research 50, no. 9 (May 20, 2022): 4974–87. https://doi.org/10.1093/nar/gkac268.
 [^ganji2018]: Ganji, Mahipal, Indra A. Shaltiel, Shveta Bisht, Eugene Kim, Ana Kalichava, Christian H. Haering, and Cees Dekker. “Real-Time Imaging of DNA Loop Extrusion by Condensin.” Science 360, no. 6384 (April 2018): 102–5. https://doi.org/10.1126/science.aar7831.
