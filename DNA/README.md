@@ -139,7 +139,11 @@ The energies for the bending, twisting, stretching and excluded volume interacti
 
 > [!NOTE]
 In the current version of btree_chromo, we neglect the twisting potential for neighboring beads (the corresponding forces are not calculated and are not used during our simulations). The reason for this has to do with how minimizations work in LAMMPS.
-> 
+>
+
+<img align="right" width=250 src="./figures/4. Modeling chromosome dynamics/bdry_alt.svg">
+
+There is also an excluded volume interaction between the DNA/ribosomes and "boundary" beads (cell membrane) that ensure the DNA and ribosomes stay inside the spherical/overlapping sphere shaped volume.
 
 In btree_chromo, we simulate dynamics of the DNA and ribosomes using a GPU-accelerated version of the Brownian dynamics integrator, which performs time-integration to update the coordinates of each of the beads. Let's quickly go through how the Brownian dynamics integrator works. First, recall how the acceleration of each bead is related to the net force on that bead and it's mass, which is given by Newton's second law, $F_{\text{net}}=ma$. 
 
@@ -159,13 +163,9 @@ In the large friction limit, i.e. where $\gamma_i$ is very large, we can neglect
 
 <img align="center" height=50 src="./figures/4. Modeling chromosome dynamics/Brownian_eq.png">
 
-<img align="right" width=250 src="./figures/4. Modeling chromosome dynamics/bdry_alt.svg">
-
 LAMMPS uses this equation to update positions, according to a simple first order integration scheme known as the Euler-Maruyama method (basically, the Euler method).
 
 Both Langevin and Brownian dynamics can be used to correctly sample the NVT ensemble, but Brownian dynamics is preferred in our case since it allows us to take comparatively large time steps. Brownian dynamics is also sometimes called overdamped Langevin dynamics. This approximation is valid for timesteps that satisfy $\Delta t \gg m_i/\gamma_i$.
-
-There is also an excluded volume interaction between the DNA/ribosomes and "boundary" beads (cell membrane) that ensure the DNA and ribosomes stay inside the spherical/overlapping sphere shaped volume.
 
 ### SMC looping and topoisomerases
 
@@ -175,11 +175,11 @@ During the genome reduction process of Syn3A, guided by transposon mutagenesis s
 
 **Figure 6: Real-time imaging of DNA loop extrusion by SMC complex.**  A series of snapshots shows DNA loop extrusion intermediates cuased by an SMC dimer on a SxO-stained double-tethered DNA strand. A constant flow at a large angle to DNA axis stretches extruded loop and maintains DNA in imaging plane. Adapted from Ganji et al[^ganji2018].
 
-<img align="right" width=500 src="./figures/4. Modeling chromosome dynamics/looping_bidirectional.png">
-
 Ganji et al. directly visualized the process by which condensin (aka, an SMC dimer) complexes extrude DNA into loops[^ganji2018]. They demonstrated that a single condensin can pull in DNA from one side at a force-dependent rate, supporting the loop extrusion model as a mechanism for chromosome organization. This finding provides strong evidence that SMC protein complexes like condensin actively shape the spatial arrangement of the genome.
 
-The simulation methodology we use for SMC looping is that of Bonato and Michieletto, in which DNA loops are created by adding harmonic bonds bewteen "anchor" and "hinge" monomers[^bonato2021]. Updating the hinge locations causes loop extrusion, as illustrated in the figure to the right. In the simulation, a bead is considered a candidate for the hinge only if it is within a 50 nm radius of the anchor bead; this is because the SMC dimer has a long axis of ~50 nm, and thus can only physically couple DNA beads a maximum 50 nm apart[^nomidis2022].
+<img align="right" width=600 src="./figures/4. Modeling chromosome dynamics/looping_bidirectional.png">
+
+The simulation methodology we use for SMC looping is that of Bonato and Michieletto, in which DNA loops are created by adding harmonic bonds bewteen "anchor" and "hinge" monomers[^bonato2021]. In the simulation, a bead is considered a candidate for the hinge only if it is within a 50 nm radius of the anchor bead; this is because the SMC dimer has a long axis of ~50 nm, and thus can only physically couple DNA beads a maximum 50 nm apart[^nomidis2022].
 
 | Parameter | Description |
 | --- | --- |
@@ -192,13 +192,13 @@ In order to get the daughter chromosomes to partition, it turns out it is necess
 
 <img align="center" width=600 src="./figures/4. Modeling chromosome dynamics/SMC_block_bypass.png">
 
-<img align="right" width=300 src="./figures/4. Modeling chromosome dynamics/topo.png">
+<img align="right" width=250 src="./figures/4. Modeling chromosome dynamics/topo.png">
+
+<img align="right" width=250 src="./figures/4. Modeling chromosome dynamics/topo2.png">
 
 Also found to be essential were topoisomerases. There is evidence for coordination between topoisomerases and SMC complexes[^zawadzki2015]. For our simulations, topoisomerase is modeled by periodically running a set of minimizations and Brownian dynamics steps with DNA-DNA pair interactions replaced by soft potentials, which permits strand-crossings.
 
 We don't have a great way of keeping track of strand crossings, but they usually happen when the SMC loops update, pulling strands of DNA taught against one another.
-
-<img align="center" width=250 src="./figures/4. Modeling chromosome dynamics/topo2.png">
 
 ## 5. Understanding btree_chromo Commands
 
