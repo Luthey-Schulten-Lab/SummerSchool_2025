@@ -10,15 +10,17 @@ We will walk you through how to set up and run a simulation using the program bt
 ## Outline of tutorial:
 
 1. Introduction to DNA simulation with btree_chromo and LAMMPS
-2. Setting up and running your first simulation on Delta
-3. Modeling DNA initial structure and replication
-4. Modeling chromosome dynamics
-5. Understanding btree_chromo commands
-6. Visualization with VMD
+2. Setting up and running your simulation on Delta
+3. Generating an initial structure
+4. Modeling DNA replication
+5. Modeling chromosome dynamics
+6. A closer look at SMC dynamics
+7. Understanding btree_chromo commands
+8. Visualization with VMD
 
-Most of the content of this tutorial, including the implementation of energy terms for the DNA polymer, DNA disentanglement, and general procedure for simulating Brownian dynamics and energy minimization with LAMMPS on a GPU, is also explained in our recent manuscript[^thornburg2025] which you can go check it out on bioRxiv. The content on SMC blocking/bypassing and daughter chromosome partitioning without the need for an additional fictitious force is a work in progress. 
+Most of the content of this tutorial, including the implementation of energy terms for the DNA polymer, DNA disentanglement, and general procedure for simulating Brownian dynamics and energy minimization with LAMMPS on a GPU, is also explained in our recent manuscript[^thornburg2025] which you can check out on bioRxiv. The content on SMC blocking/bypassing and daughter chromosome partitioning without the need for an additional fictitious force is a work in progress. 
 
-## 1. Introduction to DNA Simulation with btree_chromo and LAMMPS
+## 1. Introduction to DNA simulation with btree_chromo and LAMMPS
 
 Here, we simulate DNA replication and dynamics using the C++ program btree_chromo, available online at  [github.com/brg4/btree_chromo](https://github.com/brg4/btree_chromo). This program was created mainly for the purposes of simulating the minimal cell chromosome, but it can be used to simulate any circular chromosome. The main purpose of the program is to model replication states of the chromosome, as well as perform simulation of chromosome dynamics by calling [LAMMPS](https://www.lammps.org/#gsc.tab=0) (Large-scale Atomic/Molecular Massively Parallel Simulator), a molecular dynamics program from Sandia National Laboratories.  
 
@@ -28,7 +30,7 @@ The DNA that btree_chromo simulates is coarse-grained at a 10 bp resolution. Thi
 
 Today you will run a simulation using a variant of LAMMPS which utilizes the GPUs on the Delta HPC cluster. We will simulate the cell cycle of the minimal cell including the effects of SMC proteins, topoisomerase, and Brownian dynamics. We will start by generating an initial configuration for the DNA and ribosomes of the minimal cell in a spherical cell membrane. The DNA will replicate, disentangle, and partition, and the cell membrane will grow and divide. At the end of the simulation we should have two cells that each look roughly like the cell we started with.
 
-## 2. Setting up and running your first simulation on Delta
+## 2. Setting up and running your simulation on Delta
 In this section, we will log on to Delta and launch a container which has btree_chromo and LAMMPS already installed. Then, we will start running a simulation of the minimal cell chromosome. 
 
 > [!NOTE]
@@ -96,10 +98,7 @@ Job run time...
 > 
 
 
-## 3. Modeling DNA initial structure and replication 
-In this section you will learn how we generate initial conditions for the chromsome and ribosome bead positions. You will also learn about DNA replication in the minimal cell, and how to represent replication states with a binary tree model.
-
-### Growing the DNA
+## 3. Generating an initial structure 
 
 At the start of every simulation, we need initial configuration, i.e. coordinates for the DNA, ribosomes, and cell membrane. Initial configurations for the chromosome are generated using a midpoint-displacement algorithm that creates three-dimensional, closed curves formed from overlapping spherocylinder segments. We assume a spherical cell with a known ribosome distribution (nearly randomly distributed, according to Cryo-ET), and "grow in" a self-avoiding chain of these spherocylinders. This process involves adding segments iteratively while avoiding overlaps with ribosomes and preventing knots. Spherical monomers are then interpolated along the spherocylinders. This method accurately models the "fractal globule" chromosome configuration present in Syn3A cells.
 
@@ -107,25 +106,25 @@ See the figure on the right for  a schematic of algorithm used to generate initi
 
 <img align="center" width="600" src="./figures/3. Modeling the minimal cell/sc_growth_composite_0.png">
 
-The first part of the python script we ran above generated initial configurations for the DNA and ribosomes. The code for performing this algorithm is available at [github.com/brg4/sc_chain_generation](https://github.com/brg4/sc_chain_generation). For the DNA in our simulations we will run below, we used coordinates generated from this program. If one would like to generate coordinates for DNA, as well as ribosomes, one should download, compile and run `sc_chain_generation` from the github link above. In the following simulations, ribosomes have not been included, but it is straightforward to include those: just vary the number of obstacles `N_o` in the input script (`.inp` file) for `sc_chain_generation`. For your convenience, an input script for `sc_chain_generation` for generating a 54338 bead chromosome with 500 ribosomes has been included in this github repository, in `SummerSchool_2024/DNA/files/Syn3A_chromosome_init.inp`. The program `sc_chain_generation` can output the coordinates in either a `.bin`, `.dat`, or `.xyz` file format, the first of which is meant to be read by btree_chromo, and the last of which is human readable and easily read by VMD. To run the input file, you can do  `/path/to/sc_chain_generation/src/gen_sc_chain --i_f=${input_fname} --o_d=${outputDirectory} --o_l=Syn3A_chromosome_init --s=10 --l=${log_fname} --n_t=8 --bin --xyz`.
+The very first thing that the job we submitted to Delta does is to generate initial configurations (i.e. coordinates) for the DNA and ribosomes using the program `sc_chain_generation` which was written by a previous graduate student Ben Gilbert. The code is available at [github.com/brg4/sc_chain_generation](https://github.com/brg4/sc_chain_generation). If one would like to generate coordinates for DNA, as well as ribosomes, for some other purpose, one should download, compile and run `sc_chain_generation` from the github link above. One can specify the number of ribosomes easily: just vary the number of obstacles `N_o` in the input script (`.inp` file) for `sc_chain_generation`. There are also parameters for sphere diameter, chromosome length, etc. The program `sc_chain_generation` can output the coordinates in either a `.bin`, `.dat`, or `.xyz` file format, the first of which is meant to be read by btree_chromo, and the last of which is human readable and easily read by VMD. To run an input file, you do  `/path/to/sc_chain_generation/src/gen_sc_chain --i_f=${input_fname} --o_d=${outputDirectory} --o_l=Syn3A_chromosome_init --s=10 --l=${log_fname} --n_t=8 --bin --xyz`.
 
-### Modeling Replication States
+## 4. Modeling DNA replication
 
 The JCVI-syn3A minimal cell has a 543379 bp (543 kbp) genome comprised of 493 genes. This means an unreplicated chromosome is represented as a circular polymer of 54338 beads. Replication begins at a location on the genome called the origin (_Ori_), proceeds along the DNA in the clockwise and counterclockwise directions with Y-shaped structures (Fork), and ends at the terminal site, also called the terminus (_Ter_).  It turns out the replication states of the minimal cell aren't that interesting: it undergoes one replication initiation event per cell cycle, which means it starts with one unreplicated circular chromosome, and replication proceeds from _Ori_ to _Ter_ until we have two complete circular chromosomes.
 
-<img align="center" width="500" src="./figures/3. Modeling the minimal cell/topology_simple.png">
+<img align="center" width="500" src="./figures/4. Modeling chromosome dynamics/rep_state.png">
 
-**Figure 3: Representing replication states.**  _Ori_, _Ter_, and Forks given in red, orange, and magenta respectively.
+**Figure 3: Representing replication states.**  _Ori_, _Ter_, and Forks given in red, orange, and violet respectively.
 
-We can use a binary tree to represent the replication state of the chromosome. An unreplicated chromosome is represented by a single node, which we call the mother (m). When unreplicated, the chromosome is circular. As replication proceeds (starting from the _Ori_, along the Forks), the mother branches into two nodes, which we call the left and right daughters (ml and mr). The structure is now no longer circular; it is now called a "theta structure" due to its resemblance to the Greek letter $\theta$. Both the left and right daughters have their own _Ori_'s, so in principle, they could begin to replicate too. However, DNA sequencing of the minimal cell indicates that we have only one replication initiation event per cell cycle.
+As replication proceeds (starting from the _Ori_, along the Forks), the mother chromosome splits into two chromosomes, which we call the left and right daughter chromosomes. The structure is now no longer circular; it is now called a "theta structure" due to its resemblance to the Greek letter $\theta$. Both the left and right daughters have their own _Ori_'s, so in principle, they could begin to replicate too. However, DNA sequencing of the minimal cell indicates that we have only one replication initiation event per cell cycle.
 
 For our simulations, we implement the "train-track" model of bacterial DNA replication[^gogou2021], where replisomes independently move along the opposite arms of the mother chromosome at each replication fork, replicating the DNA. There is another model called the "replication factory" model, but since Syn3A has so few regulatory mechanisms, this second one unlikely. (Plus, the train track model is also more consistent with our understanding of replication initiation[^thornburg2022].) In our implementation, new monomers are added to the left and right daughter chromosomes during replication by creating pairs of monomers centered around the corresponding position of the mother chromosome's monomers. 
 
-<img align="center" width="800" src="./figures/3. Modeling the minimal cell/replication_topology_partB_horizontal_rep_only_0.png">
+<img align="center" width="800" src="./figures/4. Modeling chromosome dynamics/traintrack_updated.png">
 
-**Figure 5: Replication with train-track model.**  Starting with an unreplicated Syn3A chromosome (543,379 bp) inside a 200 nm radius cell with 500 ribosomes (not shown), 20,000 bp (2,000 monomers) were replicated using the train-track model (refer to the schematic). Circles are used to highlight the origins of replication (Oris), termination sites (Ter), and replication forks in the replicated system.
+**Figure 5: Replication with train-track model.**  Starting with an unreplicated Syn3A chromosome (543,379 bp) inside a 200 nm radius cell with 500 ribosomes (not shown), the 90% of the chromosome was replicated using the train-track model (refer to the schematic on the right). Spotlights are used to highlight the origins of replication (Oris), and a third spotlight shows the termination site (Ter) and replication forks, which have nearly reached the Ter. The magnifying glass magnifies one of the replication forks in the spotlight. Lime and magenta arrows indicate chromosome partitioning.
 
-## 4. Modeling Chromosome Dynamics
+## 5. Modeling chromosome dynamics
 
 The total potential energy for the chromosome/ribosome system is
 
@@ -201,7 +200,7 @@ Also found to be essential were topoisomerases. There is evidence for coordinati
 
 We don't have a great way of keeping track of strand crossings, but they usually happen when the SMC loops update, pulling strands of DNA taught against one another.
 
-## 4.5. A closer look at SMC dynamics
+## 6. A closer look at SMC dynamics
 
 <img align="center" width=600 src="./figures/4. Modeling chromosome dynamics/uniform_loading.png">
 
@@ -213,11 +212,11 @@ We don't have a great way of keeping track of strand crossings, but they usually
 
 https://github.com/user-attachments/assets/1c6cfac8-d1d2-4148-9c79-f8d8c935bb40
 
-## 5. Understanding btree_chromo Commands
+## 7. Understanding btree_chromo Commands
 
 Need to update this section
 
-## 6. Visualization and analysis with VMD
+## 8. Visualization with VMD
 
 You will now copy over the .lammpstrj files from Delta to your local machine in order to visualize them in vmd. Open up a new terminal, which we will call **Local terminal**.
 
