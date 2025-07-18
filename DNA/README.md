@@ -68,6 +68,23 @@ We will run our btree_chromo simulation via a bash script that submits a job to 
 
 You will obtain output in the folder `/projects/beyi/${USER}/DNA_SummerSchool_2025`.
 
+```bash
+/projects/beyi/$USERNAME/
+├── launch_simulation.sh
+└── DNA_SummerSchool_2025/
+    ├── data/
+    │   ├── coords/
+    │   ├── loops/
+    │   ├── rep_states/
+    │   └── run_name.lammpstrj  # etc.
+    ├── scripts/
+    │   ├── run_btree_chromo.py
+    │   ├── template.inp
+    │   ├── run_sc_chain_generation.sh 
+    │   ├── Syn3A_chromosome_init.inp
+    │   └── BD_lengths.txt
+```
+
 Run the command
 ```bash
 sbatch /projects/beyi/${USER}/run_btree_chromo.sh
@@ -95,7 +112,7 @@ The very first thing that the job we submitted to Delta does is to generate init
 
 The JCVI-syn3A minimal cell has a 543379 bp (543 kbp) genome comprised of 493 genes. This means an unreplicated chromosome is represented as a circular polymer of 54338 beads. Replication begins at a location on the genome called the origin (_Ori_), proceeds along the DNA in the clockwise and counterclockwise directions with Y-shaped structures (Fork), and ends at the terminal site, also called the terminus (_Ter_).  It turns out the replication states of the minimal cell aren't that interesting: it undergoes one replication initiation event per cell cycle, which means it starts with one unreplicated circular chromosome, and replication proceeds from _Ori_ to _Ter_ until we have two complete circular chromosomes.
 
-<img align="center" width="500" src="./figures/4. Modeling chromosome dynamics/rep_state.png">
+<img align="center" width="700" src="./figures/4. Modeling chromosome dynamics/rep_state.png">
 
 **Figure 3: Representing replication states.**  _Ori_, _Ter_, and Forks given in red, orange, and violet respectively.
 
@@ -179,13 +196,13 @@ In order to get the daughter chromosomes to partition, it turns out it is necess
 
 <img align="center" width=600 src="./figures/4. Modeling chromosome dynamics/extrude_block_bypass.png">
 
-<img align="center" width=250 src="./figures/4. Modeling chromosome dynamics/topo.png">
-
-<img align="center" width=250 src="./figures/4. Modeling chromosome dynamics/topo2.png">
-
 Also found to be essential were topoisomerases. There is evidence for coordination between topoisomerases and SMC complexes[^zawadzki2015]. For our simulations, topoisomerase is modeled by periodically running a set of minimizations and Brownian dynamics steps with DNA-DNA pair interactions replaced by soft potentials, which permits strand-crossings.
 
 We don't have a great way of keeping track of strand crossings, but they usually happen when the SMC loops update, pulling strands of DNA taught against one another.
+
+<img align="center" width=250 src="./figures/4. Modeling chromosome dynamics/topo.png">
+
+<img align="center" width=250 src="./figures/4. Modeling chromosome dynamics/topo2.png">
 
 ## 6. A closer look at SMC dynamics
 
@@ -205,52 +222,18 @@ Need to update this section
 
 ## 8. Visualization with VMD
 
-You will now copy over the .lammpstrj files from Delta to your local machine in order to visualize them in vmd. Open up a new terminal, which we will call **Local terminal**.
-
-We can use VMD on DELTA
-
-In the **Local terminal**:
-
-```bash
-scp $USERNAME@login.delta.ncsa.illinois.edu:/projects/bddt/$USERNAME/btree_chromo_workspace/\\*.lammpstrj .
-
-```
-
-(Alternatively, instead of `.` you may choose to specify path to a local directory.)
-We will also copy over the .tcl scripts which will create nice representations for the DNA and boundary particles.
-
-In the **Local terminal**:
-
-```bash
-scp $USERNAME@login.delta.ncsa.illinois.edu:/projects/bddt/$USERNAME/btree_chromo_workspace/\\*.tcl .
-
-```
-
-In VMD, open the VMD TkConsole and do (Extensions->Tk Console). In the Tk Console, do `source full_model.tcl`. 
-
-**Important considerations for Windows Users:**
-For those using a Windows machine, you will need to make sure your environmental variables for LAMMPS are set correctly by setting them via command line outside of VMD. Before starting VMD, in Windows Command Shell, please do the following:
-```bash
-setx LAMMPSDUMMYPOS "$xd,$yd,$zd"
-setx LAMMPSMAXATOMS "200000"
-setx LAMMPSREMAPFIELDS "vx=c_id_track,vy=c_type_track"
-```
-Each entry should produce “SUCCESS: Specified value was saved.”
-
-This workaround is only needed on Windows VMD (i.e. not on Linux and Mac VMD). This issue will be addressed in upcoming VMD releases. As of writing this, the latest VMD is Version 1.9.4.
-
-VMD Render stuff
+**Go to [VMD Guide by Tianyu](../RDME/vmd_guide.md)**
 
 | Monomer type | Color | Bead Size |
 | --- | --- | --- |
-| DNA | viridis color scale | 13.0 |
+| DNA | gray(M), lime(L), magenta(R) | 13.0 |
 | Ori | red | 39.0 |
 | Ter | orange | 39.0 |
-| Fork | magenta | 39.0 |
+| Fork | violet | 39.0 |
 | Ribosome | mauve | 70.0 |
-| Boundary | gray | 32.5 |
-| Anchor | black | 19.5 |
-| Hinge | white | 19.5 |
+| Boundary | silver | 32.5 |
+| SMC1 | black | 19.5 |
+| SMC2 | white | 19.5 |
 
 ## References
 [^gilbert2023]: Gilbert, Benjamin R., Zane R. Thornburg, Troy A. Brier, Jan A. Stevens, Fabian Grünewald, John E. Stone, Siewert J. Marrink, and Zaida Luthey-Schulten. “Dynamics of Chromosome Organization in a Minimal Bacterial Cell.” Frontiers in Cell and Developmental Biology 11 (August 9, 2023). https://doi.org/10.3389/fcell.2023.1214962.
