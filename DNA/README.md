@@ -1,15 +1,15 @@
-# Simulating DNA using btree_chromo and LAMMPS
+# Simulating DNA with LAMMPS
 
 ## Description:
 <img align="right" width="300" src="./figures/1. Introduction to simulation with btree_chromo and LAMMPS/spotlight.png">
 
-We will walk you through how to set up and run a simulation using the program btree_chromo, on the Delta HPC cluster. We will simulate the DNA dynamics of the Minimal Cell, including DNA replication, disentanglement of daughter chromosomes, and partitioning of daughter chromosomes into their respective daughter volumes. The coarse-grained model of the DNA, ribosomes and cell membrane will be discussed, as well as the use of LAMMPS to perform energy minimizations and Brownian dynamics. We will also go into greater detail about how we model biological mechanisms such as SMC looping and topoisomerase. You will get a chance to visualize and analyze a simulation trajectory in VMD.
+We will walk you through how to set up and run a simulation with LAMMPS using GPUs on the Delta HPC cluster. We will simulate the DNA dynamics of the Minimal Cell JCVI-syn3A, including DNA replication, disentanglement of daughter chromosomes, and partitioning of daughter chromosomes into their respective daughter volumes. The coarse-grained model of the DNA, ribosomes and cell membrane will be discussed, as well as the use of LAMMPS to perform energy minimizations and Brownian dynamics. We will also go into greater detail about how we model biological mechanisms such as SMC looping and topoisomerase. You will get a chance to visualize and analyze a simulation trajectory in VMD.
 
 *This tutorial was prepared for the second edition of the STC QCB Summer School, held during July of 2025.*
 
 ## Outline of tutorial:
 
-1. Introduction to DNA simulation with btree_chromo and LAMMPS
+1. Introduction to DNA simulation with LAMMPS
 2. **Setting up and running your simulation on Delta (To be completed Monday, Jul 21)**
 3. Generating an initial structure
 4. Modeling DNA replication
@@ -20,15 +20,19 @@ We will walk you through how to set up and run a simulation using the program bt
 
 Most of the content of this tutorial, including the implementation of energy terms for the DNA polymer, DNA disentanglement, and general procedure for simulating Brownian dynamics and energy minimization with LAMMPS on a GPU, is also explained in our recent manuscript[^thornburg2025] which you can check out on bioRxiv. The content on SMC blocking/bypassing and daughter chromosome partitioning without the need for an additional fictitious force is a work in progress. 
 
-## 1. Introduction to DNA simulation with btree_chromo and LAMMPS
+## 1. Introduction to DNA simulation with LAMMPS
 
-Here, we simulate DNA replication and dynamics using the C++ program btree_chromo, available online at  [github.com/brg4/btree_chromo](https://github.com/brg4/btree_chromo). This program was created mainly for the purposes of simulating the minimal cell chromosome, but it can be used to simulate any circular chromosome. The main purpose of the program is to model replication states of the chromosome, as well as perform simulation of chromosome dynamics by calling [LAMMPS](https://www.lammps.org/#gsc.tab=0) (Large-scale Atomic/Molecular Massively Parallel Simulator), a molecular dynamics program from Sandia National Laboratories.  
+Here, we simulate DNA replication and dynamics using [LAMMPS](https://www.lammps.org/#gsc.tab=0) (Large-scale Atomic/Molecular Massively Parallel Simulator), a molecular dynamics program from Sandia National Laboratories. We will not have to worry about writing our own LAMMPS input scripts. Instead, we will be running the C++ program `btree_chromo`, available online at  [github.com/brg4/btree_chromo](https://github.com/brg4/btree_chromo). This program was created mainly for the purposes of simulating the minimal cell chromosome, but it can be used to simulate any circular chromosome. The main purpose of the program is to model replication states of the chromosome, as well as perform simulation of chromosome dynamics by calling LAMMPS. 
 
 <img align="center" width="300" src="./figures/1. Introduction to simulation with btree_chromo and LAMMPS/DNA_model_0.png">
 
 The DNA that btree_chromo simulates is coarse-grained at a 10 bp resolution. This means that a single, 3.4 nm diameter bead is used to represent 10 base pairs. We also use beads to represent ribosomes (10 nm), and the cell membrane. The program emulates the effects of SMC (structural maintenence of chromosomes) proteins that extrude loops of DNA to effect chromosome organization, as well as type II topoisomerases which allow for DNA strand crossings when they become tangled.
 
 Today you will run a simulation using a variant of LAMMPS which utilizes the GPUs on the Delta HPC cluster. We will simulate the cell cycle of the minimal cell including the effects of SMC proteins, topoisomerase, and Brownian dynamics. We will start by generating an initial configuration for the DNA and ribosomes of the minimal cell in a spherical cell membrane. The DNA will replicate, disentangle, and partition, and the cell membrane will grow and divide. At the end of the simulation we should have two cells that each look roughly like the cell we started with.
+
+At the core of the simulation we use LAMMPS for simulating the DNA dynamics, but their are several layers code wrapped around LAMMPS that are designed to make our lives easier. These layers are as follows: we will submit a slurm script that launches an Apptainer container. This container runs the fortran program to generate the initial DNA/ribosome coordinates, and then runs a python script which writes and executes 90 `btree_chromo` input scripts, each of which correspond to 1 biological minute of the Syn3A cell cycle. Each `btree_chromo` script involves writing and executing 6 LAMMPS input scripts (each of which correspond to 2 biological seconds of DNA replication and SMC looping).
+
+At one level even deeper, LAMMPS uses Kokkos, a library that lets the same LAMMPS code run efficiently on different types of hardware, like AMD and NVIDIA GPUs. In our case, Kokkos lets us perform the force calculations for the energy minimizations and Brownian dynamics on the GPU. Running on the GPU is around an order of magnitude faster than running on the CPU, and some GPUs can be much faster than others - for example, the A100 GPUs on Delta are around 2.5 times as fast as the RTX A5000 GPUs on my office desktop computer.
 
 ## 2. Setting up and running your simulation on Delta
 In this section, we will log on to Delta and launch a container which has btree_chromo and LAMMPS already installed. Then, we will start running a simulation of the minimal cell chromosome. 
