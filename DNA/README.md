@@ -10,7 +10,7 @@ We will walk you through how to set up and run a simulation using the program bt
 ## Outline of tutorial:
 
 1. Introduction to DNA simulation with btree_chromo and LAMMPS
-2. Setting up and running your simulation on Delta
+2. **Setting up and running your simulation on Delta (To be completed Monday, Jul 21)**
 3. Generating an initial structure
 4. Modeling DNA replication
 5. Modeling chromosome dynamics
@@ -34,7 +34,7 @@ Today you will run a simulation using a variant of LAMMPS which utilizes the GPU
 In this section, we will log on to Delta and launch a container which has btree_chromo and LAMMPS already installed. Then, we will start running a simulation of the minimal cell chromosome. 
 
 > [!NOTE]
-The reason we are doing this first, is so that the simulation will be left running throughout the rest of day and tomorrow morning. Tomorrow morning/afternoon we can visualize the results of our simulations.
+The reason we are doing this first, is so that the simulation will be left running throughout the rest of day and tomorrow morning. The simulations take around 14 hours to run, even using the A100 GPUs on Delta which are very fast. Tomorrow morning/afternoon we can visualize the results of our simulations.
 > 
 
 **Step 1: Log in to Delta**
@@ -52,28 +52,22 @@ You will need to replace $USERNAME with your own.
 **Step 2: Create workspace and copy examples folder**
 
 ```bash
-bash /projects/bddt/DNA/files/prelaunch_btree_chromo.sh
+bash /projects/beyi/prelaunch_btree_chromo.sh
 
 ```
 
-This bash script creates a workspace `/projects/bddt/${USER}/btree_chromo_workspace`. It also copies the `examples` directory into the workspace, which contains example input and output files for **btree_chromo**.
+This bash script copies all the necessary files into your personal directory, `/projects/beyi/$USERNAME`.
 
 **Running our simulations**
 
-We will run our btree_chromo simulation via a bash script that submits a job to Delta such that it runs non-interactively. This has the advantage over the interactive session in that it will perform all the same commands above, while not putting you into the Apptainer shell (the command-line interface within the container). 
+We will run our btree_chromo simulation via a bash script that submits a job to Delta.
 
-You will still obtain output in the folder `/projects/bddt/${USER}/btree_chromo_workspace` in the file `full_model.lammpstrj` but you will no longer get the continous output stream from btree_chromo clogging up your terminal.
+You will obtain output in the folder `/projects/beyi/${USER}/DNA_SummerSchool_2025`.
 
 Run the command
 ```bash
-sbatch /projects/bddt/${USER}/btree_chromo_workspace/run_btree_chromo.sh
+sbatch /projects/beyi/${USER}/run_btree_chromo.sh
 ```
-If you get `sbatch: error: Unable to open file /projects/bddt/${USER}/btree_chromo_workspace/run_btree_chromo.sh`, please do
-
-```bash
-cp /projects/bddt/DNA/files/run_btree_chromo.sh /projects/bddt/${USER}/btree_chromo_workspace/run_btree_chromo.sh
-```
-and then you should be able to run the `sbatch` command.
 
 If you would like to monitor the progress of your job, you can do the command
 
@@ -81,21 +75,6 @@ If you would like to monitor the progress of your job, you can do the command
 squeue -u ${USER}
 ```
 which will shoud you your jobid, how long the job has been running, as well as what partition and GPU node it is running on.
-
-You can also do 
-```bash
-ls -lh /projects/bddt/${USER}/btree_chromo_workspace/
-```
-to see when the last time your `full_model.lammpstrj` was updated, as well as its size. 
-
-
-> [!TIP]
-RNG seed...
->
-
-> [!TIP]
-Job run time...
-> 
 
 
 ## 3. Generating an initial structure 
