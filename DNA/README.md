@@ -208,7 +208,7 @@ We don't have a great way of keeping track of strand crossings, but they usually
 
 Consider the following toy example. Suppose we have five SMC’s that load uniformly on a segment of DNA. The SMCs will bind to the DNA and start to form loops, and as they do they will bridge progressively distant genomic sites. 
 
-Below, we represent the looping state of the DNA in three ways: the physical structure, an arc diagram, and a contact map. The physical structure of the DNA shows how the SMC contacts naturally leads to loop formation, and the arc diagram is a 1D line representing genomic locations where arc between i and j shows a contact between genomic locations i and j. For the uniform loading case, each of the 5 SMC’s spawn on the main diagonal, and then move diagonally away as i decreases and j increases at the same rate. We represent the growing SMCs with a green dot.
+Below, we represent the looping state of the DNA in three ways: the physical structure, an arc diagram, and a contact map. The physical structure of the DNA shows how the SMC contacts naturally leads to loop formation, and the arc diagram is a 1D line representing genomic locations where arc between i and j shows a contact between genomic locations i and j. The contact map is a matrix where each axis represents genomic locations and a point corresponds to a contact between two locations. Although the matrix is symmetric, usually the elements both above and below the main diagonal are shown, as we do here. An SMC that bridges genomic locations i and j will be represented on the map by the points (i,j) and (j,i). For the uniform loading case, each of the 5 SMC’s spawn on the main diagonal, and then move diagonally away as i decreases and j increases at the same rate. We represent the growing SMCs with a green dot.
 
 <img align="center" width=600 src="./figures/4. Modeling chromosome dynamics/uniform_loading_1.png">
 
@@ -224,9 +224,19 @@ For such theta structures, we can have blocking at the forks. This will appear o
 
 <img align="center" width=600 src="./figures/4. Modeling chromosome dynamics/rep_loop_state_example.png">
 
-<img align="center" width=250 src="./figures/4. Modeling chromosome dynamics/cluster.png">
+Below, I have attached a movie that shows how the replication/loop state of chromosome changes throughout an ~90 minute cell cycle. Each axis represents the genomic position, which spans 543379 bp × 2 = 1086758 bp since eventually we will have two chromosomes. Starting with the mother chromosome (gray square), the left and right daughter chromosomes grow until we have two complete chromosomes (lime and magenta squares). For these simulations, we start with 50 loops, and add loops proportional to the total amount of DNA until we have 100 loops. Notice how for this set of parameters, most of the loops are fully blocked. You can also see the formation of "+" signs made from several loops, which corresponds to many loops that are blocked in a "traffic jam".
 
 https://github.com/user-attachments/assets/1c6cfac8-d1d2-4148-9c79-f8d8c935bb40
+
+It seems pretty plausible that SMC looping can help with chromosome partitioning, since it scrunches up DNA of the same type (left, right, mother). If you have something that is mixed up and you want to seperate them into distinct volumes, you can de-mix them by introducing bonds between components of the same type (think oil and water): this is exactly what SMC proteins do, and it close to the idea enthalpy-driven phase separation. You might wonder if there is also an entropic component to the seperation. This is less clear. In organisms with clear nucleoid regions, the phase seperation is aided by crowding and depletion forces which are entropic in nature, but Syn3A does not have a defined nucleoid region. Entropy has been shown to aid with chromosome partitioning in cylindrically shaped bacteria, but Syn3A is spherical during replication.
+
+In our simulations, SMC's start loading onto daughter chromosomes immediately after replication initiation. As the replication forks proceed along the mother chromosome, the daughter chromosomes lay right on top of each other. However, eventually the SMC's will set up "traffic jams" or "condensation centers" on each chromosome, which look like a cluster of SMC's with loops emanating from the clusters -- this is sometimes called a "bottle brush" structure. Then, looping is mostly done by the unblocked SMC's on the edges of the cluster, which reel in newly replicated DNA into the bottle brush, as well as DNA that strays into the other bottle brushes. 
+
+<img align="center" width=250 src="./figures/4. Modeling chromosome dynamics/cluster.png">
+
+It turns out that the SMC cluster idea is consistent with the idea of a diffuse nucleoid region. If we assume there are 50 SMC's bound on the DNA, the average loop length will be around 543379bp / 50 = 10kbp. If you calculate the radius of gyration of each of those loops, the size of each loop is roughly equal to the radius of the cell.
+
+<img align="center" width=250 src="./figures/4. Modeling chromosome dynamics/cluster_2.png">
 
 ## 7. Understanding btree_chromo Commands
 
