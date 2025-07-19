@@ -3,14 +3,14 @@
 ## Description:
 <img align="right" width="300" src="./figures/1. Introduction to simulation with btree_chromo and LAMMPS/spotlight.png">
 
-We will walk you through how to set up and run a simulation with LAMMPS using GPUs on the Delta HPC cluster. We will simulate the DNA dynamics of the Minimal Cell JCVI-syn3A, including DNA replication, disentanglement of daughter chromosomes, and partitioning of daughter chromosomes into their respective daughter volumes. The coarse-grained model of the DNA, ribosomes and cell membrane will be discussed, as well as the use of LAMMPS to perform energy minimizations and Brownian dynamics. We will also go into greater detail about how we model biological mechanisms such as SMC looping and topoisomerase. You will get a chance to visualize and analyze a simulation trajectory in VMD.
+We will walk you through how to set up and run a LAMMPS simulation using GPUs on the Delta HPC cluster. We will simulate the DNA dynamics of the Minimal Cell JCVI-syn3A, including DNA replication, disentanglement of daughter chromosomes, and partitioning of daughter chromosomes into their respective daughter volumes. The coarse-grained model of the DNA, ribosomes and cell membrane will be discussed, as well as the use of LAMMPS to perform energy minimizations and Brownian dynamics. We will also go into greater detail about how we model biological mechanisms such as SMC looping and topoisomerase. You will get a chance to visualize and analyze a simulation trajectory in VMD.
 
-*This tutorial was prepared for the second edition of the STC QCB Summer School, held during July of 2025.*
+*This tutorial was prepared for the second edition of the STC QCB Summer School, held July 21-25, 2025.*
 
 ## Outline of tutorial:
 
 1. Introduction to DNA simulation with LAMMPS
-2. **Setting up and running your simulation on Delta (To be completed Monday, Jul 21)**
+2. **Setting up and submitting your job to Delta (do this on the first day)**
 3. Generating an initial structure
 4. Modeling DNA replication
 5. Modeling chromosome dynamics
@@ -34,7 +34,7 @@ At the core of the simulation we use LAMMPS for simulating the DNA dynamics, but
 
 At one level even deeper, LAMMPS uses Kokkos, a library that lets the same LAMMPS code run efficiently on different types of hardware, like AMD and NVIDIA GPUs. In our case, Kokkos lets us perform the force calculations for the energy minimizations and Brownian dynamics on the GPU. Running on the GPU is around an order of magnitude faster than running on the CPU, and some GPUs can be much faster than others - for example, the A100 GPUs on Delta are around 2.5 times as fast as the RTX A5000 GPUs on my office desktop computer.
 
-## 2. Setting up and running your simulation on Delta
+## 2. Setting up submitting your job to Delta
 In this section, we will log on to Delta and launch a container which has btree_chromo and LAMMPS already installed. Then, we will start running a simulation of the minimal cell chromosome. 
 
 > [!NOTE]
@@ -95,7 +95,7 @@ If you would like to monitor the progress of your job, you can do the command
 ```bash
 squeue -u ${USER}
 ```
-which will shoud you your jobid, how long the job has been running, as well as what partition and GPU node it is running on.
+which will show you your jobid, how long the job has been running, as well as what partition and GPU node it is running on.
 
 
 ## 3. Generating an initial structure 
@@ -134,7 +134,7 @@ The total potential energy for the chromosome/ribosome system is
 
 $$U= \sum_{i=1}^{N_{\mathrm{DNA}}}\left[U_i^b+U_i^a+U_i^s\right] +\sum_{i=1}^{N_{\mathrm{DNA}}-1} \sum_{j=i+1}^{N_{\mathrm{DNA}}} U_{i j}^{\mathrm{DNA}-\mathrm{DNA}}+\sum_{i=1}^{N_{\mathrm{DNA}}} \sum_j^{N_{\text {ribo }}} U_{i j}^{\mathrm{DNA}-\text { ribo }} +\sum_{i=1}^{N_{\text {ribo }}-1} \sum_{j=i+1}^{N_{\text {ribo }}} U_{i j}^{\text {ribo-ribo }} +\sum_{i=1}^{N_{\text {bdry }}} \sum_j^{N_{\mathrm{DNA}}} U_{i j}^{\text {bdry-DNA }}+\sum_{i=1}^{N_{\text {bdry }}} \sum_j^{N_{\text {ribo }}} U_{i j}^{\text {bdry-ribo }}.$$
 
-The energies for the bending, twisting, stretching and excluded volume interactions are shown below.
+The energies for the bending, stretching and excluded volume interactions are shown below.
 
 |**Bending:** | **Stretching** | **Excluded Volume** |
 |:--:|:--:|:--:|
