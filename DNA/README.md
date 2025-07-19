@@ -114,7 +114,7 @@ The JCVI-syn3A minimal cell has a 543379 bp (543 kbp) genome comprised of 493 ge
 
 <img align="center" width="700" src="./figures/4. Modeling chromosome dynamics/rep_state.png">
 
-**Figure 3: Representing replication states.**  _Ori_, _Ter_, and Forks given in red, orange, and violet respectively.
+**Figure 1: Representing replication states.**  _Ori_, _Ter_, and Forks given in red, orange, and violet respectively.
 
 As replication proceeds (starting from the _Ori_, along the Forks), the mother chromosome splits into two chromosomes, which we call the left and right daughter chromosomes. The structure is now no longer circular; it is now called a "theta structure" due to its resemblance to the Greek letter $\theta$. Both the left and right daughters have their own _Ori_'s, so in principle, they could begin to replicate too. However, DNA sequencing of the minimal cell indicates that we have only one replication initiation event per cell cycle.
 
@@ -122,7 +122,7 @@ For our simulations, we implement the "train-track" model of bacterial DNA repli
 
 <img align="center" width="800" src="./figures/4. Modeling chromosome dynamics/traintrack_updated.png">
 
-**Figure 5: Replication with train-track model.**  Starting with an unreplicated Syn3A chromosome (543,379 bp) inside a 200 nm radius cell with 500 ribosomes (not shown), the 90% of the chromosome was replicated using the train-track model (refer to the schematic on the right). Spotlights are used to highlight the origins of replication (Oris), and a third spotlight shows the termination site (Ter) and replication forks, which have nearly reached the Ter. The magnifying glass magnifies one of the replication forks in the spotlight. Lime and magenta arrows indicate chromosome partitioning.
+**Figure 2: Replication with train-track model.**  Starting with an unreplicated Syn3A chromosome (543,379 bp) inside a 200 nm radius cell with 500 ribosomes (not shown), the 90% of the chromosome was replicated using the train-track model (refer to the schematic on the right). Spotlights are used to highlight the origins of replication (Oris), and a third spotlight shows the termination site (Ter) and replication forks, which have nearly reached the Ter. The magnifying glass magnifies one of the replication forks in the spotlight. Lime and magenta arrows indicate chromosome partitioning.
 
 In our simulations, we update the replication state every 2 seconds of biological time. We assume the maximum replication rate of 100 bp/s for each of the replication forks, which means the replication forks each move 20 beads every time we update the replication state until they hit the Ter.
 
@@ -171,26 +171,33 @@ Both Langevin and Brownian dynamics can be used to correctly sample the NVT ense
 
 ### SMC looping and topoisomerases
 
-During the genome reduction process of Syn3A, guided by transposon mutagenesis studies on the original JCVI-syn1.0 genome and its intermediate reduced versions, it was found that structural maintenence of chromosomes (SMC) proteins were essential. However, the effect of SMC looping during the minimal cell replication cycle is not fully understood. While magnetic tweezer experiments have been done to determine loop extrusion step size of ~200 bp[^ryu2022], and simulations indicate an extrusion frequency of ~2.5 steps/s[^nomidis2022], we have limited experimental results for SMC looping in the crowded in-cell environment. 
+During the genome reduction process of Syn3A, guided by transposon mutagenesis studies on the original JCVI-syn1.0 genome and its intermediate reduced versions, it was found that structural maintenence of chromosomes (SMC) proteins were essential. Ganji et al. directly visualized the process by which condensin (aka, an SMC dimer) complexes extrude DNA into loops[^ganji2018]. They demonstrated that a single condensin can pull in DNA from one side at a force-dependent rate, supporting the loop extrusion model as a mechanism for chromosome organization. This finding provides strong evidence that SMC protein complexes like condensin actively shape the spatial arrangement of the genome.Magnetic tweezer experiments have been done to determine loop extrusion step size of ~200 bp[^ryu2022], and simulations indicate an extrusion frequency of ~2.5 steps/s[^nomidis2022].
 
 <img align="center" height=300 src="./figures/4. Modeling chromosome dynamics/ganji.png">
 
-**Figure 6: Real-time imaging of DNA loop extrusion by SMC complex.**  A series of snapshots shows DNA loop extrusion intermediates cuased by an SMC dimer on a SxO-stained double-tethered DNA strand. A constant flow at a large angle to DNA axis stretches extruded loop and maintains DNA in imaging plane. Adapted from Ganji et al[^ganji2018].
+**Figure 3: DNA loop extrusion by SMC complex.**  A series of snapshots shows DNA loop extrusion intermediates caused by SMC on a SxO-stained double-tethered DNA strand. A constant flow at a large angle to DNA axis stretches extruded loop and maintains DNA in imaging plane. Adapted from Ganji et al[^ganji2018].
 
-Ganji et al. directly visualized the process by which condensin (aka, an SMC dimer) complexes extrude DNA into loops[^ganji2018]. They demonstrated that a single condensin can pull in DNA from one side at a force-dependent rate, supporting the loop extrusion model as a mechanism for chromosome organization. This finding provides strong evidence that SMC protein complexes like condensin actively shape the spatial arrangement of the genome.
+
+https://github.com/user-attachments/assets/e46c7361-aabe-438c-96b5-40ca38abdc43
+
+**Movie 1: Real-time imaging of DNA loop extrusion by SMC complex.**  Movie corresponding to Figure 6 showing DNA loop extrusion by SMC on a SxO-stained double-tethered DNA strand. A constant flow at a large angle to DNA axis stretches extruded loop and maintains DNA in imaging plane. From Ganji et al[^ganji2018].
+
+(Most of the experiments on SMCs have been with eukaryotic SMCs like condensin. Syn3A actually has the bacterial SMC, SMC-ScpA/B, consisting of an SMC homodimer plus an ScpA kleisin protein and two accesory ScpB proteins. Recently [a preprint went up on bioRxiv](https://www.biorxiv.org/content/10.1101/2025.05.11.653314v1) which claims to have repeated the Ganji et al. experiments with SMC-ScpA/B from Ureaplasma parvum, which is a not-too-distant relative of Mycoplasma mycoides which is the organism from which Syn3A is derived.)
+
+The simulation methodology we use for SMC looping is that of Bonato and Michieletto, in which DNA loops are created by adding harmonic bonds bewteen two DNA monomers [^bonato2021] which reprent DNA bound by SMC. Many studies indicate that SMC loop extrusion in vivo is bidirectional, in other words both sides of the SMC translocate. Therefore in our model, both DNA monomers are updated. 
 
 <img align="center" width=600 src="./figures/4. Modeling chromosome dynamics/extrusion.png">
 
-The simulation methodology we use for SMC looping is that of Bonato and Michieletto, in which DNA loops are created by adding harmonic bonds bewteen two DNA monomers [^bonato2021] which reprent DNA bound by SMC. Many studies indicate that SMC loop extrusion in vivo is bidirectional, in other words both sides of the SMC translocate. Therefore in our model, both DNA monomers are updated. We take an extrusion rate of 500 bp/s, split into 250 bp/s for each side. This seems *very* fast: for example, RNAP transcribes at a maximum rate of 85 bp/s, and for DNA replication the forks have a maximum rate of 100 bp/s. However, the 0.5-1 kbp value has been corroborated by several studies.
+We take an extrusion rate of 500 bp/s, split into 250 bp/s for each side. This seems *very* fast: for example, RNAP transcribes at a maximum rate of 85 bp/s, and for DNA replication the forks have a maximum rate of 100 bp/s. However, the 0.5-1 kbp value has been corroborated by several studies.
 
 There is also the question of the step size of the SMC's. It turns out the exact step size does not matter much in our simulations with respect to partitioning of the daughter chromosomes, but here update the SMC positions in our LAMMPS simulations every 2 biological seconds, which corresponds to extruding 500 bp on each side.
 
 | Parameter | Description |
 | --- | --- |
-| Total number of loops | Number of active anchor+hinge pairs that are extruding loops. We know that there are ~100 SMC dimers[^gilbert2023]. |
-| Loop extrusion frequency (s^-1) | How often does loop extrusion occur? Our best estimate is around every 0.4 s[^nomidis2022]. |
-| Unbind/Rebind frequency (s^-1) | How often does the anchor move to a new location? |
-| Extrusion step size (bp) | ~200 bp[^ryu2022]|
+| Total number of loops | Number of active anchor+hinge pairs that are extruding loops. We know that there are ~100 SMC dimers[^gilbert2023]. In our simulations we estimate around half of them are bound at one time. |
+| Loop extrusion frequency (s^-1) | How often does loop extrusion occur? Our best estimate is around every 0.4 s[^nomidis2022]. In our simulations we update the loops every 2 s.|
+| Unbind/Rebind frequency (s^-1) | How fast are SMC unbind and rebinding? In our simulations, dwell times are on the order of minutes. We assume the unbinding and rebinding frequencies are equal, so that half of the SMCs are bound at one time|
+| Extrusion step size (bp) | ~200 bp[^ryu2022]. In our simulations we update loops every 5 extrusion steps, corresponding to 1kbp or 500 bp on each side for bidirectional extrusion.|
 
 In order to get the daughter chromosomes to partition, it turns out it is necessary to model another type of SMC behavior, namely blocking/bypassing. When SMCs encounter each other in our simulations, they block each other from translocating any further, and there is some rate for bypassing each other. Similarly, there is some rate for SMCs to bypass replication forks, but for these simulations we set that to zero.
 
