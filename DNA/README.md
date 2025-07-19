@@ -206,9 +206,21 @@ We don't have a great way of keeping track of strand crossings, but they usually
 
 ## 6. A closer look at SMC dynamics
 
+Consider the following toy example. Suppose we have five SMC’s that load uniformly on a segment of DNA. The SMCs will bind to the DNA and start to form loops, and as they do they will bridge progressively distant genomic sites. 
+
+Below, we represent the looping state of the DNA in three ways: the physical structure, an arc diagram, and a contact map. The physical structure of the DNA shows how the SMC contacts naturally leads to loop formation, and the arc diagram is a 1D line representing genomic locations where arc between i and j shows a contact between genomic locations i and j. For the uniform loading case, each of the 5 SMC’s spawn on the main diagonal, and then move diagonally away as i decreases and j increases at the same rate. We represent the growing SMCs with a green dot.
+
 <img align="center" width=600 src="./figures/4. Modeling chromosome dynamics/uniform_loading.png">
 
+Eventually, there comes a point where the SMC’s encounter each other. When this happens, the middle 3 SMC’s are blocked on both sides, while the outer 2 SMC’s are blocked on one side. On the contact map, we represent the 3 stationary SMC’s with a red square, and we represent the two outer SMCs with a yellow triangle which points in the direction in which it is still free to move.
+
+<img align="center" width=600 src="./figures/4. Modeling chromosome dynamics/uniform_loading_2.png">
+
+We can also draw contact maps for theta structures. Here, we gray square represents the mother chromosome, which spans the genomic positions between forks, and with the terminus in the center. The lime and magenta squares represent the left and right daughter chromosomes, each with their own origin.
+
 <img align="center" width=600 src="./figures/4. Modeling chromosome dynamics/rep_loop_state.png">
+
+For such theta structures, we can have blocking at the forks. This will appear on contact maps as points at the edges of the squares. If the other side of the SMC is not blocked, the points will move along the edges of the square. In the figure below, can you match each of the loops in the arc diagram to the loops in the physical structure, as well as identify the corresponding points in the contact map?
 
 <img align="center" width=600 src="./figures/4. Modeling chromosome dynamics/rep_loop_state_example.png">
 
