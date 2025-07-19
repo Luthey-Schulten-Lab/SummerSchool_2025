@@ -234,9 +234,13 @@ In our simulations, SMC's start loading onto daughter chromosomes immediately af
 
 <img align="center" width=250 src="./figures/4. Modeling chromosome dynamics/cluster.png">
 
-It turns out that the SMC cluster idea is consistent with the idea of a diffuse nucleoid region. If we assume there are 50 SMC's bound on the DNA, the average loop length will be around 543379bp / 50 = 10kbp. If you calculate the radius of gyration of each of those loops, the size of each loop is roughly equal to the radius of the cell.
+You might imagine that if the loops are too long, then entropy actually would hinder chromosome separation, because loops would naturally diffuse into the wrong subvolumes. However, this seems to not be the case. If we assume there are 50 SMC's bound on the DNA, the average loop length will be around 543379bp / 50 = 10kbp. If you calculate the radius of gyration of each of those loops, the size of each loop is roughly equal to the radius of the cell. It turns out that the SMC cluster idea is consistent with the idea of a diffuse nucleoid region. 
 
 <img align="center" width=250 src="./figures/4. Modeling chromosome dynamics/cluster_2.png">
+
+In the movie below, I took a chromosome state which is about 2/3 of the way replicated, and ran dynamics for 3 seconds. Despite the fact that all of the loops are equilibrated, we still only see reorganization of each of the chromosome domains, left (lime), right (magenta), and mother (violet), within the cell without minimal mixing of those domains. At the center of each of of these domains is a cluster of SMC's.
+
+https://github.com/user-attachments/assets/8387c708-43c8-486a-8082-b665156d4bbf
 
 ## 7. Understanding btree_chromo Commands
 
