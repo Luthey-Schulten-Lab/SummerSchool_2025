@@ -210,7 +210,7 @@ Consider the following toy example. Suppose we have five SMC’s that load unifo
 
 Below, we represent the looping state of the DNA in three ways: the physical structure, an arc diagram, and a contact map. The physical structure of the DNA shows how the SMC contacts naturally leads to loop formation, and the arc diagram is a 1D line representing genomic locations where arc between i and j shows a contact between genomic locations i and j. For the uniform loading case, each of the 5 SMC’s spawn on the main diagonal, and then move diagonally away as i decreases and j increases at the same rate. We represent the growing SMCs with a green dot.
 
-<img align="center" width=600 src="./figures/4. Modeling chromosome dynamics/uniform_loading.png">
+<img align="center" width=600 src="./figures/4. Modeling chromosome dynamics/uniform_loading_1.png">
 
 Eventually, there comes a point where the SMC’s encounter each other. When this happens, the middle 3 SMC’s are blocked on both sides, while the outer 2 SMC’s are blocked on one side. On the contact map, we represent the 3 stationary SMC’s with a red square, and we represent the two outer SMCs with a yellow triangle which points in the direction in which it is still free to move.
 
