@@ -87,7 +87,8 @@ You will obtain output in the folder `/projects/beyi/${USER}/DNA_SummerSchool_20
 
 Run the command
 ```bash
-sbatch /projects/beyi/${USER}/run_btree_chromo.sh
+cd /projects/beyi/${USER}/
+sbatch launch_simulation.sh
 ```
 
 If you would like to monitor the progress of your job, you can do the command
