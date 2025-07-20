@@ -247,11 +247,54 @@ https://github.com/user-attachments/assets/8387c708-43c8-486a-8082-b665156d4bbf
 
 ## 7. Understanding btree_chromo Commands
 
-Need to update this section
+On Delta, you can `vim /projects/beyi/${USER}/DNA_SummerSchool_2025/scripts/template.inp` to see the template for the input scripts we run with `btree_chromo`. The most important lines are:
+
+```bash
+# run for 12 seconds of bio time (6 batches of 2 seconds) with dynamics
+repeat:6
+sync_simulator_and_system
+set_initial_state
+transform:m_cw20_ccw20
+set_final_state
+output_state:{output_dir}/rep_states/rep_state_{run_name}.txt
+map_replication
+write_loops:{output_dir}/loops/loops_{run_name}.txt
+sys_write_sim_read_LAMMPS_data:{output_dir}data_{run_name}.lammps
+translocate:50,T
+sys_write_sim_read_LAMMPS_data:{output_dir}data_{run_name}.lammps
+simulator_form_loops:F
+simulator_minimize_topoDNA_harmonic:1000
+simulator_set_delta_t:2.5E+7
+{run_dynamics}
+end_repeat
+
+sync_simulator_and_system
+
+# run for 48 seconds of bio time (24 batches of 2 seconds) without dynamics
+repeat:24
+set_initial_state
+transform:m_cw20_ccw20
+set_final_state
+output_state:{output_dir}/rep_states/rep_state_{run_name}.txt
+map_replication
+write_loops:{output_dir}/loops/loops_{run_name}.txt
+translocate:50,T
+end_repeat
+```
+
+As indicated by the comments, we only run dynamics with LAMMPS for 20% of the biological time, but the other 80% of the time we still perform the replication and SMC blocking/bypassing dynamics.
+
+The `repeat` commands are exactly like for loops. Each iteration represents 2 seconds of biological time, during which we replicate on both sides by 20 beads (`transform:m_cw20_ccw20`) and translocate SMCs by 50 beads (`translocate:50,T`. What this really means is we attempt 50 moves; whether a loop updates or not depends on whether its blocked by another loop, and the parameters we set for the blocking, bypassing, and basal birth/death rates for the SMCs).
+
+The command `simulator_form_loops:F` reads in the loop state from `btree_chromo` into the LAMMPS simulation object. The command `simulator_minimize_topoDNA_harmonic:1000` runs a minimization with strand crossing permitted, `simulator_set_delta_t:2.5E+7` sets the timestep to 25 ns, and `{run_dynamics}` runs Brownian dynamics with strand crossings forbidden.
 
 ## 8. Visualization with VMD
 
 **Go to [VMD Guide by Tianyu](../RDME/vmd_guide.md)**
+
+In VMD, go to TkConsole and `cd /projects/beyi/your_username/DNA_SummerSchool_2025/data`, and then do `source load_btree_chromo.tcl`.
+
+You should see a representation of the trajectory for the Minimal Cell growth and division!
 
 | Monomer type | Color | Bead Size |
 | --- | --- | --- |
