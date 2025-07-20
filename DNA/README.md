@@ -290,9 +290,17 @@ The command `simulator_form_loops:F` reads in the loop state from `btree_chromo`
 
 ## 8. Visualization with VMD
 
-**Go to [VMD Guide by Tianyu](../RDME/vmd_guide.md)**
+Go to [VMD Guide by Tianyu](../RDME/vmd_guide.md) and complete step 1.
 
-In VMD, go to TkConsole and `cd /projects/beyi/your_username/DNA_SummerSchool_2025/data`, and then do `source load_btree_chromo.tcl`.
+Now that you are in the graphical user interface, open a terminal and go to your `data` folder:
+
+`cd /projects/beyi/${USER}/DNA_SummerSchool_2025/data/`
+
+In order to get the right representations in VMD, we need to preprocess the .lammpstrj with a python script. All this does is assign a unique index to the DNA beads that belong to the left daughter chromosome. The script should take 3-4 minutes to run.
+
+`python3 modify_lammpstrj.py`
+
+Now, open vmd by doingg `vmd`. Go to TkConsole and `cd /projects/beyi/your_username/DNA_SummerSchool_2025/data`, and then do `source load_btree_chromo.tcl`.
 
 You should see a representation of the trajectory for the Minimal Cell growth and division!
 
