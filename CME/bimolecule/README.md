@@ -27,6 +27,8 @@ In contrast, when using the CME, we work with discrete molecular counts instead 
 
 Now go to Jupyter Notebook interface and navigate to directory `/CME/bimolecule/`. You will use the notebook `Tut1.1-ODEBimol.ipynb` to simulate the bimolecular reaction using ordinary differential equations (ODEs) solved with SciPy, and `Tut1.2-CMEBimol.ipynb` to simulate the same reaction using the Chemical Master Equation (CME) with jLM in Lattice Microbes.
 
+To run a Jupyter Notebook, you can use short-cut **Control+Enter** to execute the selected cell. Or, you can click **Cell-Run All** to run the entire script.
+
 ## Recap
 
 ### Set Up Simulation and Analyze with jLM
@@ -67,7 +69,7 @@ Additionally, you might observe that the particle counts change in discrete step
 
 ### 1. Increase the Sample Size
 
-In Tutorial 1.2, try increasing the number of replicates from 10 to 100—or even more. To do this, change the variable `reps` and restart the Jupyter Notebook kernel to begin a new CME simulation. 
+In Tutorial 1.2, try increasing the number of replicates from 10 to 100—or even more. To do this, change the variable `reps` and restart the Jupyter Notebook kernel by clicking **Kernel-Restart & Clear Output** to begin a new CME simulation. 
 
 See **Figure 2** for a comparison of the results using 10 and 100 replicates. Does increasing the number of replicates lead to smoother population averages and reduced variance?
 

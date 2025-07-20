@@ -1,9 +1,5 @@
 # <img src="./figs/STC_logo.png" alt="STC-QCB logo" height="65"> STC-QCB Summer School 2025: Modeling the Minimal Bacterial Cell JCVI-Syn3A
 
-> [!WARNING]
-Under Development
->
-
 **Welcome to the STC-QCB Summer School 2025!**
 
 These tutorials are part of the 2025 annual summer school ([Full program information here](https://emails.illinois.edu/newsletter/44/374882244.html)) organized by the NSF Science and Technology Center for Quantitative Cell Biology (STC-QCB) at UIUC.

@@ -72,7 +72,7 @@ For the ODE simulation, we use **[odecell](https://github.com/Luthey-Schulten-La
 
 The spatially homogeneous simulations can be efficiently parallelized across up to 25 independent cell replicates or more, with each replicate requiring less than 2 GB of RAM. On systems equipped with AMD EPYC 7763 “Milan” processors on **[Delta](https://docs.ncsa.illinois.edu/systems/delta/en/latest/index.html)**, or Intel Xeon Gold 6154 CPUs @ 3.00 GHz on a standard workstation, a 2-hour biological simulation with 1-second communication intervals typically completes within **6 physical hours**.
 
-Due to time constraints, you will run a 2-minute simulation with 4 cell replicates. You are encouraged to modify the parameters to run longer simulations or more replicates.
+Due to time constraints, you will run a 2-minute simulation with 4 cell replicates in a separate job. You are encouraged to modify the parameters to run longer simulations or more replicates.
 
 ---
 
@@ -93,7 +93,7 @@ Due to time constraints, you will run a 2-minute simulation with 4 cell replicat
     ```bash
     squeue -u $USER
     ```
-
+    - The job named `WCM_4_replicates` runs the WCM.
     - `PD` indicates the job is pending.
     - `R` means it is currently running.
     - If the job disappears from the list, it has finished.
@@ -103,6 +103,7 @@ Due to time constraints, you will run a 2-minute simulation with 4 cell replicat
     ```bash
     ls ../output_4replicates
     ```
+    The simulation will finish around 10 minutes. Navigate to `/projects/beyi/$USER/CME/WCM/output_4replicates` in the Jupyter Notebook webpage, and open the files as you want. In the log files, you will see the parsed input information, reactions constructed in CME, and timing of the simulation.
 
 ---
 
@@ -161,7 +162,7 @@ We now focus on gene **JCVISYN3A_0011** to illustrate how the input files work t
 
 The genome of JCVI-syn3A is stored in a standard GenBank file available from [NCBI (Accession: CP016816.2)](https://www.ncbi.nlm.nih.gov/nuccore/CP016816.2/). GenBank files contain far more than nucleotide sequences—they include feature annotations, coding regions, protein translations, and more.
 
-Open the GenBank file in `.../input_data/` with a text editor and search for **JCVISYN3A_0011**. You'll see the entry shown below. **JCVISYN3A_0011** is the locus tag for a protein-coding gene, where the prefix identifies the organism (JCVI-syn3A) and `0011` is the locus number—heavily used in the model to distinguish genes, RNAs, and proteins. This gene spans nucleotides 15153 to 16799. Its product is a *Nucleoside Transporter ABC substrate-binding protein*, part of a ribonucleoside ABC transporter complex that imports nucleosides into Syn3A.
+Open the GenBank file in `.../input_data/` with a text editor and search for **JCVISYN3A_0011**. You'll see the entry shown below. **JCVISYN3A_0011** is the locus tag for a protein-coding gene, where the prefix identifies the organism (JCVI-syn3A); `0011` is the locus number—heavily used in the model to distinguish genes, RNAs, and proteins. This gene spans nucleotides 15153 to 16799. Its product is a *Nucleoside Transporter ABC substrate-binding protein*, part of a ribonucleoside ABC transporter complex that imports nucleosides into Syn3A.
 
 <p align="center">
   <img src="../figs/figs_WCM/jcvisyn3a_0011.png" width="300" alt="GenBank entry JCVISYN3A_0011"> <br>
@@ -170,7 +171,7 @@ Open the GenBank file in `.../input_data/` with a text editor and search for **J
 
 The SBML file encodes the entire metabolic model of Syn3A, including compartments (e.g., cytoplasm, extracellular), species, reactions, gene products (enzymes or transporters), and objectives (for FBA). It does not include rate constants; those are specified in `kinetic_params.xlsx`.
 
-open the SBML file and search for the reaction *DGSNabc*. **JCVISYN3A_0011** participates in the reaction *DSGNabc*, which irreversibly transports deoxyguanosine as part of nucleotide metabolism. In the SBML file (see Figure 3), DSGNabc is marked as irreversible (`reversible=false`) and involves 3 reactants and 4 products. The `geneProductAssociation` is an *and* rule: all four subunits (**0008, 0009, 0010, and 0011**) must assemble for the transporter to function. In the current whole-cell model, we model the assembly of 21 unique protein complexes, including this one, named **rnsBACD**. The ODE solver uses the actual abundance of such assembled complexes in metabolic simulations.
+Open the SBML file and search for the reaction *DGSNabc*. **JCVISYN3A_0011** participates in the reaction *DSGNabc*, which irreversibly transports deoxyguanosine as part of nucleotide metabolism. In the SBML file (see Figure 3), DSGNabc is marked as irreversible (`reversible=false`) and involves 3 reactants and 4 products. The `geneProductAssociation` is an *and* rule: all four subunits (**0008, 0009, 0010, and 0011**) must assemble for the transporter to function. In the current whole-cell model, we model the assembly of 21 unique protein complexes, including this one, named **rnsBACD**. The ODE solver uses the actual abundance of such assembled complexes in metabolic simulations.
 
 <p align="center">
   <img src="../figs/figs_WCM/sbml.png" width="600" alt="SBML entry of DSGNabc reaction"> <br>
@@ -213,8 +214,6 @@ Genetic information processes link the genetic blueprint encoded in DNA to funct
   Right: Functions of genetic information processing (GIP) reactions.</b> 
 </p>
 
-In this whole-cell model, translation and degradation are modeled with greater precision than in Tutorial 2. Each reaction involves the binding of mRNA to a complex machinery—either a ribosome for translation or a degradosome for degradation. As one of the most active molecular species in genetic information processing, mRNA is subject to degradation upon binding to the degradosome. This competition between ribosome and degradosome binding serves as an important regulatory mechanism in gene expression, which we will explore in the results section.
-
 **Replication initiation** is modeled as the binding of the multi-domain protein **DnaA** (encoded by gene *JCVISYN3A_0001*) and the replisome to a specific chromosomal region known as **oriC**[^thornburg_kinetic].
 
 <p align="center">
@@ -248,6 +247,7 @@ The corresponding reactions for gene duplication are listed in Table 1. The repl
 
 | **Processes**   | **Reactions**                                                                                      | **Kinetic Constant**                                 |
 |-----------------|---------------------------------------------------------------------------------------------------|------------------------------------------------------|
+| Replication Initiation | DnaA binding with *Ori* | - |
 | Replication     | G<sub>locusNum</sub> → 2G<sub>elongation</sub>                                                     | $k_{\text{replication}}^{\text{locusNum}}$        |
 | Transcription   | RNAP + G<sub>locusNum</sub> → RNAP:G<sub>locusNum</sub>                                            | $k_{\text{trsc}}^{\text{binding}}$                 |
 |                 | RNAP:G<sub>locusNum</sub> → R<sub>locusNum</sub> + RNAP + G<sub>locusNum</sub>                     | $s_{\text{trsc}}^{\text{locusNum}} k_{\text{trsc}}^{\text{elongation}}$ |
@@ -256,7 +256,7 @@ The corresponding reactions for gene duplication are listed in Table 1. The repl
 | Degradation     | Degradosome + R<sub>locusNum</sub> → Degradosome:R<sub>locusNum</sub>                              | $k_{\text{degra}}^{\text{binding}}$                |
 |                 | Degradosome:R<sub>locusNum</sub> → NMPs + Degradosome                                              | $k_{\text{degra}}^{\text{depoly}}$                 |
 
-Transcription, translation and degradation are all depicted as a two-step binding and (de)polymerizatoin reactions, where the polymerizations to synthesize RNAs and proteins share the same rate form as gene replication. The rate for complete degradation from a mRNA to its monomers is calculated by divide the monomer depletion rate over the length of mRNA.
+In this whole-cell model, transcription, translation and degradation are modeled with greater precision than in Tutorial 2. Each process involves the binding to a complex machinery—either a RNAP to gene in transcription, a ribosome to mRNA for translation or a degradosome to mRNA for mRNA degradation. As one of the most active molecular species in genetic information processing, mRNA is subject to degradation upon binding to the degradosome. This competition between ribosome and degradosome binding serves as an important regulatory mechanism in gene expression, which we will explore in the results section. Transcription, translation and degradation are all depicted as a two-step binding and (de)polymerizatoin reactions, where the polymerizations to synthesize RNAs and proteins share the same rate form as gene replication. The rate for complete degradation from a mRNA to its monomers is calculated by divide the monomer depletion rate over the length of mRNA.
 
 **Table 2: Rate Form for Replication, Transcription, Translation and Degradation**
 
@@ -265,13 +265,13 @@ Transcription, translation and degradation are all depicted as a two-step bindin
 | Replication     | $k_{\text{elongation}}^{\text{replication}}$      | $\dfrac{k_{\text{replication}}^{\text{cat}}}{\dfrac{K_{D1} K_{D2}}{[dNTP_1][dNTP_2]} + \sum_i \dfrac{K_{Di}}{[dNTP_i]} + L_{\text{DNA}} - 1}$     |
 | Transcription   | $k_{\text{elongation}}^{\text{trsc}}$             | $\dfrac{k_{\text{transcription}}^{\text{cat}}}{\dfrac{K_{D1} K_{D2}}{[NTP_1][NTP_2]} + \sum_i \dfrac{K_{Di}}{[NTP_i]} + L_{\text{RNA}} - 1}$     |
 | Translation     | $k_{\text{elongation}}^{\text{trans}}$            | $`\dfrac{k_{\text{translation}}^{\text{cat}}}{\dfrac{K_{D1} K_{D2}}{[tRNA:aa_1][tRNA:aa_2]} + \sum_i \dfrac{K_{Di}}{[\text{tRNA:aa}_i]} + L_{\text{protein}} - 1}`$ |
-| Degradation     | $k_{\text{depoly}}^{\text{degra}}$                | $\dfrac{k_{\text{cat}}^{\text{degra}}}{L_{\text{mRNA}}}$                                                                                        |
+| Degradation     | $k_{\text{depoly}}^{\text{degra}}$                | $\dfrac{k_{\text{degradation}}^{\text{cat}}}{L_{\text{mRNA}}}$                                                                                        |
 
 ## 3. Essential Metabolism and Rate Law
 
 ### Essential Metabolism
 
-As discussed earlier, replication, transcription, and translation all require monomers—deoxyribonucleotides (dNTPs), ribonucleotides (NTPs), and amino acids (AAs)—to carry out polymerization reactions.
+Replication, transcription, and translation all require monomers—deoxyribonucleotides (dNTPs), ribonucleotides (NTPs), and amino acids (AAs)—to carry out polymerization reactions.
 
 All of these monomers are supplied by the metabolic network of JCVI-syn3A. The (d)NTPs are produced through nucleotide metabolism, which includes both the import of extracellular nucleosides and their subsequent conversion into (d)NTPs for DNA and RNA synthesis. Other essential intermediates—such as phosphoribosyl pyrophosphate (PRPP), phosphoenolpyruvate (PEP), and 1,3-bisphosphoglyceric acid (1,3BPG)—are generated via glycolysis in central metabolism.
 
@@ -319,9 +319,9 @@ In all organisms, including JCVI-syn3A, key macromolecular complexes mediate ess
 
 In a recently submitted manuscript[^fu_complex], we investigated the assembly of 21 unique macromolecular complexes in the context of Syn3A’s whole-cell model. Complex compositions were determined by cross-referencing genome/proteome annotations and homology-based functional assignments. Assembly pathways—modeled as sequences of bimolecular association reactions—were either taken from prior studies (e.g., ribosome[^earnest_ribosome_2015], RNAP, ATP synthase) or inferred based on known subunit interactions.
 
-The **bacterial ribosome** consists of a small subunit (30S SSU) and a large subunit (50S LSU), each of which assembles independently as ribonucleoprotein complexes. In Syn3A, rRNA operons (*rrsA*/0069, *rrlA*/0068, *rrfA*/0067 and *rrsB*/0534, *rrlB*/0533, *rrfB*/0532) encode the 16S, 23S, and 5S rRNAs, respectively. The 16S rRNA and 20 SSU ribosomal proteins form the SSU; the 23S and 5S rRNAs with 31 LSU ribosomal proteins form the LSU.
+The **bacterial ribosome** consists of a small subunit (30S SSU) and a large subunit (50S LSU), each of which assembles independently as ribonucleoprotein complexes. In Syn3A, two rRNA operons (*rrsA*/0069, *rrlA*/0068, *rrfA*/0067 and *rrsB*/0534, *rrlB*/0533, *rrfB*/0532) encode the 16S, 23S, and 5S rRNAs, respectively. The 16S rRNA and 20 SSU ribosomal proteins form the SSU; the 23S and 5S rRNAs with 31 LSU ribosomal proteins form the LSU.
 
-In our current model, SSU assembly pathways were adapted from Earnest *et al.*[^earnest_ribosome_2015], reducing the number of intermediates from 145 to 19 by retaining only the most flux-efficient routes (Figure 14(a)). For the LSU, a linear assembly pathway was sampled from the rerouted Nierhaus assembly map[^davis_LSU]. SSUs and LSUs eventually associate at a rapid rate to form intact ribosomes, which then bind mRNA to initiate translation.
+In our current model, SSU assembly pathways were adapted from Earnest *et al.*[^earnest_ribosome_2015], reducing the number of intermediates from 145 to 19 by retaining the pathways with the largest flux (Figure 14(a)). For the LSU, a linear assembly pathway was sampled from the rerouted Nierhaus assembly map[^davis_LSU]. SSUs and LSUs eventually associate at a rapid rate to form intact ribosomes, which then bind mRNA to initiate translation.
 
 **ABC transporters** in Gram-positive organisms follow a domain architecture consisting of (Figure 14 (b)):
 - Two peripheral **nucleotide-binding domains (NBDs)** that hydrolyze ATP,

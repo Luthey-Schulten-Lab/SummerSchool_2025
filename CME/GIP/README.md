@@ -4,11 +4,11 @@ Open [ChatGPT](https://chatgpt.com/) and ask the following question:
 
 **Give an example of large differences in rate constants that lead to significant fluctuations.**
 
-You can ask ChatGPT for additional examples. For reference, please also review this previous response: [Stochastic Genetic Information Processes](https://chatgpt.com/c/91d87e61-bae5-4b89-b078-d1d4cfa44274), which corresponds to this tutorial.
+Please also review this previous response: [Stochastic Genetic Information Processes](https://chatgpt.com/c/91d87e61-bae5-4b89-b078-d1d4cfa44274), which corresponds to this tutorial.
 
 ## Classic Genetic Information Process Reactions
 
-This classic and minimal genetic information process (GIP) consists of 3 species and 4 reactions. It begins with the transcription of a gene into mRNA. The mRNA can be translated into protein or degraded into its monomers. The resulting protein can also undergo degradation. The reaction scheme and associated rate constants are shown below.
+This classic and minimal genetic information process (GIP) model consists of 3 species and 4 reactions. It begins with the transcription of a gene into mRNA. The mRNA can be translated into protein or degraded into its monomers. The resulting protein can also undergo degradation. The reaction scheme and associated rate constants are shown below.
 
 <p align="center">
   <img src="../figs/figs_GIP/GIP_withCMEs.png" width="600" alt="Simple GIP model">  <br>
@@ -17,7 +17,7 @@ This classic and minimal genetic information process (GIP) consists of 3 species
 
 The rate constants are based on the protein DnaA from the minimal cell. The first three rate constants were calculated using the initial concentrations of nucleotides and aminoacyl-tRNAs reported in the *Cell* paper[^thornburg_cell]. 
 
-We assume the gene copy number is fixed at 1 and the initial mRNA count is 1, while the initial protein count is 148 from the proteomics study. The protein degradation rate is estimated based on a half-life of 25 hours[^thornburg_kinetic].
+We assume the gene copy number is fixed at 1 and the initial mRNA count is 1, and the initial protein count is 148 from the proteomics study. The protein degradation rate is estimated based on a half-life of 25 hours[^thornburg_kinetic].
 
 
 **Table 1. Four reactions with their rate constants**
@@ -59,7 +59,7 @@ Do mRNA and protein levels reach a steady state during the 6300-second simulatio
 
 ### 2. Doubling the Initial Abundance of Protein for Cell Division
 
-The initial count of protein P\_0001 (DnaA) from experimental proteomics data is 148. In the histogram below, the average DnaA count at the end of the cell cycle is approximately 270. Compare the mean protein count at the end of the simulation to this experimental value. Does the simulation produce roughly 148 new proteins over the full cell cycle? Why is this important? Consider the implications for protein doubling during cell division.
+The initial count of protein P\_0001 (DnaA) from experimental proteomics data is 148. In the histogram below, the average DnaA count at the end of the cell cycle is approximately 270. Compare the mean protein count at the end of the simulation to this experimental value. Does the simulation produce roughly 148 new proteins over the full cell cycle? Why is this important? Consider the implications of cell division into two daughter cells.
 
 <p align="center">
   <img src="../figs/plots_GIP/GIP_Proteins_CycleEnd_100replicates.png" width="450" alt="Protein end-cycle distribution"> <br>

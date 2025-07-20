@@ -6,7 +6,7 @@ Lattice Microbes (LM) is a GPU-accelerated stochastic simulation platform. The l
 
 LM is designed to simulate stochastic processes in biological cells using the spatially homogeneous Chemical Master Equation (CME) and heterogeneous Reaction Diffusion Master Equation (RDME). With "hooking", one can also incorporate custom events, including metabolic reactions simulated with Ordinary Differential Equation (ODE), and chromosome dynamics with Brownian Dynamics (BD).
 
-jLM is a Python-based Problem Solving Environment (PSE) designed to integrate with Jupyter Notebooks. It was developed in 2018 as a successor to pyLM (from 2013, *now outdated*). jLM sits on top of a SWIG interface that allows the C++ backend to be accessed from the Python terminal. Using jLM allows users to set up, run, and post-process simulations within a single script, while the calculations are still executed in C++. The jLM API can be found at [Lattice Microbes API Reference](https://forxhunter.github.io/LM2.5_doc/API.html).
+jLM is a Python-based Problem Solving Environment (PSE) designed to integrate with Jupyter Notebooks. It was developed in 2018 as a successor to pyLM (from 2013, *now outdated*). jLM sits on top of a SWIG interface that allows the C++ backend to be accessed from the Python terminal. Using jLM allows users to set up, run, and post-process simulations within a single script, while the calculations are still executed in C++. The jLM application programming interface (API) can be found at [Lattice Microbes API Reference](https://forxhunter.github.io/LM2.5_doc/API.html).
 
 <!-- <img align="right" width="300" src="../figs/figs_introduction/LM_architecture.png"> -->
 
@@ -24,7 +24,7 @@ A general workflow of jLM within LM is shown below. jLM supports both CME and RD
 
 ## Stochastic Modeling of Cellular Processes
 
-CME and RDME are algorithms for simulating homogeneous and heterogeneous stochastic chemical reaction kinetics, respectively. Ordinary Differential Equations (ODEs) are suitable for macroscopic and homogeneous systems, such as metabolic networks in minimal cells. Brownian Dynamics (BD) is used for modeling the dynamics of chromosome polymers in a continuum.
+CME and RDME are algorithms for simulating homogeneous and heterogeneous stochastic chemical reaction kinetics, respectively. Ordinary Differential Equation (ODE) is suitable for macroscopic and homogeneous systems, such as metabolic networks in minimal cells. Brownian Dynamics (BD) is used for modeling the dynamics of chromosome polymers in a continuum.
 
 <p align="center">
   <img src="../figs/figs_introduction/algorithms.png" width="300" alt="Workflow of jLM"> <br>
@@ -33,7 +33,7 @@ CME and RDME are algorithms for simulating homogeneous and heterogeneous stochas
 
 ### Chemical Master Equation (CME)
 
-In CME, the system state $\mathbf{x}$ is a vector representing the count of all species. The transition between states occurs via the firing of a single chemical reaction $r$ with stoichiometry $\mathbf{S_r}$, out of all reactions $R$. The probability that reaction $r$ fires in the next time step $dt$ is $a_r(\mathbf{x})dt$, where $a_r(\mathbf{x})$ is the *propensity* of reaction $r$ under the system state $\mathbf{x}$. 
+In CME, the system state $\mathbf{x}$ is a vector representing the count of all species. The transition between states occurs via the firing of a single chemical reaction $r$ with stoichiometry $\mathbf{S_r}$, out of all reactions $R$. The probability that reaction $r$ fires in the next time step $dt$ is $a_r(\mathbf{x})dt$, where $a_r(\mathbf{x})$ is the so-called *propensity* of reaction $r$ under the system state $\mathbf{x}$. 
 
 Propensities are calculated as shown in **Table 1**, where macroscopic ODE rate constants are first converted into stochastic rate constants, and then used to calculate the propensity via the law of mass action. Here, $V$ is the system volume, $N_A$ is Avogadro’s number, and $n_A$, $n_B$ are the absolute counts of particles A and B.
 

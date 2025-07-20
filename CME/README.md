@@ -46,7 +46,7 @@ cp -r /projects/beyi/enguang/CME ./
 
 ### Launch Jupyter Notebook on Delta
 >[!NOTE]
->You will use Jupyter Notebook to run Tutorials bimolecule, GIP, and the analysis part of Tutorial WCM. The advantage of Jupyter Notebook is that you could navigate the folders and run the `.ipynb` files with an interface.
+>You will use Jupyter Notebook to run Tutorials bimolecule, GIP, and the analysis part of Tutorial WCM. The advantage of Jupyter Notebook is that you could navigate the folders and run the `.ipynb` files with an graphical interface.
 
 - **First**: Submit a job to a Delta GPU node.  
     Here `srun` launches interactive job onto Delta, `partition` claims A100 GPU node, and for four hours `time`. A four digit number is randomly generated to specify the `port` for Jupyter Notebook. 
@@ -65,7 +65,7 @@ cp -r /projects/beyi/enguang/CME ./
   [I 19:07:58.314 NotebookApp] [jupyter_nbextensions_configurator] enabled 0.6.3
   [I 19:07:58.316 NotebookApp] Serving notebooks from local directory: /workspace
   [I 19:07:58.316 NotebookApp] Jupyter Notebook 6.4.12 is running at:
-  [I 19:07:58.316 NotebookApp] http://`DeltaNode`.ncsa.illinois.edu:8811/?token=b2e7ca15cd9dc3a6893a1273e359c88869225bc29d66c80c
+  [I 19:07:58.316 NotebookApp] http://$DeltaNode.ncsa.illinois.edu:8811/?token=b2e7ca15cd9dc3a6893a1273e359c88869225bc29d66c80c
   [I 19:07:58.316 NotebookApp]  or http://127.0.0.1:$Port/?token=b2e7ca15cd9dc3a6893a1273e359c88869225bc29d66c80c
   [I 19:07:58.316 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
   [C 19:07:58.329 NotebookApp]
@@ -77,7 +77,7 @@ cp -r /projects/beyi/enguang/CME ./
       or http://127.0.0.1:$Port/?token=b2e7ca15cd9dc3a6893a1273e359c88869225bc29d66c80c
   ```
 >[!NOTE]
-> The last two line contains the Delta GPU node `DeltaNode`, which is the node assgined by Delta to run your job. The `Port` is four digits randomly generated.
+> The second to the last line contains the Delta GPU node `DeltaNode`, which is assgined by Delta to run your job. The `Port` is four digits randomly generated.
 
 - **Second**: SSH into the Delta GPU node.  
   Open **another** terminal and run the following command after replacing.
