@@ -216,7 +216,10 @@ We don't have a great way of keeping track of strand crossings, but they usually
 
 Consider the following toy example. Suppose we have five SMC’s that load uniformly on a segment of DNA. The SMCs will bind to the DNA and start to form loops, and as they do they will bridge progressively distant genomic sites. 
 
-Below, we represent the looping state of the DNA in three ways: the physical structure, an arc diagram, and a contact map. The physical structure of the DNA shows how the SMC contacts naturally leads to loop formation, and the arc diagram is a 1D line representing genomic locations where arc between i and j shows a contact between genomic locations i and j. The contact map is a matrix where each axis represents genomic locations and a point corresponds to a contact between two locations. Although the matrix is symmetric, usually the elements both above and below the main diagonal are shown, as we do here. An SMC that bridges genomic locations i and j will be represented on the map by the points (i,j) and (j,i). For the uniform loading case, each of the 5 SMC’s spawn on the main diagonal, and then move diagonally away as i decreases and j increases at the same rate. We represent the growing SMCs with a green dot.
+Below, we represent the looping state of the DNA in three ways: the physical structure, an arc diagram, and a contact map. 
+- The physical structure of the DNA shows how the SMC contacts naturally leads to loop formation
+- The arc diagram is a 1D line representing genomic locations where arc between i and j shows a contact between genomic locations i and j
+- The contact map is a matrix where each axis represents genomic locations and a point corresponds to a contact between two locations. Although the matrix is symmetric, usually the elements both above and below the main diagonal are shown, as we do here. An SMC that bridges genomic locations i and j will be represented on the map by the points (i,j) and (j,i). For the uniform loading case, each of the 5 SMC’s spawn on the main diagonal, and then move diagonally away as i decreases and j increases at the same rate. We represent the growing SMCs with a green dot.
 
 <img align="center" width=600 src="./figures/4. Modeling chromosome dynamics/uniform_loading_1.png">
 
