@@ -295,9 +295,9 @@ The command `simulator_form_loops:F` reads in the loop state from `btree_chromo`
 ## 8. Visualization with VMD
 
 Go to [VMD Guide by Tianyu](../RDME/vmd_guide.md) and complete step 1. 
-> WARNING
+> [!WARNING]
 Use 16 CPUS and 64GB of RAM.
-> >
+> 
 
 Now that you are in the graphical user interface, open a terminal and go to your `data` folder:
 
