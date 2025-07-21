@@ -3,15 +3,9 @@
 ## Description:
 
 
-<div align="right">
-  <img width="300" 
-  src="./figures/4dwcm_des.png"><br>
-  <em>Source: Thornburg et al.,
-  2025</em>
-  </div>
-
-
-In the ***4D Whole-Cell Model (4DWCM) of JCVI-syn3A*** tutorial, you will explore the trajectories of the most comprehensive computational model of a living minimal cell. The 4DWCM integrates four numerical algorithms(RDME-CME-ODE-BD) to simulate every molecular event during the entire 105-minute division cycle of the genetically minimal bacterium JCVI-syn3A. You will analyze and visualize spatially heterogeneous trajectories from pre-computed simulations, examining how reaction-diffusion master equations (RDME) on GPUs capture the spatial organization of cellular processes including protein synthesis, mRNA degradation, and complex assembly.
+| | |
+|---|---|
+| In the ***4D Whole-Cell Model (4DWCM) of JCVI-syn3A*** tutorial, you will explore the trajectories of the most comprehensive computational model of a living minimal cell. The 4DWCM integrates four numerical algorithms(RDME-CME-ODE-BD) to simulate every molecular event during the entire 105-minute division cycle of the genetically minimal bacterium JCVI-syn3A. You will analyze and visualize spatially heterogeneous trajectories from pre-computed simulations, examining how reaction-diffusion master equations (RDME) on GPUs capture the spatial organization of cellular processes including protein synthesis, mRNA degradation, and complex assembly. | <img width="300" src="./figures/4dwcm_des.png"><br><em>Source: Thornburg et al., 2025</em> |
 
 *This tutorial was prepared for the second edition of the STC QCB Summer School, held July 21-25, 2025.*
 
