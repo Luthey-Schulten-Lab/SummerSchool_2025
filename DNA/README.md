@@ -294,7 +294,10 @@ The command `simulator_form_loops:F` reads in the loop state from `btree_chromo`
 
 ## 8. Visualization with VMD
 
-Go to [VMD Guide by Tianyu](../RDME/vmd_guide.md) and complete step 1.
+Go to [VMD Guide by Tianyu](../RDME/vmd_guide.md) and complete step 1. 
+> WARNING
+Use 16 CPUS and 64GB of RAM.
+> >
 
 Now that you are in the graphical user interface, open a terminal and go to your `data` folder:
 
@@ -304,7 +307,17 @@ In order to get the right representations in VMD, we need to preprocess the .lam
 
 `python3 modify_lammpstrj.py`
 
-Now, open vmd by doing `vmd` in a terminal. In the VMD Main window, click on TkConsole. Then in the TkConsole window do `cd /projects/beyi/your_username/DNA_SummerSchool_2025/data`, and then `source load_btree_chromo.tcl`. This `.tcl` script loads in the processed trajectory and sets all of the representations for youm and it should take 1-2 minutes to run. Feel free to tinker with the representations. 
+Now, open vmd by doing 
+
+```
+module load vmd
+```
+and then 
+```
+vmd
+```
+
+In the VMD Main window, click on Extensions>TkConsole. Then in the TkConsole window do `cd /projects/beyi/your_username/DNA_SummerSchool_2025/data`, and then `source load_btree_chromo.tcl`. This `.tcl` script loads in the processed trajectory and sets all of the representations for youm and it should take 1-2 minutes to run. Feel free to tinker with the representations. 
 
 You should see a representation of the trajectory for the Minimal Cell growth and division!
 
