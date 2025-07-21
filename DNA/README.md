@@ -245,7 +245,7 @@ In our simulations, SMC's start loading onto daughter chromosomes immediately af
 
 <img align="center" width=800 src="./figures/4. Modeling chromosome dynamics/cluster_new.png">
 
-In the movie below, I took a chromosome state which is about 2/3 of the way replicated, and ran dynamics for 3 seconds. The system is equilibrated, so it is free to mix if it wanted to, but despite this we only see repositioning within the cell of each of the chromosome domains (L lime, R magenta, and mother violet) and we do not see mixing of those domains. At the center of each of of these domains is a cluster of SMC's.
+In the movie below, I took a chromosome state which is about 2/3 of the way replicated, and ran dynamics for 3 seconds. The system is equilibrated, so it is free to mix if it wanted to, but despite this we only see repositioning within the cell of each of the chromosome domains (L lime, R magenta, and mother violet) and we do not see mixing of those domains. At the center of each of of these domains lies a cluster of SMC's.
 
 https://github.com/user-attachments/assets/8387c708-43c8-486a-8082-b665156d4bbf
 
