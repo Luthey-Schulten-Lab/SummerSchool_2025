@@ -304,7 +304,7 @@ In order to get the right representations in VMD, we need to preprocess the .lam
 
 `python3 modify_lammpstrj.py`
 
-Now, open vmd by doingg `vmd`. Go to TkConsole and `cd /projects/beyi/your_username/DNA_SummerSchool_2025/data`, and then do `source load_btree_chromo.tcl`.
+Now, open vmd by doing `vmd` in a terminal. In the VMD Main window, click on TkConsole. Then in the TkConsole window do `cd /projects/beyi/your_username/DNA_SummerSchool_2025/data`, and then `source load_btree_chromo.tcl`. This `.tcl` script loads in the processed trajectory and sets all of the representations for youm and it should take 1-2 minutes to run. Feel free to tinker with the representations. 
 
 You should see a representation of the trajectory for the Minimal Cell growth and division!
 
@@ -318,6 +318,8 @@ You should see a representation of the trajectory for the Minimal Cell growth an
 | Boundary | silver | 32.5 |
 | SMC1 | black | 19.5 |
 | SMC2 | white | 19.5 |
+
+For the presentation on the last day, it would be nice to have a movie of the trajectory on one of your slides. For those who are interested in making a movie, I will work with whoever is interested in our extra time to make it. I have some commands to render each of the frames, and then to compile it into a `.mp4`.
 
 ## References
 [^gilbert2023]: Gilbert, Benjamin R., Zane R. Thornburg, Troy A. Brier, Jan A. Stevens, Fabian Grünewald, John E. Stone, Siewert J. Marrink, and Zaida Luthey-Schulten. “Dynamics of Chromosome Organization in a Minimal Bacterial Cell.” Frontiers in Cell and Developmental Biology 11 (August 9, 2023). https://doi.org/10.3389/fcell.2023.1214962.
