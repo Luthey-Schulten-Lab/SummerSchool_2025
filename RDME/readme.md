@@ -2,7 +2,7 @@
 
 ## Description:
 
-<img align="right" width="300" src="./figures/4dwcm_des.png">
+
 <div align="right">
   <img width="300" 
   src="./figures/4dwcm_des.png"><br>
