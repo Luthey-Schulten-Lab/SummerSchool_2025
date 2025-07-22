@@ -380,6 +380,43 @@ This workaround is only needed on Windows VMD (i.e. not on Linux and Mac VMD). T
 
 For the presentation on the last day, it would be nice to have a movie of the trajectory on one of your slides. For those who are interested in making a movie, I will work with whoever is interested in our extra time to make it. I have some commands to render each of the frames, and then to compile it into a `.mp4`.
 
+You can use these commands to generate a higher quality movie than allowed by VMD Movie Maker:
+
+Set directory to save frames: set this to something reasonable
+```
+set outdir "/tmp"
+```
+
+```bash
+file mkdir $outdir
+```
+
+# Number of frames in the trajectory
+```
+set nframes [molinfo top get numframes]
+```
+
+
+```bash
+# Loop over each frame
+for {set i 0} {$i < $nframes} {incr i} {
+    # Set the frame
+    animate goto $i
+
+    # Format the output filename with zero-padded index
+    set fname [format "%s/frame%04d.tga" $outdir $i]
+
+    # Render with TachyonInternal at high resolution and antialiasing
+    render TachyonInternal $fname -res 1920 1080 -aa 12
+
+    puts "Rendered frame $i to $fname"
+}
+```
+
+```bash
+ffmpeg -framerate 30 -i frame%04d.tga -c:v libx264 -pix_fmt yuv420p -crf 18 high_quality_movie.mp4
+```
+
 ## References
 [^gilbert2023]: Gilbert, Benjamin R., Zane R. Thornburg, Troy A. Brier, Jan A. Stevens, Fabian Grünewald, John E. Stone, Siewert J. Marrink, and Zaida Luthey-Schulten. “Dynamics of Chromosome Organization in a Minimal Bacterial Cell.” Frontiers in Cell and Developmental Biology 11 (August 9, 2023). https://doi.org/10.3389/fcell.2023.1214962.
 [^gogou2021]: Gogou, Christos, Aleksandre Japaridze, and Cees Dekker. “Mechanisms for Chromosome Segregation in Bacteria.” Frontiers in Microbiology 12 (June 2021). https://doi.org/10.3389/fmicb.2021.685687.
