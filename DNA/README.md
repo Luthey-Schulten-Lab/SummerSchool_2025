@@ -16,7 +16,7 @@ We will walk you through how to set up and run a LAMMPS simulation using GPUs on
 5. Modeling chromosome dynamics
 6. A closer look at SMC dynamics
 7. Understanding btree_chromo commands
-8. [Visualization with VMD](#8.-visualization-with-vmd)
+8. Visualization with VMD
 
 Most of the content of this tutorial, including the implementation of energy terms for the DNA polymer, DNA disentanglement, and general procedure for simulating Brownian dynamics and energy minimization with LAMMPS on a GPU, is also explained in our recent manuscript[^thornburg2025] which you can check out on bioRxiv. The content on SMC blocking/bypassing and daughter chromosome partitioning without the need for an additional fictitious force is a work in progress. 
 
