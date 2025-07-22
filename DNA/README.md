@@ -391,7 +391,7 @@ set outdir "/tmp"
 file mkdir $outdir
 ```
 
-# Number of frames in the trajectory
+Set the number of frames in the trajectory
 ```
 set nframes [molinfo top get numframes]
 ```
