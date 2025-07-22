@@ -16,7 +16,7 @@ We will walk you through how to set up and run a LAMMPS simulation using GPUs on
 5. Modeling chromosome dynamics
 6. A closer look at SMC dynamics
 7. Understanding btree_chromo commands
-8. Visualization with VMD
+8. [Visualization with VMD](#8.-Visualization-with-VMD)
 
 Most of the content of this tutorial, including the implementation of energy terms for the DNA polymer, DNA disentanglement, and general procedure for simulating Brownian dynamics and energy minimization with LAMMPS on a GPU, is also explained in our recent manuscript[^thornburg2025] which you can check out on bioRxiv. The content on SMC blocking/bypassing and daughter chromosome partitioning without the need for an additional fictitious force is a work in progress. 
 
@@ -294,31 +294,61 @@ The command `simulator_form_loops:F` reads in the loop state from `btree_chromo`
 
 ## 8. Visualization with VMD
 
-Go to [VMD Guide by Tianyu](../RDME/vmd_guide.md) and complete step 1. 
-> [!WARNING]
-Use the GPUA100x4 node with 16 CPUS, 64GB of RAM, and 2 GPUs.
-> 
+Here we follow the [VMD Guide by Tianyu](../RDME/vmd_guide.md) copied below for convenience with some small modifications.
 
-Now that you are in the graphical user interface, open a terminal and go to your `data` folder:
+### 1. Initialize the OOD Interactive Session
+1. Navigate to the [Open OnDemand dashboard](https://openondemand.delta.ncsa.illinois.edu/pun/sys/dashboard).
 
-`cd /projects/beyi/${USER}/DNA_SummerSchool_2025/data/`
+2. Log in through CILogon with your NCSA username, password, and Duo MFA.
 
-In order to get the right representations in VMD, we need to preprocess the .lammpstrj with a python script. All this does is assign a unique index to the DNA beads that belong to the left daughter chromosome. The script should take 3-4 minutes to run.
+3. Open the Interactive Apps menu and click Desktop.
 
-`python3 modify_lammpstrj.py`
+4. Configure the job settings and click Launch:
+   - Container image: keep default
+   - Account: `beyi-delta-gpu`
+   - Partition: `GPUA40x4-interactive`
+   - Duration: `00-01:00:00`
+   - Reservation: leave empty if none
+   - CPUs: `16`
+   - RAM: `64GB`
+   - GPUs: `1`
 
-Now, open vmd by doing 
+5. Wait for the job status to change from "starting" to "running" in My Interactive Sessions. 
 
+   <img src="https://docs.ncsa.illinois.edu/systems/delta/en/latest/_images/desktop-starting.png" alt="starting" width="300">
+
+   Click "Connect to Desktop" to access the Linux graphical interface.
+
+   <img src="https://docs.ncsa.illinois.edu/systems/delta/en/latest/_images/desktop-connect.png" alt="running" width="300">
+
+### 2. Preprocess Trajectory and Load VMD Module
+ Open a terminal and run:
+
+```bash
+cd /projects/beyi/$USER/DNA_SummerSchool_2025/data/
 ```
+
+Preprocess the trajectory by doing
+```bash
+python3 modify_lammpstrj.py
+```
+
+This allows the DNA for the left and right daughters and mother to be colored differently. It should take ~3 minutes to run.
+
+Next, load and open vmd by doing:
+
+
+```bash
 module load vmd
-```
-and then 
-```
 vmd
 ```
 
-In the VMD Main window, click on Extensions>TkConsole. Then in the TkConsole window do `cd /projects/beyi/your_username/DNA_SummerSchool_2025/data`, and then `source load_btree_chromo.tcl`. This `.tcl` script loads in the processed trajectory and sets all of the representations for youm and it should take 1-2 minutes to run. Feel free to tinker with the representations. 
-
+### 3. Load the LAMMPS trajectory file
+   In the VMD "Main" window, click on "Extensions" and then "TkConsole". In the "TkConsole" window, do 
+```bash
+source load_btree_chromo.tcl
+```
+This script will take ~2 minutes to run.
 You should see a representation of the trajectory for the Minimal Cell growth and division!
 
 | Monomer type | Color | Bead Size |
