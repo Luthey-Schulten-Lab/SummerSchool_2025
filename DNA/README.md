@@ -356,6 +356,17 @@ source load_btree_chromo.tcl
 This script will take ~2 minutes to run.
 You should see a representation of the trajectory for the Minimal Cell growth and division!
 
+**Important considerations for Windows Users:**
+For those using a Windows machine, you will need to make sure your environmental variables for LAMMPS are set correctly by setting them via command line outside of VMD. Before starting VMD, in Windows Command Shell, please do the following:
+```bash
+setx LAMMPSDUMMYPOS "$xd,$yd,$zd"
+setx LAMMPSMAXATOMS "200000"
+setx LAMMPSREMAPFIELDS "vx=c_id_track,vy=c_type_track"
+```
+Each entry should produce “SUCCESS: Specified value was saved.”
+
+This workaround is only needed on Windows VMD (i.e. not on Linux and Mac VMD). This issue will be addressed in upcoming VMD releases. As of writing this, the latest VMD is Version 1.9.4.
+
 | Monomer type | Color | Bead Size |
 | --- | --- | --- |
 | DNA | gray(M), lime(L), magenta(R) | 13.0 |
