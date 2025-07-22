@@ -306,7 +306,7 @@ Here we follow the [VMD Guide by Tianyu](../RDME/vmd_guide.md) copied below for 
 4. Configure the job settings and click Launch:
    - Container image: keep default
    - Account: `beyi-delta-gpu`
-   - Partition: `GPUA40x4-interactive`
+   - Partition: `cpu-interactive`
    - Duration: `00-00:30:00`
    - Reservation: leave empty if none
    - CPUs: `16`
@@ -334,6 +334,11 @@ python3 modify_lammpstrj.py
 ```
 
 This allows the DNA for the left and right daughters and mother to be colored differently. It should take ~3 minutes to run.
+
+Update the load_btree_chromo.tcl file by copying it from my directory (I made some changes to it from yesterday because it turns out Delta doesn't allow GPU accelerated rendering :-()
+```bash
+cp /projects/beyi/amaytin/DNA_SummerSchool_2025/data/load_btree_chromo.tcl .
+```
 
 Next, load and open vmd by doing:
 
