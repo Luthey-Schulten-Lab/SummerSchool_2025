@@ -307,7 +307,7 @@ Here we follow the [VMD Guide by Tianyu](../RDME/vmd_guide.md) copied below for 
    - Container image: keep default
    - Account: `beyi-delta-gpu`
    - Partition: `GPUA40x4-interactive`
-   - Duration: `00-01:00:00`
+   - Duration: `00-00:30:00`
    - Reservation: leave empty if none
    - CPUs: `16`
    - RAM: `64GB`
