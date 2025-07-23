@@ -95,7 +95,7 @@ cp -r /projects/beyi/enguang/CME ./
 - **Third**: Open Jupyter Notebook in a webpage.   
   Copy the last URL in the first terminal and paste to one browser (Firefox, Chrome, ...) to open Jupyter Notebook.
 
-## 2. Introduction to Lattice Microbe
+## 2. Introduction to Lattice Microbe and Stochastic Simulation
 
 **Go to [Introduction](introduction/)**
 
