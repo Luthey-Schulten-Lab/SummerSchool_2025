@@ -5,7 +5,7 @@ Now, we are at the last tutorial, the CME-ODE WCM of Syn3A.
 ## Outline:
 1. [Run CME/ODE Whole-Cell Model in Parallel](#1-run-cmeode-whole-cell-model-in-parallel)
 2. [Minimal Genome and Genetic Information Processes](#2-minimal-genome-and-genetic-information-processes)
-3. [Essential Metabolism](#3-essential-metabolism)
+3. [Essential Metabolism and Rate Law](#3-essential-metabolism)
 4. [Macromolecular Complex Assembly](#4-macromolecular-complex-assembly)
 5. [Hybrid CME-ODE Algorithm](#5-hybrid-cme-ode-algorithm)
 6. [Analysis and Discussion](#6-analysis-and-discussion)
