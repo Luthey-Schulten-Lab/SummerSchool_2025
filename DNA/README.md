@@ -3,14 +3,14 @@
 ## Description:
 <img align="right" width="300" src="./figures/1. Introduction to simulation with btree_chromo and LAMMPS/spotlight.png">
 
-We will walk you through how to set up and run a LAMMPS simulation using GPUs on the Delta HPC cluster. We will simulate the DNA dynamics of the Minimal Cell JCVI-syn3A, including DNA replication, disentanglement of daughter chromosomes, and partitioning of daughter chromosomes into their respective daughter volumes. The coarse-grained model of the DNA, ribosomes and cell membrane will be discussed, as well as the use of LAMMPS to perform energy minimizations and Brownian dynamics. We will also go into greater detail about how we model biological mechanisms such as SMC looping and topoisomerase. You will get a chance to visualize and analyze a simulation trajectory in VMD.
+We will walk you through how to set up and run a LAMMPS simulation using GPUs on the Delta HPC cluster. We will simulate the DNA dynamics of the Minimal Cell JCVI-syn3A, including DNA replication, disentanglement of daughter chromosomes, and partitioning of daughter chromosomes into their respective daughter volumes. The coarse-grained model of the DNA, ribosomes and cell membrane will be discussed, as well as the use of LAMMPS to perform energy minimizations and Brownian dynamics. We will also go into greater detail about how we model biological mechanisms such as topoisomerase-induced strand crossing and SMC looping. After the runs complete, you will get a chance to visualize your trajectory in VMD.
 
 *This tutorial was prepared for the second edition of the STC QCB Summer School, held July 21-25, 2025.*
 
 ## Outline of tutorial:
 
 1. Introduction to DNA simulation with LAMMPS
-2. **Setting up and submitting your job to Delta (do this on the first day)**
+2. **Setting up and submitting your job to Delta (do this on Monday)**
 3. Generating an initial structure
 4. Modeling DNA replication
 5. Modeling chromosome dynamics
@@ -133,7 +133,7 @@ In our simulations, we update the replication state every 2 seconds of biologica
 
 The total potential energy for the chromosome/ribosome system is
 
-$$U= \sum_{i=1}^{N_{\mathrm{DNA}}}\left[U_i^b+U_i^a+U_i^s\right] +\sum_{i=1}^{N_{\mathrm{DNA}}-1} \sum_{j=i+1}^{N_{\mathrm{DNA}}} U_{i j}^{\mathrm{DNA}-\mathrm{DNA}}+\sum_{i=1}^{N_{\mathrm{DNA}}} \sum_j^{N_{\text {ribo }}} U_{i j}^{\mathrm{DNA}-\text { ribo }} +\sum_{i=1}^{N_{\text {ribo }}-1} \sum_{j=i+1}^{N_{\text {ribo }}} U_{i j}^{\text {ribo-ribo }} +\sum_{i=1}^{N_{\text {bdry }}} \sum_j^{N_{\mathrm{DNA}}} U_{i j}^{\text {bdry-DNA }}+\sum_{i=1}^{N_{\text {bdry }}} \sum_j^{N_{\text {ribo }}} U_{i j}^{\text {bdry-ribo }}.$$
+$$U= \sum_{i=1}^{N_{\mathrm{DNA}}}\left[U_i^b+U_i^s\right] +\sum_{i=1}^{N_{\mathrm{DNA}}-1} \sum_{j=i+1}^{N_{\mathrm{DNA}}} U_{i j}^{\mathrm{DNA}-\mathrm{DNA}}+\sum_{i=1}^{N_{\mathrm{DNA}}} \sum_j^{N_{\text {ribo }}} U_{i j}^{\mathrm{DNA}-\text { ribo }} +\sum_{i=1}^{N_{\text {ribo }}-1} \sum_{j=i+1}^{N_{\text {ribo }}} U_{i j}^{\text {ribo-ribo }} +\sum_{i=1}^{N_{\text {bdry }}} \sum_j^{N_{\mathrm{DNA}}} U_{i j}^{\text {bdry-DNA }}+\sum_{i=1}^{N_{\text {bdry }}} \sum_j^{N_{\text {ribo }}} U_{i j}^{\text {bdry-ribo }}.$$
 
 The energies for the bending, stretching and excluded volume interactions are shown below.
 
@@ -216,7 +216,10 @@ We don't have a great way of keeping track of strand crossings, but they usually
 
 Consider the following toy example. Suppose we have five SMC’s that load uniformly on a segment of DNA. The SMCs will bind to the DNA and start to form loops, and as they do they will bridge progressively distant genomic sites. 
 
-Below, we represent the looping state of the DNA in three ways: the physical structure, an arc diagram, and a contact map. The physical structure of the DNA shows how the SMC contacts naturally leads to loop formation, and the arc diagram is a 1D line representing genomic locations where arc between i and j shows a contact between genomic locations i and j. The contact map is a matrix where each axis represents genomic locations and a point corresponds to a contact between two locations. Although the matrix is symmetric, usually the elements both above and below the main diagonal are shown, as we do here. An SMC that bridges genomic locations i and j will be represented on the map by the points (i,j) and (j,i). For the uniform loading case, each of the 5 SMC’s spawn on the main diagonal, and then move diagonally away as i decreases and j increases at the same rate. We represent the growing SMCs with a green dot.
+Below, we represent the looping state of the DNA in three ways: the physical structure, an arc diagram, and a contact map. 
+- The physical structure of the DNA shows how the SMC contacts naturally leads to loop formation
+- The arc diagram is a 1D line representing genomic locations where arc between i and j shows a contact between genomic locations i and j
+- The contact map is a matrix where each axis represents genomic locations and a point corresponds to a contact between two locations. Although the matrix is symmetric, usually the elements both above and below the main diagonal are shown, as we do here. An SMC that bridges genomic locations i and j will be represented on the map by the points (i,j) and (j,i). For the uniform loading case, each of the 5 SMC’s spawn on the main diagonal, and then move diagonally away as i decreases and j increases at the same rate. We represent the growing SMCs with a green dot.
 
 <img align="center" width=600 src="./figures/4. Modeling chromosome dynamics/uniform_loading_1.png">
 
@@ -242,7 +245,7 @@ In our simulations, SMC's start loading onto daughter chromosomes immediately af
 
 <img align="center" width=800 src="./figures/4. Modeling chromosome dynamics/cluster_new.png">
 
-In the movie below, I took a chromosome state which is about 2/3 of the way replicated, and ran dynamics for 3 seconds. Despite the fact that all of the loops are equilibrated, we still only see reorganization of each of the chromosome domains, left (lime), right (magenta), and mother (violet), within the cell without minimal mixing of those domains. At the center of each of of these domains is a cluster of SMC's.
+In the movie below, I took a chromosome state which is about 2/3 of the way replicated, and ran dynamics for 3 seconds. The system is equilibrated, so it is free to mix if it wanted to, but despite this we only see repositioning within the cell of each of the chromosome domains (L lime, R magenta, and mother violet) and we do not see mixing of those domains. At the center of each of of these domains lies a cluster of SMC's.
 
 https://github.com/user-attachments/assets/8387c708-43c8-486a-8082-b665156d4bbf
 
@@ -291,19 +294,78 @@ The command `simulator_form_loops:F` reads in the loop state from `btree_chromo`
 
 ## 8. Visualization with VMD
 
-Go to [VMD Guide by Tianyu](../RDME/vmd_guide.md) and complete step 1.
+Here we follow the [VMD Guide by Tianyu](../RDME/vmd_guide.md) copied below for convenience with some small modifications.
 
-Now that you are in the graphical user interface, open a terminal and go to your `data` folder:
+### 1. Initialize the OOD Interactive Session
+1. Navigate to the [Open OnDemand dashboard](https://openondemand.delta.ncsa.illinois.edu/pun/sys/dashboard).
 
-`cd /projects/beyi/${USER}/DNA_SummerSchool_2025/data/`
+2. Log in through CILogon with your NCSA username, password, and Duo MFA.
 
-In order to get the right representations in VMD, we need to preprocess the .lammpstrj with a python script. All this does is assign a unique index to the DNA beads that belong to the left daughter chromosome. The script should take 3-4 minutes to run.
+3. Open the Interactive Apps menu and click Desktop.
 
-`python3 modify_lammpstrj.py`
+4. Configure the job settings and click Launch:
+   - Container image: keep default
+   - Account: `beyi-delta-gpu`
+   - Partition: `cpu-interactive`
+   - Duration: `00-00:30:00`
+   - Reservation: leave empty if none
+   - CPUs: `16`
+   - RAM: `64GB`
+   - GPUs: `1`
 
-Now, open vmd by doingg `vmd`. Go to TkConsole and `cd /projects/beyi/your_username/DNA_SummerSchool_2025/data`, and then do `source load_btree_chromo.tcl`.
+5. Wait for the job status to change from "starting" to "running" in My Interactive Sessions. 
 
+   <img src="https://docs.ncsa.illinois.edu/systems/delta/en/latest/_images/desktop-starting.png" alt="starting" width="300">
+
+   Click "Connect to Desktop" to access the Linux graphical interface.
+
+   <img src="https://docs.ncsa.illinois.edu/systems/delta/en/latest/_images/desktop-connect.png" alt="running" width="300">
+
+### 2. Preprocess Trajectory and Load VMD Module
+ Open a terminal and run:
+
+```bash
+cd /projects/beyi/$USER/DNA_SummerSchool_2025/data/
+```
+
+Preprocess the trajectory by doing
+```bash
+python3 modify_lammpstrj.py
+```
+
+This allows the DNA for the left and right daughters and mother to be colored differently. It should take ~3 minutes to run.
+
+Update the load_btree_chromo.tcl file by copying it from my directory (I made some changes to it from yesterday because it turns out Delta doesn't allow GPU accelerated rendering :-()
+```bash
+cp /projects/beyi/amaytin/DNA_SummerSchool_2025/data/load_btree_chromo.tcl .
+```
+
+Next, load and open vmd by doing:
+
+
+```bash
+module load vmd
+vmd
+```
+
+### 3. Load the LAMMPS trajectory file
+   In the VMD "Main" window, click on "Extensions" and then "TkConsole". In the "TkConsole" window, do 
+```bash
+source load_btree_chromo.tcl
+```
+This script will take ~2 minutes to run.
 You should see a representation of the trajectory for the Minimal Cell growth and division!
+
+**Important considerations for Windows Users:**
+For those using a Windows machine, you will need to make sure your environmental variables for LAMMPS are set correctly by setting them via command line outside of VMD. Before starting VMD, in Windows Command Shell, please do the following:
+```bash
+setx LAMMPSDUMMYPOS "$xd,$yd,$zd"
+setx LAMMPSMAXATOMS "200000"
+setx LAMMPSREMAPFIELDS "vx=c_id_track,vy=c_type_track"
+```
+Each entry should produce “SUCCESS: Specified value was saved.”
+
+This workaround is only needed on Windows VMD (i.e. not on Linux and Mac VMD). This issue will be addressed in upcoming VMD releases. As of writing this, the latest VMD is Version 1.9.4.
 
 | Monomer type | Color | Bead Size |
 | --- | --- | --- |
@@ -315,6 +377,45 @@ You should see a representation of the trajectory for the Minimal Cell growth an
 | Boundary | silver | 32.5 |
 | SMC1 | black | 19.5 |
 | SMC2 | white | 19.5 |
+
+For the presentation on the last day, it would be nice to have a movie of the trajectory on one of your slides. For those who are interested in making a movie, I will work with whoever is interested in our extra time to make it. I have some commands to render each of the frames, and then to compile it into a `.mp4`.
+
+You can use these commands to generate a higher quality movie than allowed by VMD Movie Maker:
+
+Set directory to save frames: set this to something reasonable
+```
+set outdir "/tmp"
+```
+
+```bash
+file mkdir $outdir
+```
+
+Set the number of frames in the trajectory
+```
+set nframes [molinfo top get numframes]
+```
+
+
+```bash
+# Loop over each frame
+for {set i 0} {$i < $nframes} {incr i} {
+    # Set the frame
+    animate goto $i
+
+    # Format the output filename with zero-padded index
+    set fname [format "%s/frame%04d.tga" $outdir $i]
+
+    # Render with TachyonInternal at high resolution and antialiasing
+    render TachyonInternal $fname -res 1920 1080 -aa 12
+
+    puts "Rendered frame $i to $fname"
+}
+```
+
+```bash
+ffmpeg -framerate 30 -i frame%04d.tga -c:v libx264 -pix_fmt yuv420p -crf 18 high_quality_movie.mp4
+```
 
 ## References
 [^gilbert2023]: Gilbert, Benjamin R., Zane R. Thornburg, Troy A. Brier, Jan A. Stevens, Fabian Grünewald, John E. Stone, Siewert J. Marrink, and Zaida Luthey-Schulten. “Dynamics of Chromosome Organization in a Minimal Bacterial Cell.” Frontiers in Cell and Developmental Biology 11 (August 9, 2023). https://doi.org/10.3389/fcell.2023.1214962.
