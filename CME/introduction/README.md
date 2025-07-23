@@ -61,6 +61,11 @@ Thus, the Chemical Master Equation states that the derivative of the probability
 
 As with ODEs, CMEs for complex systems are generally not analytically solvable. Therefore, the Gillespie Algorithm—also known as the Stochastic Simulation Algorithm (SSA)—is commonly used to sample many trajectories that capture the system’s stochastic evolution. Unlike numerical algorithms for ODEs, such as the well-known *LSODA*, the Gillespie Algorithm determines both the time until the next reaction and which reaction occurs by sampling **from random numbers**. You are encouraged to refer to [Wiki Gillespie](https://en.wikipedia.org/wiki/Gillespie\_algorithm}) and [Stochastic Simulation of Chemical Kinetics](https://labs.engineering.asu.edu/acs/wp-content/uploads/sites/33/2016/08/GillespieOverview2007.pdf) by Daniel T. Gillespie to know more details.
 
+<p align="center">
+  <img src="../figs/figs_introduction/Gillespie.png" width="450" alt="Gillespie Algorithm"> <br>
+  <b>Figure 4. Gillespie Algorithm</b>
+</p>
+
 ### Reaction Diffusion Master Equation (RDME)
 
 The RDME is used to simulate spatially heterogeneous systems by dividing the volume into subvolumes, usually a 3D cubic lattice. Within each lattice site, reactions are assumed to be well-stirred and are governed by individual CMEs (first summation below). The second summation accounts for diffusion by describing the flow of probability between neighboring lattice sites.
