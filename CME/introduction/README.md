@@ -11,14 +11,14 @@ jLM is a Python-based Problem Solving Environment (PSE) designed to integrate wi
 <!-- <img align="right" width="300" src="../figs/figs_introduction/LM_architecture.png"> -->
 
 <p align="center">
-  <img src="../figs/figs_introduction/jLM_Schematic.png" width="300" alt="Schematic diagram of the LM architecture"> <br>
+  <img src="../figs/figs_introduction/jLM_Schematic.png" width="450" alt="Schematic diagram of the LM architecture"> <br>
   <b>Figure 1. Schematic diagram of the LM architecture</b>
 </p>
 
 A general workflow of jLM within LM is shown below. jLM supports both CME and RDME simulations. Designed to work with Jupyter Notebooks, jLM offers a suite of functions to visualize RDME simulation elements such as spatial regions, species, and reactions during setup. In `hookSimulation()`, various algorithms can be incorporated into CME or RDME simulations to implement hybrid algorithms.
 
 <p align="center">
-  <img src="../figs/figs_introduction/jLM_Flowchart.png" width="450" alt="Workflow of jLM"> <br>
+  <img src="../figs/figs_introduction/jLM_Flowchart.png" width="600" alt="Workflow of jLM"> <br>
   <b>Figure 2. Workflow of jLM</b>
 </p>
 
@@ -29,7 +29,7 @@ A general workflow of jLM within LM is shown below. jLM supports both CME and RD
 CME and RDME are algorithms for simulating homogeneous and heterogeneous stochastic chemical reaction kinetics, respectively. Ordinary Differential Equation (ODE) is suitable for macroscopic and homogeneous systems, such as metabolic networks in minimal cells. Brownian Dynamics (BD) is used for modeling the dynamics of chromosome polymers in a continuum.
 
 <p align="center">
-  <img src="../figs/figs_introduction/algorithms.png" width="300" alt="Workflow of jLM"> <br>
+  <img src="../figs/figs_introduction/algorithms.png" width="450" alt="Workflow of jLM"> <br>
   <b>Figure 3. Stochastic/Deterministic and Homogenous/Heterogeneous Simulation Algorithms</b>
 </p>
 
@@ -62,7 +62,7 @@ Thus, the Chemical Master Equation states that the derivative of the probability
 As with ODEs, CMEs for complex systems are generally not analytically solvable. Therefore, the Gillespie Algorithm—also known as the Stochastic Simulation Algorithm (SSA)—is commonly used to sample many trajectories that capture the system’s stochastic evolution. Unlike numerical algorithms for ODEs, such as the well-known *LSODA*, the Gillespie Algorithm determines both the time until the next reaction and which reaction occurs by sampling **from random numbers**. You are encouraged to refer to [Wiki Gillespie](https://en.wikipedia.org/wiki/Gillespie\_algorithm}) and [Stochastic Simulation of Chemical Kinetics](https://labs.engineering.asu.edu/acs/wp-content/uploads/sites/33/2016/08/GillespieOverview2007.pdf) by Daniel T. Gillespie to know more details.
 
 <p align="center">
-  <img src="../figs/figs_introduction/Gillespie.png" width="450" alt="Gillespie Algorithm"> <br>
+  <img src="../figs/figs_introduction/Gillespie.png" width="600" alt="Gillespie Algorithm"> <br>
   <b>Figure 4. Gillespie Algorithm</b>
 </p>
 
