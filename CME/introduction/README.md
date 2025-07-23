@@ -24,6 +24,8 @@ A general workflow of jLM within LM is shown below. jLM supports both CME and RD
 
 ## Stochastic Modeling of Cellular Processes
 
+**The discreteness and stochasticity of chemical kinetics play a role when the number of reactants is significantly low**. For the species in genetic information processes, most mRNAs have a number of 1 or 2, which is significantly smaller than ATP of counts $10^6$. Based on the initial volume of JCVI-syn3A (200 nm radius, 0.035 fL, 1 particle count equals 50 nM), mRNA concentrations are 50 or 100 nM, and ATP is roughly 5 mM. Therefore, it is necessary to simulate the kinetics in genetic information processes (GIP) and protein complex assembly with stochastic CME or RDME and metabolism with deterministic ODE.
+
 CME and RDME are algorithms for simulating homogeneous and heterogeneous stochastic chemical reaction kinetics, respectively. Ordinary Differential Equation (ODE) is suitable for macroscopic and homogeneous systems, such as metabolic networks in minimal cells. Brownian Dynamics (BD) is used for modeling the dynamics of chromosome polymers in a continuum.
 
 <p align="center">
