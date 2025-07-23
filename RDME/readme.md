@@ -12,11 +12,12 @@
 ## Outline:
 
 1. Set up the tutorial on Delta and data downloads
-2. Model overview and hybrid simulation flowchart  
-3. Geometry: surface area, volume and DNA doubling
-4. Complex assembly and active counts
-5. Proteomics relative to replication initiation
-6. Whole-cell energetics: ATP production and expenditure
+2. Get familiar with RDME by running Tutorials 1 and 2.
+3. Model overview and hybrid simulation flowchart  
+4. Geometry: surface area, volume and DNA doubling
+5. Complex assembly and active counts
+6. Proteomics relative to replication initiation
+7. Whole-cell energetics: ATP production and expenditure
 
 ## 1. Set up the tutorial on Delta and data downloads
 
@@ -93,8 +94,20 @@ Then we launch the server for **jupyter notebook** (This is the same process as 
   Copy the last URL in the first terminal and paste to one browser (Firefox, Chrome, ...) to open Jupyter Notebook.
 ---
 
+## 2. RDME tutorials
 
-## 2. Model Overview and Hybrid Simulation Flowchart
+We have Tutorial of bimolecular reactions and Gnentic information processing in RDME. You might open it and try it first. 
+
+Go to the folders, and open the jupyter notebooks to start: 
+```
+./TutR1_Bimolecule
+
+./TutR2_GIP
+
+```
+
+
+## 3. Model Overview and Hybrid Simulation Flowchart
 
 The 4DWCM [1] integrates four numerical algorithms so that every molecular event of a living minimal cell can be followed for its entire 105-min division cycle:
 
