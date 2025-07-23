@@ -9,7 +9,7 @@ We will model the reversible association/dissociation reaction of hypothetical m
 \ce{A + B <=>[\ce{k_f}][\ce{k_r}]C}
 ```
 
-We begin with small initial counts: 100 molecules of A, 100 of B, and 0 of C. These molecules are placed in a microbe-sized volume of 1 fL. Also, let us start off with forward rate $k_f$=1.07$\times10^6$ M<sup>-1</sup>s<sup>-1</sup> and backward rate $k_r$=0.351 s<sup>-1</sup>.
+We begin with small initial counts: 100 molecules of A, 100 of B, and 0 of C. These molecules are placed in a microbe-sized volume of 1 fL. Also, let us start off with forward rate $k_f$=1.07$$\times10^6$$ M<sup>-1</sup>s<sup>-1</sup> and backward rate $k_r$=0.351 s<sup>-1</sup>.
 
 Under ODE representation using concentrations of species, the rates of change of A, B, and C are:
 
