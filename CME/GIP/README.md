@@ -8,17 +8,16 @@ Please also review this previous response: [Stochastic Genetic Information Proce
 
 ## Classic Genetic Information Process Reactions
 
-This classic and minimal genetic information process (GIP) model consists of 3 species and 4 reactions. It begins with the transcription of a gene into mRNA. The mRNA can be translated into protein or degraded into its monomers. The resulting protein can also undergo degradation. The reaction scheme and associated rate constants are shown below.
+This classic and simplified genetic information process (GIP) model consists of 3 species and 4 **first-order reactions**. It begins with the transcription of a gene into mRNA. The mRNA can be translated into protein or degraded into its monomers. The resulting protein can also undergo degradation. The reaction scheme and associated rate constants are shown below.
 
 <p align="center">
   <img src="../figs/figs_GIP/GIP_withCMEs.png" width="600" alt="Simple GIP model">  <br>
   <b>Figure 1. Genetic information processing model and its corresponding chemical master equation, where <i>m</i> and <i>n</i> are the counts of mRNAs and proteins.</b>
 </p>
 
-The rate constants are based on the protein DnaA from the minimal cell. The first three rate constants were calculated using the initial concentrations of nucleotides and aminoacyl-tRNAs reported in the *Cell* paper[^thornburg_cell]. 
+The rate constants are for the protein DnaA from the minimal cell. To calculate the first three rate constants, we used the concentrations of nucleotides and aminoacyl-tRNAs, length of gene/mRNA/protein, and the active ratio of RNAP, ribosome, and degradasome as reported in the *Cell* paper[^thornburg_cell]. 
 
 We assume the gene copy number is fixed at 1 and the initial mRNA count is 1, and the initial protein count is 148 from the proteomics study. The protein degradation rate is estimated based on a half-life of 25 hours[^thornburg_kinetic].
-
 
 **Table 1. Four reactions with their rate constants**
 
