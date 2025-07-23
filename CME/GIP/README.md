@@ -39,7 +39,7 @@ By default:
 
 ## Stochastic Protein Synthesis
 
-We begin by examining the average and variation in mRNA and protein abundances across the population of 10 simulated cells. The population-averaged mRNA abundance fluctuates below 1 throughout the cell cycle, while protein levels increase steadily due to translation. Protein degradation is minor under this set of kinetic parameters.
+We begin by examining the average and variation in mRNA and protein abundances across the population of 10 simulated cells in **Figure 2 Left**. The population-averaged mRNA abundance fluctuates below 1 throughout the cell cycle, while protein levels increase steadily due to translation. Protein degradation is minor under this set of kinetic parameters.
 
 Protein synthesis is a stochastic process that occurs in individual cells. By plotting the time traces of mRNA and protein for several replicates, you can observe the characteristic stair-step pattern of mRNA production and burst-like synthesis of proteins. You will see that protein levels increase or "burst" when mRNAs are present, and may plateau or decrease when mRNAs are absent. We encourage you to compare the patterns shown here with your own simulation results.
 
