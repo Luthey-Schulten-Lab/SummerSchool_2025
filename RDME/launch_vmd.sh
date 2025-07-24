@@ -3,6 +3,7 @@
 # This script is used to launch VMD
 
 cd /projects/beyi/
+module load ffmpeg
 module load anaconda3_cpu
 source activate /projects/beyi/sw/conda/envs/vmdplugin
 module load vmd/1.9.4lm
