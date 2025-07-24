@@ -52,12 +52,6 @@ Then we launch the server for **jupyter notebook** (This is the same process as 
   ```bash
   srun --account=beyi-delta-gpu --partition=gpuA100x4 --time=04:00:00 --mem=64g --gpus-per-node=1 --tasks-per-node=1 --cpus-per-task=16 --nodes=1 apptainer exec --nv --containall --bind /projects/beyi/$USER/:/workspace /projects/beyi/$USER/CME/summer2025.sif bash -c "source /root/miniconda3/etc/profile.d/conda.sh && conda activate lm_2.5_dev && jupyter notebook /workspace/ --no-browser --port=$((RANDOM%9000+1000)) --ip=0.0.0.0 --allow-root"
 
-  ```
-  if you want to run tutorials try this:
-  ```bash
-    #back up 
-  srun --account=beyi-delta-gpu --partition=gpuA100x4 --time=04:00:00 --mem=64g --gpus-per-node=1 --tasks-per-node=1 --cpus-per-task=16 --nodes=1 apptainer exec --nv --containall --bind /projects/beyi/$USER/:/workspace /projects/beyi/LM.sif jupyter-notebook /workspace/ --no-browser --port=$((RANDOM%9000+1000)) --ip=0.0.0.0 --allow-root
-  ``` 
 
   Then you should wait for Delta to allocate the resources for your request, which usually takes less than 1 minute. When you see similar things as the following, you are good to proceed to the second step.
 
