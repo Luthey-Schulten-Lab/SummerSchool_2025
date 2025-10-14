@@ -38,7 +38,7 @@ Navigate to your user directory `/projects/beyi/$USER` that automatically create
 cd /projects/beyi/$USER
 ```
 
-Copy the prepared materials to your directory. This step may take several minutes due to the large Apptainer file (~7 GB) and precomputed CME-ODE WCM trajectories.
+Copy the prepared materials to your directory. This step may take several minutes due to the precomputed CME-ODE WCM trajectories.
 
 ```bash
 cp -r /projects/beyi/enguang/CME ./
@@ -77,14 +77,14 @@ cp -r /projects/beyi/enguang/CME ./
       or http://127.0.0.1:$Port/?token=b2e7ca15cd9dc3a6893a1273e359c88869225bc29d66c80c
   ```
 >[!NOTE]
-> The second to the last line contains the Delta GPU node `DeltaNode`, which is assgined by Delta to run your job. The `Port` is four digits randomly generated.
+> The second to the last line contains the Delta GPU node `$DeltaNode`, which is assgined by Delta to run your job. The `$Port` is four digits randomly generated.
 
 - **Second**: SSH into the Delta GPU node.  
   Open **another** terminal and run the following command after replacing.
 >[!WARNING]
->***Replace*** `DeltaNode` with the node assgined by Delta.    
->***Replace*** `USERNAME` with your Delta username.   
->***Replace*** `Port` with the 4 digit number generated.
+>***Replace*** `$DeltaNode` with the node assgined by Delta.    
+>***Replace*** `$USERNAME` with your Delta username.   
+>***Replace*** TWO `$Port` with the 4 digit number generated.
 
   ```bash
   ssh -l $USERNAME  -L 127.0.0.1:$Port:$DeltaNode.delta.internal.ncsa.edu:$Port dt-login.delta.ncsa.illinois.edu
